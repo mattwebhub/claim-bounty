@@ -1,6 +1,5 @@
 .DEFAULT_GOAL := help
 
-GOLANGCI_LINT_VERSION := v2.13.1
 GOVULNCHECK_VERSION := v1.7.0
 LEFTHOOK_VERSION := v1.13.6
 ACTIONLINT_VERSION := v1.7.12
@@ -8,8 +7,8 @@ TEST_DATABASE_URL ?= postgres://postgres:postgres@127.0.0.1:5432/app?sslmode=dis
 CONTEXT_PATH ?= .
 
 .PHONY: help doctor context arch arch-explain dev db-up db-down validate-config \
-	fmt fmt-check vet lint lint-actions test test-race test-integration migration-check vulnerability \
-	build docker-build public-release check-fast check check-ci hooks clean
+	fmt fmt-check vet lint lint-new lint-actions test test-race test-integration migration-check vulnerability \
+	build docker-build public-release check-fast precommit check check-ci hooks clean
 
 help: ## Show available commands.
 	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z0-9_-]+:.*## / {printf "  %-20s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -51,8 +50,11 @@ vet: ## Run the standard static analyzer.
 	go vet ./...
 
 lint: ## Run the pinned high-signal lint suite.
-	go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(GOLANGCI_LINT_VERSION) run
+	../../scripts/golangci-lint run
 	$(MAKE) lint-actions
+
+lint-new: ## Reject lint findings introduced by the current worktree change.
+	../../scripts/golangci-lint run --new-from-rev=HEAD --whole-files
 
 lint-actions: ## Validate GitHub workflow syntax and expressions.
 	go run github.com/rhysd/actionlint/cmd/actionlint@$(ACTIONLINT_VERSION) ../../.github/workflows/*.yml
@@ -82,6 +84,8 @@ public-release: ## Scan for secrets, private files, and unsafe release defaults.
 	@cd ../.. && ./scripts/check-public-release
 
 check-fast: fmt-check arch vet test ## Run the warm-cache edit-loop gate.
+
+precommit: check-fast lint-new ## Run backend checks required before a commit.
 
 check: check-fast lint test-race build public-release ## Run the complete local handoff gate.
 

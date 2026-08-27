@@ -4,9 +4,16 @@ set -eu
 failed=0
 for required in README.md LICENSE SECURITY.md CONTRIBUTING.md AGENTS.md ARCHITECTURE.md \
   architecture/rules.yaml contracts/openapi.yaml package.json pnpm-lock.yaml pnpm-workspace.yaml \
-  redocly.yaml .node-version; do
+  redocly.yaml .node-version scripts/golangci-lint scripts/install-hooks; do
   if [ ! -f "$required" ]; then
     printf 'PUBLIC-001 missing required public file: %s\n' "$required" >&2
+    failed=1
+  fi
+done
+
+for executable in scripts/golangci-lint scripts/install-hooks; do
+  if [ -f "$executable" ] && [ ! -x "$executable" ]; then
+    printf 'PUBLIC-008 repository runner must be executable: %s\n' "$executable" >&2
     failed=1
   fi
 done
