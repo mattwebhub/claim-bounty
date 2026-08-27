@@ -1,0 +1,35 @@
+#!/bin/sh
+set -eu
+
+failed=0
+for required in README.md LICENSE SECURITY.md CONTRIBUTING.md AGENTS.md ARCHITECTURE.md .env.example; do
+  if [ ! -f "$required" ]; then
+    printf 'PUBLIC-001 missing required public file: %s\n' "$required" >&2
+    failed=1
+  fi
+done
+
+if find . -type f \( -name '.env' -o -name '*.pem' -o -name '*.key' \) -not -path './.git/*' | grep -q .; then
+  printf 'PUBLIC-002 private environment/key file found\n' >&2
+  failed=1
+fi
+
+secret_pattern='-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----|gh[pousr]_[A-Za-z0-9_]{30,}|AKIA[0-9A-Z]{16}'
+if command -v rg >/dev/null 2>&1 && rg -n --hidden --glob '!.git/**' --glob '!scripts/check-public-release' -- "$secret_pattern" .; then
+  printf 'PUBLIC-003 probable credential found; remove it and rotate the credential\n' >&2
+  failed=1
+fi
+
+if grep -Eq '^FROM .+:latest([ @]|$)' Dockerfile; then
+  printf 'PUBLIC-004 Dockerfile uses a latest tag; pin the base image\n' >&2
+  failed=1
+fi
+if ! grep -Eq '^USER [1-9][0-9]*(:[1-9][0-9]*)?$' Dockerfile; then
+  printf 'PUBLIC-005 final container must use a numeric non-root user\n' >&2
+  failed=1
+fi
+
+if [ "$failed" -ne 0 ]; then
+  exit 1
+fi
+printf 'public-release: hygiene checks passed\n'

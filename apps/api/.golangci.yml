@@ -1,0 +1,84 @@
+version: "2"
+
+run:
+  timeout: 5m
+  relative-path-mode: gomod
+  allow-parallel-runners: true
+
+linters:
+  default: none
+  enable:
+    - asasalint
+    - bodyclose
+    - canonicalheader
+    - durationcheck
+    - errcheck
+    - errorlint
+    - exptostd
+    - fatcontext
+    - gocritic
+    - gosec
+    - govet
+    - ineffassign
+    - intrange
+    - loggercheck
+    - misspell
+    - musttag
+    - nilerr
+    - nolintlint
+    - predeclared
+    - reassign
+    - recvcheck
+    - rowserrcheck
+    - sloglint
+    - staticcheck
+    - testableexamples
+    - unconvert
+    - unparam
+    - unused
+    - usestdlibvars
+    - wastedassign
+    - whitespace
+  settings:
+    errcheck:
+      check-type-assertions: false
+      check-blank: false
+    sloglint:
+      context: scope
+      static-msg: true
+      key-naming-case: snake
+    staticcheck:
+      checks:
+        - all
+        - -ST1000
+        - -QF1001
+        - -SA9004
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - path: _test\.go
+        linters:
+          - gosec
+          - noctx
+          - wrapcheck
+      - path: internal/adapters/postgres/sqlc/
+        linters:
+          - all
+      - path: internal/adapters/postgres/store\.go
+        text: "G115: integer overflow conversion"
+        linters:
+          - gosec
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
