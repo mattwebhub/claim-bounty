@@ -1,0 +1,63 @@
+#!/bin/sh
+set -eu
+
+failed=0
+for required in README.md LICENSE SECURITY.md CONTRIBUTING.md AGENTS.md ARCHITECTURE.md \
+  architecture/rules.yaml contracts/openapi.yaml package.json pnpm-lock.yaml pnpm-workspace.yaml \
+  redocly.yaml .node-version; do
+  if [ ! -f "$required" ]; then
+    printf 'PUBLIC-001 missing required public file: %s\n' "$required" >&2
+    failed=1
+  fi
+done
+
+if find . -type f \( -name '.env' -o -name '*.pem' -o -name '*.key' \) -not -path './.git/*' -not -path './node_modules/*' | grep -q .; then
+  printf 'PUBLIC-002 private environment or key file found\n' >&2
+  failed=1
+fi
+
+secret_pattern='-----BEGIN (RSA |EC |OPENSSH |ENCRYPTED )?PRIVATE KEY-----|gh[pousr]_[A-Za-z0-9_]{30,}|github_pat_[A-Za-z0-9_]{50,}|AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9_-]{30,}|xox[baprs]-[A-Za-z0-9-]{20,}'
+if rg -n --hidden --glob '!.git/**' --glob '!**/node_modules/**' --glob '!scripts/check-public-release' -- "$secret_pattern" .; then
+  printf 'PUBLIC-003 probable credential found; remove and rotate it\n' >&2
+  failed=1
+fi
+
+private_pattern='toone|truleaf|/Users/[^/]+|micro1-go-template|micro1-react-template|go-backend-template|react-frontend-template'
+if rg -n -i --hidden --glob '!.git/**' --glob '!**/node_modules/**' --glob '!scripts/check-public-release' -- "$private_pattern" .; then
+  printf 'PUBLIC-004 private-source or obsolete standalone reference found\n' >&2
+  failed=1
+fi
+
+for dockerfile in apps/*/Dockerfile; do
+  [ -f "$dockerfile" ] || continue
+  if awk '
+    toupper($1) == "FROM" {
+      image=$2
+      if (image ~ /^--/) image=$3
+      if (image != "scratch" && image !~ /@sha256:[0-9a-f]{64}$/) print FNR ":" image
+    }
+  ' "$dockerfile" | grep -q .; then
+    printf 'PUBLIC-005 Docker bases must use immutable sha256 digests: %s\n' "$dockerfile" >&2
+    failed=1
+  fi
+  final_user=$(awk '
+    toupper($1) == "FROM" { user="" }
+    toupper($1) == "USER" { user=$2 }
+    END { print user }
+  ' "$dockerfile")
+  if ! printf '%s\n' "$final_user" | grep -Eq '^[1-9][0-9]*(:[1-9][0-9]*)?$'; then
+    printf 'PUBLIC-006 final container stage requires an explicit numeric non-root USER: %s\n' "$dockerfile" >&2
+    failed=1
+  fi
+done
+
+if find . -mindepth 2 -type d -name .git -not -path './node_modules/*' | grep -q .; then
+  printf 'PUBLIC-007 nested Git repository found\n' >&2
+  failed=1
+fi
+
+if [ "$failed" -ne 0 ]; then
+  exit 1
+fi
+
+printf 'public-release: hygiene checks passed\n'

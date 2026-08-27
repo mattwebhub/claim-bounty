@@ -1,0 +1,30 @@
+{
+  "name": "micro1-template",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "concurrently --kill-others --names api,web --prefix-colors blue,magenta \"pnpm dev:api\" \"pnpm dev:web\"",
+    "dev:api": "cd apps/api && go run ./cmd/api",
+    "dev:web": "pnpm --filter @micro1/web dev",
+    "check:fast": "make check-fast",
+    "check": "make check",
+    "contract:generate": "pnpm --filter @micro1/web api:generate",
+    "contract:lint": "redocly lint --config redocly.yaml contracts/openapi.yaml",
+    "contract:check": "pnpm contract:lint && ./scripts/check-generated",
+    "test:system": "pnpm --filter @micro1/web test:system",
+    "architecture:check": "./scripts/check-architecture",
+    "format": "prettier --write . --ignore-unknown && pnpm --filter @micro1/web format && gofmt -w apps/api",
+    "format:check": "prettier --check . --ignore-unknown && pnpm --filter @micro1/web format:check",
+    "hooks:install": "lefthook install"
+  },
+  "devDependencies": {
+    "@redocly/cli": "2.49.0",
+    "concurrently": "^9.2.1",
+    "lefthook": "2.1.10",
+    "prettier": "^3.7.4"
+  }
+}

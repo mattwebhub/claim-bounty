@@ -1,0 +1,327 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: Detect affected applications
+    runs-on: ubuntu-latest
+    outputs:
+      api: ${{ github.event_name == 'workflow_dispatch' && 'true' || steps.filter.outputs.api }}
+      web: ${{ github.event_name == 'workflow_dispatch' && 'true' || steps.filter.outputs.web }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - id: filter
+        if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
+        uses: dorny/paths-filter@0e4a8c6effa4802afeda77dc8d303f8176d7dfad # v3
+        with:
+          filters: |
+            api:
+              - 'apps/api/**'
+              - 'contracts/**'
+              - 'architecture/**'
+              - 'scripts/**'
+              - 'infra/**'
+              - '.github/**'
+              - 'Makefile'
+              - '.dockerignore'
+              - '.env.example'
+              - 'AGENTS.md'
+              - 'ARCHITECTURE.md'
+            web:
+              - 'apps/web/**'
+              - 'contracts/**'
+              - 'architecture/**'
+              - 'scripts/**'
+              - 'infra/**'
+              - '.github/**'
+              - 'Makefile'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'redocly.yaml'
+              - '.node-version'
+              - '.dockerignore'
+              - '.env.example'
+              - 'AGENTS.md'
+              - 'ARCHITECTURE.md'
+
+  repository-hygiene:
+    name: Repository hygiene
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+        with:
+          version: 9.15.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: apps/api/.go-version
+          cache: true
+          cache-dependency-path: apps/api/go.sum
+      - name: Verify workspace lockfile
+        run: pnpm install --frozen-lockfile
+      - name: Check repository formatting
+        run: pnpm format:check
+      - name: Check workflow syntax and expressions
+        run: cd apps/api && go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.12 ../../.github/workflows/*.yml
+      - name: Check patch whitespace
+        run: git diff --check
+      - name: Check public-release hygiene
+        run: sh ./scripts/check-public-release
+
+  contract:
+    name: Contract validity and drift
+    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.web == 'true' }}
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+        with:
+          version: 9.15.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        if: ${{ github.event_name == 'pull_request' }}
+        with:
+          go-version-file: apps/api/.go-version
+          cache: true
+          cache-dependency-path: apps/api/go.sum
+      - run: pnpm install --frozen-lockfile
+      - name: Validate OpenAPI and generated TypeScript
+        run: pnpm contract:check
+      - name: Reject breaking OpenAPI changes
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if git cat-file -e "$BASE_SHA:contracts/openapi.yaml" 2>/dev/null; then
+            git show "$BASE_SHA:contracts/openapi.yaml" > "$RUNNER_TEMP/openapi-base.yaml"
+            cd apps/api
+            go run github.com/oasdiff/oasdiff@v1.29.1 breaking --allow-external-refs=false "$RUNNER_TEMP/openapi-base.yaml" ../../contracts/openapi.yaml
+          else
+            echo "No base contract exists; treating this as the initial contract introduction."
+          fi
+
+  api-static-unit:
+    name: API static, unit, race, and build
+    if: ${{ needs.changes.outputs.api == 'true' }}
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: apps/api/.go-version
+          cache: true
+          cache-dependency-path: apps/api/go.sum
+      - name: Architecture, format, vet, and unit tests
+        run: make -C apps/api check-fast
+      - name: Lint
+        uses: golangci/golangci-lint-action@4afd733a84b1f43292c63897423277bb7f4313a9 # v8
+        with:
+          version: v2.13.1
+          working-directory: apps/api
+          args: --timeout=5m
+      - name: Race and coverage
+        working-directory: apps/api
+        run: go test -race -covermode=atomic -coverprofile=coverage.out ./...
+      - name: Build production binary
+        working-directory: apps/api
+        run: go build -trimpath -o bin/api ./cmd/api
+      - name: Upload API coverage evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: api-coverage
+          path: apps/api/coverage.out
+          if-no-files-found: ignore
+          retention-days: 14
+
+  postgres-integration:
+    name: PostgreSQL migrations and integration
+    if: ${{ needs.changes.outputs.api == 'true' }}
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17.6-alpine3.22@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94
+        env:
+          POSTGRES_DB: app
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d app"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      TEST_DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/app?sslmode=disable
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: apps/api/.go-version
+          cache: true
+          cache-dependency-path: apps/api/go.sum
+      - name: Replay migrations up/down/up
+        run: make -C apps/api migration-check
+      - name: Run PostgreSQL adapter tests
+        run: make -C apps/api test-integration
+
+  web-quality:
+    name: Web static, unit, coverage, and build
+    if: ${{ needs.changes.outputs.web == 'true' }}
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+        with:
+          version: 9.15.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @micro1/web format:check
+      - run: pnpm --filter @micro1/web lint
+      - run: pnpm --filter @micro1/web typecheck
+      - run: pnpm --filter @micro1/web architecture:check
+      - run: pnpm --filter @micro1/web test:coverage
+      - run: pnpm --filter @micro1/web dead-code:check
+      - run: pnpm --filter @micro1/web build
+      - run: pnpm --filter @micro1/web bundle:check
+      - name: Upload web coverage evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: web-coverage
+          path: apps/web/coverage/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  api-container:
+    name: API production container
+    if: ${{ needs.changes.outputs.api == 'true' }}
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          push: false
+          tags: micro1-template-api:ci
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
+
+  web-container:
+    name: Web production container
+    if: ${{ needs.changes.outputs.web == 'true' }}
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: .
+          file: apps/web/Dockerfile
+          push: false
+          tags: micro1-template-web:ci
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web
+
+  required:
+    name: CI / Required
+    if: ${{ always() }}
+    needs:
+      - changes
+      - repository-hygiene
+      - contract
+      - api-static-unit
+      - postgres-integration
+      - web-quality
+      - api-container
+      - web-container
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce all applicable CI gates
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          HYGIENE_RESULT: ${{ needs.repository-hygiene.result }}
+          API_CHANGED: ${{ needs.changes.outputs.api }}
+          WEB_CHANGED: ${{ needs.changes.outputs.web }}
+          CONTRACT_RESULT: ${{ needs.contract.result }}
+          API_RESULT: ${{ needs.api-static-unit.result }}
+          POSTGRES_RESULT: ${{ needs.postgres-integration.result }}
+          WEB_RESULT: ${{ needs.web-quality.result }}
+          API_CONTAINER_RESULT: ${{ needs.api-container.result }}
+          WEB_CONTAINER_RESULT: ${{ needs.web-container.result }}
+        run: |
+          set -eu
+          [ "$CHANGES_RESULT" = success ]
+          [ "$HYGIENE_RESULT" = success ]
+
+          require_when_changed() {
+            changed=$1
+            result=$2
+            label=$3
+            if [ "$changed" = true ]; then
+              [ "$result" = success ] || { echo "$label failed or did not run: $result" >&2; exit 1; }
+            else
+              case "$result" in success|skipped) ;; *) echo "$label failed: $result" >&2; exit 1 ;; esac
+            fi
+          }
+
+          if [ "$API_CHANGED" = true ] || [ "$WEB_CHANGED" = true ]; then
+            [ "$CONTRACT_RESULT" = success ] || { echo "contract gate failed or did not run: $CONTRACT_RESULT" >&2; exit 1; }
+          else
+            [ "$CONTRACT_RESULT" = skipped ] || [ "$CONTRACT_RESULT" = success ]
+          fi
+
+          require_when_changed "$API_CHANGED" "$API_RESULT" "API gate"
+          require_when_changed "$API_CHANGED" "$POSTGRES_RESULT" "PostgreSQL gate"
+          require_when_changed "$API_CHANGED" "$API_CONTAINER_RESULT" "API container gate"
+          require_when_changed "$WEB_CHANGED" "$WEB_RESULT" "web gate"
+          require_when_changed "$WEB_CHANGED" "$WEB_CONTAINER_RESULT" "web container gate"
+          echo "All applicable CI gates passed."

@@ -1,0 +1,33 @@
+name: Architecture change
+description: Propose a deliberate change to a repository-wide boundary or invariant.
+title: '[Architecture]: '
+labels: [architecture]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and evidence
+      description: Describe the concrete pressure that the current architecture does not handle.
+    validations:
+      required: true
+  - type: textarea
+    id: boundaries
+    attributes:
+      label: Boundaries affected
+      description: List services, ports, adapters, features, state owners, contracts, or deployment boundaries.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed decision
+      description: Include alternatives, tradeoffs, migration, enforcement, and rollback.
+    validations:
+      required: true
+  - type: textarea
+    id: proof
+    attributes:
+      label: Executable proof
+      description: Which architecture rule, fixture, test, or quality gate will prevent regression?
+    validations:
+      required: true

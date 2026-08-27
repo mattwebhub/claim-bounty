@@ -1,0 +1,27 @@
+#!/bin/sh
+set -eu
+
+rule=${1:-}
+if [ -z "$rule" ]; then
+  printf 'usage: scripts/explain-rule RULE-ID\n' >&2
+  exit 2
+fi
+
+documentation=$(awk -v requested="$rule" '
+  $1 == "-" && $2 == "id:" { active=($3 == requested); next }
+  active && $1 == "documentation:" { print $2; exit }
+' architecture/rules.yaml)
+
+if [ -z "$documentation" ]; then
+  printf 'architecture: unknown rule ID: %s\n' "$rule" >&2
+  printf 'available rules:\n' >&2
+  awk '$1 == "-" && $2 == "id:" { print "  " $3 }' architecture/rules.yaml >&2
+  exit 2
+fi
+if [ ! -f "$documentation" ]; then
+  printf 'architecture: documentation is missing for %s: %s\n' "$rule" "$documentation" >&2
+  exit 1
+fi
+
+printf 'Rule: %s\nDocumentation: %s\n\n' "$rule" "$documentation"
+sed -n '1,240p' "$documentation"

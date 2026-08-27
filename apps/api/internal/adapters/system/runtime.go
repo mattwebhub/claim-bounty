@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mattwebhub/micro1-go-template/internal/domain"
-	"github.com/mattwebhub/micro1-go-template/internal/ports"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/domain"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/ports"
 )
 
 type Clock struct{}

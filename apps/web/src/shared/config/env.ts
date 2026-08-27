@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const environmentSchema = z.object({
-  VITE_APP_NAME: z.string().trim().min(1).default('React Frontend Template'),
+  VITE_APP_NAME: z.string().trim().min(1).default('Micro1 Template'),
   VITE_API_BASE_URL: z.url().default('http://localhost:8080/api/v1'),
   VITE_API_TIMEOUT_MS: z.coerce.number().int().positive().max(120_000).default(10_000),
 });

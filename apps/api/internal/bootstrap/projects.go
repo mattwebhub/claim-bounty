@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/mattwebhub/micro1-go-template/internal/adapters/postgres"
-	"github.com/mattwebhub/micro1-go-template/internal/adapters/system"
-	"github.com/mattwebhub/micro1-go-template/internal/config"
-	"github.com/mattwebhub/micro1-go-template/internal/services"
-	"github.com/mattwebhub/micro1-go-template/internal/transport/httpapi"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/adapters/postgres"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/adapters/system"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/config"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/services"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/transport/httpapi"
 )
 
 // buildProjectModule is the only place that chooses concrete implementations
@@ -41,12 +41,17 @@ func buildProjectModule(ctx context.Context, cfg config.Config, logger *slog.Log
 		store.Close()
 		return Module{}, fmt.Errorf("bootstrap: construct project queries: %w", err)
 	}
-	workspaces, err := services.NewWorkspaceService(store, clock)
+	workspaceQueries, err := services.NewWorkspaceQueryService(store)
 	if err != nil {
 		store.Close()
-		return Module{}, fmt.Errorf("bootstrap: construct workspace service: %w", err)
+		return Module{}, fmt.Errorf("bootstrap: construct workspace queries: %w", err)
 	}
-	routes, err := httpapi.NewProjectRoutes(commands, queries, workspaces, logger, cfg.HTTP.MaxBodyBytes)
+	workspaceCommands, err := services.NewWorkspaceCommandService(store, store, clock)
+	if err != nil {
+		store.Close()
+		return Module{}, fmt.Errorf("bootstrap: construct workspace commands: %w", err)
+	}
+	routes, err := httpapi.NewProjectRoutes(commands, queries, workspaceQueries, workspaceCommands, logger, cfg.HTTP.MaxBodyBytes)
 	if err != nil {
 		store.Close()
 		return Module{}, fmt.Errorf("bootstrap: construct project routes: %w", err)

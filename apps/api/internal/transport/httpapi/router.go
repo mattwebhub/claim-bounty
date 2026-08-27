@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/mattwebhub/micro1-go-template/internal/transport/httpapi/middleware"
-	"github.com/mattwebhub/micro1-go-template/internal/transport/httpapi/response"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/transport/httpapi/middleware"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/transport/httpapi/response"
 )
 
 type RouteRegistrar interface {

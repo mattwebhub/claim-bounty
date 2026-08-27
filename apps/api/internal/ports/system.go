@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/mattwebhub/micro1-go-template/internal/domain"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/domain"
 )
 
 // ProjectIDGenerator keeps randomness outside the domain and makes project

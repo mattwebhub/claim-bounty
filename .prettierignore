@@ -1,0 +1,5 @@
+apps/api/**
+apps/web/**
+coverage/**
+node_modules/**
+pnpm-lock.yaml

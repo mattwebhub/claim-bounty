@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1.7
 FROM golang:1.26.6-alpine3.23@sha256:e57c41c1d5864341031181b0db34b9a537bb5773eb6428e4e5bdaea0f9135406 AS build
-WORKDIR /src
+WORKDIR /src/apps/api
 RUN apk add --no-cache ca-certificates
-COPY go.mod go.sum* ./
+COPY apps/api/go.mod apps/api/go.sum* ./
 RUN go mod download
-COPY . .
+COPY apps/api/ ./
 RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w -buildid=" -o /out/api ./cmd/api
 
 FROM scratch

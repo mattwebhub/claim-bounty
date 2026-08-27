@@ -15,10 +15,10 @@ help: ## Show available commands.
 	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z0-9_-]+:.*## / {printf "  %-20s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 doctor: ## Validate the local toolchain and runtime prerequisites.
-	@./scripts/doctor
+	@../../scripts/doctor
 
 context: ## Show boundaries and focused checks (CONTEXT_PATH=internal/domain).
-	@./scripts/context "$(CONTEXT_PATH)"
+	@cd ../.. && ./scripts/agent-context "apps/api/$(CONTEXT_PATH)"
 
 arch: ## Run executable architecture rules and their fixture tests.
 	go run ./tools/archlint -root .
@@ -29,14 +29,14 @@ arch-explain: ## Explain one rule (RULE=GO-ARCH-001).
 	go run ./tools/archlint -explain "$(RULE)"
 
 dev: ## Run PostgreSQL and then the API.
-	$(MAKE) db-up
+	$(MAKE) -C ../.. db-up
 	go run ./cmd/api
 
 db-up: ## Start the pinned local PostgreSQL service and wait for health.
-	docker compose up -d --wait postgres
+	docker compose -f ../../infra/compose.yaml up -d --wait postgres
 
 db-down: ## Stop and remove the template's ephemeral PostgreSQL service.
-	docker compose down --volumes --remove-orphans
+	docker compose -f ../../infra/compose.yaml down --volumes --remove-orphans
 
 validate-config: ## Validate environment configuration without serving traffic.
 	go run ./cmd/api validate-config
@@ -55,7 +55,7 @@ lint: ## Run the pinned high-signal lint suite.
 	$(MAKE) lint-actions
 
 lint-actions: ## Validate GitHub workflow syntax and expressions.
-	go run github.com/rhysd/actionlint/cmd/actionlint@$(ACTIONLINT_VERSION)
+	go run github.com/rhysd/actionlint/cmd/actionlint@$(ACTIONLINT_VERSION) ../../.github/workflows/*.yml
 
 test: ## Run the deterministic unit and HTTP test suite.
 	go test ./...
@@ -76,10 +76,10 @@ build: ## Build the production API binary.
 	go build -trimpath -o bin/api ./cmd/api
 
 docker-build: ## Build the pinned, non-root runtime image.
-	docker build --pull --tag micro1-go-template:local .
+	docker build --pull --file apps/api/Dockerfile --tag micro1-api:local ../..
 
 public-release: ## Scan for secrets, private files, and unsafe release defaults.
-	@./scripts/check-public-release
+	@cd ../.. && ./scripts/check-public-release
 
 check-fast: fmt-check arch vet test ## Run the warm-cache edit-loop gate.
 
@@ -92,7 +92,7 @@ check-ci: ## Run database, security, and container gates in an ephemeral local s
 	  $(MAKE) check migration-check test-integration vulnerability docker-build
 
 hooks: ## Install the pinned Lefthook Git hooks.
-	go run github.com/evilmartians/lefthook@$(LEFTHOOK_VERSION) install
+	@cd ../.. && pnpm hooks:install
 
 clean: ## Remove local build artifacts.
 	@set -eu; target="$(CURDIR)/bin"; [ "$${target}" != "$(CURDIR)" ]; rm -rf "$${target}"

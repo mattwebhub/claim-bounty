@@ -4,7 +4,7 @@ import { parseEnvironment } from '@/shared/config/env';
 describe('parseEnvironment', () => {
   it('applies safe local defaults', () => {
     expect(parseEnvironment({})).toEqual({
-      VITE_APP_NAME: 'React Frontend Template',
+      VITE_APP_NAME: 'Micro1 Template',
       VITE_API_BASE_URL: 'http://localhost:8080/api/v1',
       VITE_API_TIMEOUT_MS: 10_000,
     });

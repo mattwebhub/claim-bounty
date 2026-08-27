@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mattwebhub/micro1-go-template/internal/domain"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/domain"
 )
 
 func TestWorkspaceDocumentRejectsDuplicateObjectIDs(t *testing.T) {

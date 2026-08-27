@@ -15,16 +15,17 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/mattwebhub/micro1-go-template/internal/adapters/postgres/sqlc"
-	"github.com/mattwebhub/micro1-go-template/internal/domain"
-	"github.com/mattwebhub/micro1-go-template/internal/ports"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/adapters/postgres/sqlc"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/domain"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/ports"
 )
 
 const defaultQueryTimeout = 5 * time.Second
 
 var (
 	_ ports.ProjectRepository              = (*Store)(nil)
-	_ ports.WorkspaceRepository            = (*Store)(nil)
+	_ ports.WorkspaceReader                = (*Store)(nil)
+	_ ports.WorkspaceSaver                 = (*Store)(nil)
 	_ ports.TransactionManager             = (*Store)(nil)
 	_ ports.TransactionProjectRepository   = (*transactionRepositories)(nil)
 	_ ports.TransactionWorkspaceRepository = (*workspaceTransactionRepository)(nil)
@@ -189,15 +190,18 @@ func (s *Store) Save(ctx context.Context, workspace domain.Workspace, expectedVe
 	return workspaceFromRow(row)
 }
 
-func (s *Store) WithinTransaction(ctx context.Context, fn func(ports.TransactionRepositories) error) error {
+func (s *Store) WithinTransaction(
+	ctx context.Context,
+	fn func(context.Context, ports.TransactionRepositories) error,
+) error {
 	if fn == nil {
 		return errors.New("postgres: transaction callback is required")
 	}
-	ctx, cancel := context.WithTimeout(ctx, s.queryTimeout)
+	transactionCtx, cancel := context.WithTimeout(ctx, s.queryTimeout)
 	defer cancel()
-	err := pgx.BeginFunc(ctx, s.pool, func(tx pgx.Tx) error {
-		repositories := &transactionRepositories{ctx: ctx, queries: s.queries.WithTx(tx)}
-		if err := fn(repositories); err != nil {
+	err := pgx.BeginFunc(transactionCtx, s.pool, func(tx pgx.Tx) error {
+		repositories := &transactionRepositories{queries: s.queries.WithTx(tx)}
+		if err := fn(transactionCtx, repositories); err != nil {
 			return err
 		}
 		return nil
@@ -209,7 +213,6 @@ func (s *Store) WithinTransaction(ctx context.Context, fn func(ports.Transaction
 }
 
 type transactionRepositories struct {
-	ctx     context.Context
 	queries *sqlc.Queries
 }
 
@@ -218,8 +221,8 @@ func (r *transactionRepositories) Workspaces() ports.TransactionWorkspaceReposit
 	return &workspaceTransactionRepository{parent: r}
 }
 
-func (r *transactionRepositories) Create(_ context.Context, project domain.Project) error {
-	err := r.queries.CreateProject(r.ctx, postgresUUID(project.ID()), project.Name(), postgresTime(project.CreatedAt()), postgresTime(project.UpdatedAt()))
+func (r *transactionRepositories) Create(ctx context.Context, project domain.Project) error {
+	err := r.queries.CreateProject(ctx, postgresUUID(project.ID()), project.Name(), postgresTime(project.CreatedAt()), postgresTime(project.UpdatedAt()))
 	if constraint(err, "projects_pkey") {
 		return domain.ErrProjectExists
 	}
@@ -229,12 +232,12 @@ func (r *transactionRepositories) Create(_ context.Context, project domain.Proje
 	return nil
 }
 
-func (r *transactionRepositories) CreateWorkspace(_ context.Context, workspace domain.Workspace) error {
+func (r *transactionRepositories) CreateWorkspace(ctx context.Context, workspace domain.Workspace) error {
 	document, err := marshalDocument(workspace.Document())
 	if err != nil {
 		return err
 	}
-	err = r.queries.CreateWorkspace(r.ctx, sqlc.CreateWorkspaceParams{
+	err = r.queries.CreateWorkspace(ctx, sqlc.CreateWorkspaceParams{
 		ProjectID: postgresUUID(workspace.ProjectID()), Document: document, Version: int64(workspace.Version()),
 		CreatedAt: postgresTime(workspace.CreatedAt()), UpdatedAt: postgresTime(workspace.UpdatedAt()),
 	})

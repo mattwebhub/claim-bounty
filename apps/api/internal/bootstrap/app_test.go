@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/mattwebhub/micro1-go-template/internal/config"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/config"
 )
 
 type routeRegistrar func(*http.ServeMux)

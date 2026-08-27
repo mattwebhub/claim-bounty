@@ -55,7 +55,7 @@ export async function apiRequest<TSchema extends z.ZodType>(
   try {
     const response = await fetch(resolveUrl(request.path), {
       method: request.method ?? 'GET',
-      credentials: 'include',
+      credentials: 'same-origin',
       headers,
       ...(request.body === undefined ? {} : { body: JSON.stringify(request.body) }),
       signal,

@@ -4,4 +4,3 @@ playwright-report
 test-results
 node_modules
 src/shared/api/generated
-pnpm-lock.yaml

@@ -1,0 +1,232 @@
+name: Security
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'schedule' }}
+
+jobs:
+  changes:
+    name: Detect affected applications
+    runs-on: ubuntu-latest
+    outputs:
+      api: ${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && 'true' || steps.filter.outputs.api }}
+      web: ${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && 'true' || steps.filter.outputs.web }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - id: filter
+        if: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
+        uses: dorny/paths-filter@0e4a8c6effa4802afeda77dc8d303f8176d7dfad # v3
+        with:
+          filters: |
+            api:
+              - 'apps/api/**'
+              - 'contracts/**'
+              - 'infra/**'
+              - 'scripts/**'
+              - '.github/**'
+              - 'Makefile'
+              - '.dockerignore'
+            web:
+              - 'apps/web/**'
+              - 'contracts/**'
+              - 'infra/**'
+              - 'scripts/**'
+              - '.github/**'
+              - 'Makefile'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - '.node-version'
+              - '.dockerignore'
+
+  dependency-review:
+    name: Dependency review
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5
+        with:
+          fail-on-severity: moderate
+          deny-licenses: GPL-2.0, GPL-3.0, AGPL-1.0, AGPL-3.0
+
+  go-vulnerability:
+    name: Reachable Go vulnerability scan
+    if: ${{ needs.changes.outputs.api == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: apps/api/.go-version
+          cache: true
+          cache-dependency-path: apps/api/go.sum
+      - run: make -C apps/api vulnerability
+
+  npm-audit:
+    name: JavaScript dependency audit
+    if: ${{ needs.changes.outputs.web == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+        with:
+          version: 9.15.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm audit --audit-level high
+
+  codeql-go:
+    name: CodeQL Go
+    if: ${{ needs.changes.outputs.api == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: apps/api/.go-version
+          cache: true
+          cache-dependency-path: apps/api/go.sum
+      - uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4
+        with:
+          languages: go
+          build-mode: manual
+          queries: security-extended
+      - name: Build API for CodeQL
+        working-directory: apps/api
+        run: go build ./cmd/api
+      - uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4
+        with:
+          category: /language:go
+
+  codeql-javascript:
+    name: CodeQL JavaScript and TypeScript
+    if: ${{ needs.changes.outputs.web == 'true' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4
+        with:
+          languages: javascript-typescript
+          queries: security-extended
+      - uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4
+        with:
+          category: /language:javascript-typescript
+
+  repository-scan:
+    name: Filesystem vulnerability, secret, and misconfiguration scan
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Scan repository
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret,misconfig
+          format: json
+          output: trivy-results.json
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+      - name: Upload scan evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: trivy-results
+          path: trivy-results.json
+          if-no-files-found: ignore
+          retention-days: 14
+
+  required:
+    name: Security / Required
+    if: ${{ always() }}
+    needs:
+      - changes
+      - dependency-review
+      - go-vulnerability
+      - npm-audit
+      - codeql-go
+      - codeql-javascript
+      - repository-scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce all applicable security gates
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          API_CHANGED: ${{ needs.changes.outputs.api }}
+          WEB_CHANGED: ${{ needs.changes.outputs.web }}
+          DEPENDENCY_RESULT: ${{ needs.dependency-review.result }}
+          GO_VULN_RESULT: ${{ needs.go-vulnerability.result }}
+          NPM_AUDIT_RESULT: ${{ needs.npm-audit.result }}
+          CODEQL_GO_RESULT: ${{ needs.codeql-go.result }}
+          CODEQL_JS_RESULT: ${{ needs.codeql-javascript.result }}
+          REPOSITORY_SCAN_RESULT: ${{ needs.repository-scan.result }}
+        run: |
+          set -eu
+          [ "$CHANGES_RESULT" = success ]
+          [ "$REPOSITORY_SCAN_RESULT" = success ]
+
+          if [ "$EVENT_NAME" = pull_request ]; then
+            [ "$DEPENDENCY_RESULT" = success ] || { echo "dependency review failed: $DEPENDENCY_RESULT" >&2; exit 1; }
+          else
+            [ "$DEPENDENCY_RESULT" = skipped ] || [ "$DEPENDENCY_RESULT" = success ]
+          fi
+
+          full_scan=false
+          if [ "$EVENT_NAME" = schedule ] || [ "$EVENT_NAME" = workflow_dispatch ]; then full_scan=true; fi
+
+          require_scan() {
+            changed=$1
+            result=$2
+            label=$3
+            if [ "$changed" = true ] || [ "$full_scan" = true ]; then
+              [ "$result" = success ] || { echo "$label failed or did not run: $result" >&2; exit 1; }
+            else
+              case "$result" in success|skipped) ;; *) echo "$label failed: $result" >&2; exit 1 ;; esac
+            fi
+          }
+
+          require_scan "$API_CHANGED" "$GO_VULN_RESULT" "Go vulnerability scan"
+          require_scan "$API_CHANGED" "$CODEQL_GO_RESULT" "Go CodeQL"
+          require_scan "$WEB_CHANGED" "$NPM_AUDIT_RESULT" "JavaScript audit"
+          require_scan "$WEB_CHANGED" "$CODEQL_JS_RESULT" "JavaScript CodeQL"
+          echo "All applicable security gates passed."

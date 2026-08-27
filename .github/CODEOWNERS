@@ -1,0 +1,10 @@
+* @mattwebhub
+
+/apps/api/ @mattwebhub
+/apps/api/internal/domain/ @mattwebhub
+/apps/api/internal/ports/ @mattwebhub
+/apps/web/ @mattwebhub
+/contracts/ @mattwebhub
+/architecture/ @mattwebhub
+/infra/ @mattwebhub
+/.github/ @mattwebhub

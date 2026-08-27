@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/mattwebhub/micro1-go-template/internal/transport/httpapi/response"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/transport/httpapi/response"
 )
 
 func CORS(allowedOrigins []string) Middleware {
@@ -28,7 +28,7 @@ func CORS(allowedOrigins []string) Middleware {
 			w.Header().Set("Access-Control-Allow-Origin", origin)
 			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
 			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, If-Match, Idempotency-Key, X-Request-ID")
-			w.Header().Set("Access-Control-Expose-Headers", "ETag, X-Request-ID")
+			w.Header().Set("Access-Control-Expose-Headers", "ETag, Location, X-Request-ID")
 			if r.Method == http.MethodOptions {
 				w.Header().Add("Vary", "Access-Control-Request-Method")
 				w.Header().Add("Vary", "Access-Control-Request-Headers")

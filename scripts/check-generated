@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+generated='apps/web/src/shared/api/generated/schema.d.ts'
+temporary=$(mktemp /tmp/micro1-openapi-types.XXXXXX)
+trap 'unlink "$temporary" 2>/dev/null || true' EXIT INT TERM
+
+pnpm --filter @micro1/web exec openapi-typescript ../../contracts/openapi.yaml -o "$temporary"
+if ! cmp -s "$generated" "$temporary"; then
+  printf 'CONTRACT-001 generated TypeScript drifted; run: make contract-generate\n' >&2
+  diff -u "$generated" "$temporary" || true
+  exit 1
+fi
+
+printf 'contract: canonical schema is valid and generated types are current\n'

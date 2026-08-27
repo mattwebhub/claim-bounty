@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/mattwebhub/micro1-go-template/internal/domain"
-	"github.com/mattwebhub/micro1-go-template/internal/ports"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/domain"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/ports"
 )
 
 type GetWorkspaceQuery struct {
@@ -26,33 +26,52 @@ type SaveWorkspaceResult struct {
 	Workspace domain.Workspace
 }
 
-type WorkspaceService struct {
-	repository ports.WorkspaceRepository
-	clock      ports.Clock
+// WorkspaceQueryService owns workspace reads and has no write capability.
+type WorkspaceQueryService struct {
+	reader ports.WorkspaceReader
 }
 
-func NewWorkspaceService(repository ports.WorkspaceRepository, clock ports.Clock) (*WorkspaceService, error) {
-	if repository == nil || clock == nil {
+func NewWorkspaceQueryService(reader ports.WorkspaceReader) (*WorkspaceQueryService, error) {
+	if reader == nil {
 		return nil, ErrInvalidDependencies
 	}
-	return &WorkspaceService{repository: repository, clock: clock}, nil
+	return &WorkspaceQueryService{reader: reader}, nil
 }
 
-func (s *WorkspaceService) GetWorkspace(
+func (s *WorkspaceQueryService) GetWorkspace(
 	ctx context.Context,
 	query GetWorkspaceQuery,
 ) (GetWorkspaceResult, error) {
 	if _, err := domain.NewProjectID(query.ProjectID.String()); err != nil {
 		return GetWorkspaceResult{}, err
 	}
-	workspace, err := s.repository.GetByProjectID(ctx, query.ProjectID)
+	workspace, err := s.reader.GetByProjectID(ctx, query.ProjectID)
 	if err != nil {
 		return GetWorkspaceResult{}, fmt.Errorf("get workspace: %w", err)
 	}
 	return GetWorkspaceResult{Workspace: workspace}, nil
 }
 
-func (s *WorkspaceService) SaveWorkspace(
+// WorkspaceCommandService owns workspace mutations. Its reader and saver are
+// separate capabilities so a save use case cannot acquire unrelated methods.
+type WorkspaceCommandService struct {
+	reader ports.WorkspaceReader
+	saver  ports.WorkspaceSaver
+	clock  ports.Clock
+}
+
+func NewWorkspaceCommandService(
+	reader ports.WorkspaceReader,
+	saver ports.WorkspaceSaver,
+	clock ports.Clock,
+) (*WorkspaceCommandService, error) {
+	if reader == nil || saver == nil || clock == nil {
+		return nil, ErrInvalidDependencies
+	}
+	return &WorkspaceCommandService{reader: reader, saver: saver, clock: clock}, nil
+}
+
+func (s *WorkspaceCommandService) SaveWorkspace(
 	ctx context.Context,
 	command SaveWorkspaceCommand,
 ) (SaveWorkspaceResult, error) {
@@ -75,7 +94,7 @@ func (s *WorkspaceService) SaveWorkspace(
 		return SaveWorkspaceResult{}, err
 	}
 
-	current, err := s.repository.GetByProjectID(ctx, command.ProjectID)
+	current, err := s.reader.GetByProjectID(ctx, command.ProjectID)
 	if err != nil {
 		return SaveWorkspaceResult{}, fmt.Errorf("load workspace for save: %w", err)
 	}
@@ -84,7 +103,7 @@ func (s *WorkspaceService) SaveWorkspace(
 		return SaveWorkspaceResult{}, fmt.Errorf("apply workspace document: %w", err)
 	}
 
-	saved, err := s.repository.Save(ctx, updated, command.ExpectedVersion)
+	saved, err := s.saver.Save(ctx, updated, command.ExpectedVersion)
 	if err != nil {
 		return SaveWorkspaceResult{}, fmt.Errorf("save workspace: %w", err)
 	}

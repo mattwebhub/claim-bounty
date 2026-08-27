@@ -11,8 +11,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** List projects using stable cursor pagination */
         get: operations["listProjects"];
         put?: never;
+        /** Create a project and its initial workspace */
         post: operations["createProject"];
         delete?: never;
         options?: never;
@@ -29,6 +31,7 @@ export interface paths {
             };
             cookie?: never;
         };
+        /** Get a project by identifier */
         get: operations["getProject"];
         put?: never;
         post?: never;
@@ -47,7 +50,9 @@ export interface paths {
             };
             cookie?: never;
         };
+        /** Get a project's versioned workspace */
         get: operations["getWorkspace"];
+        /** Save a workspace using optimistic concurrency */
         put: operations["saveWorkspace"];
         post?: never;
         delete?: never;
@@ -114,11 +119,13 @@ export interface components {
         };
         FieldIssue: {
             path: string;
-            code: string;
+            /** @enum {string} */
+            code: "required" | "invalid" | "invalid_format" | "invalid_encoding" | "invalid_characters" | "out_of_range" | "too_long" | "too_many" | "unsupported" | "invalid_object" | "duplicate_id" | "before_created_at";
             message: string;
         };
         Error: {
-            code: string;
+            /** @enum {string} */
+            code: "body_too_large" | "cors_origin_denied" | "empty_body" | "if_match_required" | "internal_error" | "invalid_json" | "invalid_path_parameter" | "invalid_query" | "not_found" | "not_ready" | "project_exists" | "project_not_found" | "unsupported_media_type" | "validation_failed" | "version_conflict" | "workspace_not_found";
             message: string;
             requestId?: string;
             details?: components["schemas"]["FieldIssue"][];

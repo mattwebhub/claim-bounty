@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/mattwebhub/micro1-go-template/internal/domain"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/domain"
 )
 
 func TestProjectIDGeneratorProducesConstructedUUID(t *testing.T) {

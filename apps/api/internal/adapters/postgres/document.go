@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/mattwebhub/micro1-go-template/internal/adapters/postgres/sqlc"
-	"github.com/mattwebhub/micro1-go-template/internal/domain"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/adapters/postgres/sqlc"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/domain"
 )
 
 type documentRecord struct {

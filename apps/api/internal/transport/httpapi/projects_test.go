@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mattwebhub/micro1-go-template/internal/domain"
-	"github.com/mattwebhub/micro1-go-template/internal/services"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/domain"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/services"
 )
 
 const testProjectID = "0190cafe-7a4f-7000-8000-000000000001"
@@ -54,7 +54,7 @@ func TestProjectRoutesCreateAndListContract(t *testing.T) {
 		if command.Name != "Hackathon" {
 			t.Fatalf("name = %q", command.Name)
 		}
-		return services.CreateProjectResult{Project: project, Workspace: workspace}, nil
+		return services.CreateProjectResult{Project: project}, nil
 	})
 	reader := projectReaderStub{
 		get: func(context.Context, services.GetProjectQuery) (services.GetProjectResult, error) {
@@ -67,7 +67,8 @@ func TestProjectRoutesCreateAndListContract(t *testing.T) {
 			return services.ListProjectsResult{Projects: []domain.Project{project}, NextCursor: "next"}, nil
 		},
 	}
-	handler := testProjectHandler(t, creator, reader, successfulWorkspaceStub(workspace))
+	workspaces := successfulWorkspaceStub(workspace)
+	handler := testProjectHandler(t, creator, reader, workspaces, workspaces)
 
 	request := httptest.NewRequest(http.MethodPost, "/api/v1/projects", strings.NewReader(`{"name":"Hackathon"}`))
 	request.Header.Set("Content-Type", "application/json")
@@ -121,6 +122,7 @@ func TestWorkspaceRoutesUseStrongVersionETag(t *testing.T) {
 			return services.ListProjectsResult{}, nil
 		}},
 		stub,
+		stub,
 	)
 
 	recorder := httptest.NewRecorder()
@@ -171,6 +173,7 @@ func TestWorkspaceSaveRejectsOmittedZeroValueFields(t *testing.T) {
 			return services.ListProjectsResult{}, nil
 		}},
 		workspaces,
+		workspaces,
 	)
 
 	// label, x, and y have valid Go zero values but are required by the wire
@@ -207,6 +210,7 @@ func TestListProjectsRejectsAmbiguousOrOutOfContractQuery(t *testing.T) {
 			return services.ListProjectsResult{}, nil
 		}},
 		successfulWorkspaceStub(workspace),
+		successfulWorkspaceStub(workspace),
 	)
 
 	for _, rawQuery := range []string{"limit=1&limit=2", "limit=101"} {
@@ -234,7 +238,8 @@ func TestProjectRoutesMapValidationDetailsAndHideInternalErrors(t *testing.T) {
 	}, list: func(context.Context, services.ListProjectsQuery) (services.ListProjectsResult, error) {
 		return services.ListProjectsResult{}, nil
 	}}
-	handler := testProjectHandler(t, creator, reader, successfulWorkspaceStub(workspace))
+	workspaces := successfulWorkspaceStub(workspace)
+	handler := testProjectHandler(t, creator, reader, workspaces, workspaces)
 	request := httptest.NewRequest(http.MethodPost, "/api/v1/projects", strings.NewReader(`{"name":""}`))
 	request.Header.Set("Content-Type", "application/json")
 	recorder := httptest.NewRecorder()
@@ -274,9 +279,15 @@ func TestMapErrorCoversEveryPublicDomainCategory(t *testing.T) {
 	}
 }
 
-func testProjectHandler(t *testing.T, creator ProjectCreator, reader ProjectReader, workspaces WorkspaceReaderWriter) http.Handler {
+func testProjectHandler(
+	t *testing.T,
+	creator ProjectCreator,
+	reader ProjectReader,
+	workspaces WorkspaceReader,
+	workspaceSaver WorkspaceSaver,
+) http.Handler {
 	t.Helper()
-	routes, err := NewProjectRoutes(creator, reader, workspaces, slog.New(slog.DiscardHandler), 1<<20)
+	routes, err := NewProjectRoutes(creator, reader, workspaces, workspaceSaver, slog.New(slog.DiscardHandler), 1<<20)
 	if err != nil {
 		t.Fatal(err)
 	}

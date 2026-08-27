@@ -1,4 +1,4 @@
-module github.com/mattwebhub/micro1-go-template
+module github.com/mattwebhub/micro1-template/apps/api
 
 go 1.26.6
 

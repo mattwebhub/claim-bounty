@@ -7,7 +7,8 @@
     "src/shared/lib/index.ts",
     "src/shared/test/index.ts",
     "src/shared/ui/index.ts",
-    "tests/e2e/**/*.ts"
+    "tests/e2e/**/*.ts",
+    "tests/system/**/*.ts"
   ],
   "project": ["src/**/*.{ts,tsx}", "tests/**/*.ts", "*.config.ts", "scripts/*.mjs"],
   "ignore": ["src/shared/api/generated/**"],

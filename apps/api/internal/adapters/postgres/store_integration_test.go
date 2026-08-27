@@ -14,10 +14,10 @@ import (
 	"time"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
-	"github.com/mattwebhub/micro1-go-template/internal/adapters/postgres"
-	"github.com/mattwebhub/micro1-go-template/internal/domain"
-	"github.com/mattwebhub/micro1-go-template/internal/ports"
-	"github.com/mattwebhub/micro1-go-template/migrations"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/adapters/postgres"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/domain"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/ports"
+	"github.com/mattwebhub/micro1-template/apps/api/migrations"
 	"github.com/pressly/goose/v3"
 )
 
@@ -80,11 +80,11 @@ func TestStoreRoundTripTransactionPaginationAndConflict(t *testing.T) {
 		t.Fatal(err)
 	}
 	// Use the exact port callback type: both writes must commit together.
-	err = store.WithinTransaction(ctx, func(repositories ports.TransactionRepositories) error {
-		if err := repositories.Projects().Create(ctx, project); err != nil {
+	err = store.WithinTransaction(ctx, func(transactionCtx context.Context, repositories ports.TransactionRepositories) error {
+		if err := repositories.Projects().Create(transactionCtx, project); err != nil {
 			return err
 		}
-		return repositories.Workspaces().Create(ctx, workspace)
+		return repositories.Workspaces().Create(transactionCtx, workspace)
 	})
 	if err != nil {
 		t.Fatal(err)
@@ -107,11 +107,11 @@ func TestStoreRoundTripTransactionPaginationAndConflict(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := store.WithinTransaction(ctx, func(repositories ports.TransactionRepositories) error {
-		if err := repositories.Projects().Create(ctx, secondProject); err != nil {
+	if err := store.WithinTransaction(ctx, func(transactionCtx context.Context, repositories ports.TransactionRepositories) error {
+		if err := repositories.Projects().Create(transactionCtx, secondProject); err != nil {
 			return err
 		}
-		return repositories.Workspaces().Create(ctx, secondWorkspace)
+		return repositories.Workspaces().Create(transactionCtx, secondWorkspace)
 	}); err != nil {
 		t.Fatal(err)
 	}
@@ -150,14 +150,14 @@ func TestStoreRoundTripTransactionPaginationAndConflict(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = store.WithinTransaction(ctx, func(repositories ports.TransactionRepositories) error {
-		if err := repositories.Projects().Create(ctx, rollbackProject); err != nil {
+	err = store.WithinTransaction(ctx, func(transactionCtx context.Context, repositories ports.TransactionRepositories) error {
+		if err := repositories.Projects().Create(transactionCtx, rollbackProject); err != nil {
 			return err
 		}
-		if err := repositories.Workspaces().Create(ctx, rollbackWorkspace); err != nil {
+		if err := repositories.Workspaces().Create(transactionCtx, rollbackWorkspace); err != nil {
 			return err
 		}
-		return repositories.Workspaces().Create(ctx, rollbackWorkspace)
+		return repositories.Workspaces().Create(transactionCtx, rollbackWorkspace)
 	})
 	if err == nil {
 		t.Fatal("duplicate workspace unexpectedly committed")

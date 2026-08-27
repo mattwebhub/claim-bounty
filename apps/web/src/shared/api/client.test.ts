@@ -5,6 +5,20 @@ import { ApiError, apiRequest } from '@/shared/api';
 import { mockServer } from '@/shared/test/mocks/server';
 
 describe('apiRequest', () => {
+  it('never sends browser credentials to a cross-origin API by default', async () => {
+    let credentials: RequestCredentials | undefined;
+    mockServer.use(
+      http.get('http://localhost:8080/api/v1/credential-policy', ({ request }) => {
+        credentials = request.credentials;
+        return HttpResponse.json({ data: { ok: true } });
+      }),
+    );
+
+    await apiRequest({ path: '/credential-policy', schema: z.object({ ok: z.boolean() }) });
+
+    expect(credentials).toBe('same-origin');
+  });
+
   it('unwraps and validates a successful response', async () => {
     mockServer.use(
       http.get('http://localhost:8080/api/v1/example', () =>

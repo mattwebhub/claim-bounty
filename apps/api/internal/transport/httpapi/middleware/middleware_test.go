@@ -60,6 +60,12 @@ func TestSecurityAndCORS(t *testing.T) {
 	if recorder.Code != http.StatusNoContent || recorder.Header().Get("Access-Control-Allow-Origin") == "" || recorder.Header().Get("Content-Security-Policy") == "" {
 		t.Fatalf("headers = %#v", recorder.Header())
 	}
+	if recorder.Header().Get("Access-Control-Allow-Credentials") != "" {
+		t.Fatal("credentialed cross-origin requests must require an explicit future policy")
+	}
+	if exposed := recorder.Header().Get("Access-Control-Expose-Headers"); !strings.Contains(exposed, "ETag") || !strings.Contains(exposed, "Location") {
+		t.Fatalf("public response headers are not exposed: %q", exposed)
+	}
 }
 
 func TestCORSRejectsDisallowedStateChangingOriginWithStableEnvelope(t *testing.T) {

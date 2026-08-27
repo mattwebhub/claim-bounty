@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mattwebhub/micro1-go-template/internal/domain"
-	"github.com/mattwebhub/micro1-go-template/internal/ports"
-	"github.com/mattwebhub/micro1-go-template/internal/services"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/domain"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/ports"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/services"
 )
 
 const projectIDString = "123e4567-e89b-12d3-a456-426614174000"
@@ -21,9 +21,11 @@ func TestCreateProjectPersistsProjectAndWorkspaceInOneTransaction(t *testing.T) 
 	id := mustProjectID(t)
 	projects := &fakeTransactionProjects{}
 	workspaces := &fakeTransactionWorkspaces{}
+	transactionContext, cancel := context.WithCancel(context.Background())
+	defer cancel()
 	transactions := &fakeTransactionManager{repositories: fakeTransactionRepositories{
 		projects: projects, workspaces: workspaces,
-	}}
+	}, transactionContext: transactionContext}
 	service, err := services.NewProjectCommandService(
 		transactions,
 		fixedIDGenerator{id: id},
@@ -43,11 +45,14 @@ func TestCreateProjectPersistsProjectAndWorkspaceInOneTransaction(t *testing.T) 
 	if projects.created.ID() != id || workspaces.created.ProjectID() != id {
 		t.Fatalf("created aggregate IDs do not match generated ID %q", id)
 	}
+	if projects.ctx != transactionContext || workspaces.ctx != transactionContext {
+		t.Fatal("transaction-bound repositories did not receive the callback transaction context")
+	}
 	if got, want := result.Project.Name(), "New project"; got != want {
 		t.Fatalf("project name = %q, want %q", got, want)
 	}
-	if got, want := result.Workspace.Version(), uint64(1); got != want {
-		t.Fatalf("workspace version = %d, want %d", got, want)
+	if got, want := workspaces.created.Version(), uint64(1); got != want {
+		t.Fatalf("persisted workspace version = %d, want %d", got, want)
 	}
 }
 
@@ -164,20 +169,25 @@ type fixedClock struct{ now time.Time }
 func (clock fixedClock) Now() time.Time { return clock.now }
 
 type fakeTransactionManager struct {
-	repositories ports.TransactionRepositories
-	err          error
-	calls        int
+	repositories       ports.TransactionRepositories
+	transactionContext context.Context
+	err                error
+	calls              int
 }
 
 func (manager *fakeTransactionManager) WithinTransaction(
-	_ context.Context,
-	fn func(ports.TransactionRepositories) error,
+	ctx context.Context,
+	fn func(context.Context, ports.TransactionRepositories) error,
 ) error {
 	manager.calls++
 	if manager.err != nil {
 		return manager.err
 	}
-	return fn(manager.repositories)
+	transactionContext := manager.transactionContext
+	if transactionContext == nil {
+		transactionContext = ctx
+	}
+	return fn(transactionContext, manager.repositories)
 }
 
 type fakeTransactionRepositories struct {
@@ -195,20 +205,24 @@ func (repositories fakeTransactionRepositories) Workspaces() ports.TransactionWo
 
 type fakeTransactionProjects struct {
 	created domain.Project
+	ctx     context.Context
 	err     error
 }
 
-func (repository *fakeTransactionProjects) Create(_ context.Context, project domain.Project) error {
+func (repository *fakeTransactionProjects) Create(ctx context.Context, project domain.Project) error {
+	repository.ctx = ctx
 	repository.created = project
 	return repository.err
 }
 
 type fakeTransactionWorkspaces struct {
 	created domain.Workspace
+	ctx     context.Context
 	err     error
 }
 
-func (repository *fakeTransactionWorkspaces) Create(_ context.Context, workspace domain.Workspace) error {
+func (repository *fakeTransactionWorkspaces) Create(ctx context.Context, workspace domain.Workspace) error {
+	repository.ctx = ctx
 	repository.created = workspace
 	return repository.err
 }

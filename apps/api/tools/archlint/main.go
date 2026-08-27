@@ -16,7 +16,7 @@ import (
 	"strings"
 )
 
-const modulePath = "github.com/mattwebhub/micro1-go-template"
+const modulePath = "github.com/mattwebhub/micro1-template/apps/api"
 
 type rule struct {
 	id, summary, good, bad string
@@ -68,7 +68,7 @@ func main() {
 		return
 	}
 	for _, item := range violations {
-		fmt.Printf("%s:%d: [%s] %s; see docs/rules/%s.md\n", item.file, item.line, item.ruleID, item.message, item.ruleID)
+		fmt.Printf("%s:%d: [%s] %s; see ../../docs/rules/%s.md\n", item.file, item.line, item.ruleID, item.message, item.ruleID)
 	}
 	os.Exit(1)
 }
@@ -83,7 +83,7 @@ func explainRule(id string) error {
 		sort.Strings(ids)
 		return fmt.Errorf("unknown rule %q; choose one of %s", id, strings.Join(ids, ", "))
 	}
-	fmt.Printf("%s: %s\nCompliant: %s\nViolation: %s\nVerify: make arch\nDocumentation: docs/rules/%s.md\n", item.id, item.summary, item.good, item.bad, item.id)
+	fmt.Printf("%s: %s\nCompliant: %s\nViolation: %s\nVerify: make arch\nDocumentation: ../../docs/rules/%s.md\n", item.id, item.summary, item.good, item.bad, item.id)
 	return nil
 }
 

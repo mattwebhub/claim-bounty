@@ -1,0 +1,34 @@
+#!/bin/sh
+set -eu
+
+target=${1:-.}
+[ -e "$target" ] || { printf 'AGENT-CONTEXT-001 path does not exist: %s\n' "$target" >&2; exit 2; }
+target=${target#./}
+
+printf 'Target: %s\n\n' "$target"
+printf 'Read first:\n  AGENTS.md\n  ARCHITECTURE.md\n'
+
+case "$target" in
+  apps/api/*|apps/api)
+    printf '  apps/api/AGENTS.md\n  apps/api/ARCHITECTURE.md\n\n'
+    printf 'Boundary: domain <- ports <- services <- adapters/transport <- bootstrap <- cmd\n'
+    printf 'Rules: GO-ARCH-001 GO-ARCH-002 GO-CTX-001 GO-HTTP-001\n'
+    printf 'Focused gate: make api-check-fast\nFull gate: make api-check\n'
+    find "${target%/*}" -maxdepth 2 -name '*_test.go' -type f 2>/dev/null | sort | sed 's#^#  test: #' || true
+    ;;
+  apps/web/*|apps/web)
+    printf '  apps/web/AGENTS.md\n  apps/web/ARCHITECTURE.md\n\n'
+    printf 'Boundary: shared <- features <- routes <- app\n'
+    printf 'State: URL=navigation, Query=server, Zustand=workflow, forms=input\n'
+    printf 'Rules: WEB-ARCH-001 WEB-STATE-001\n'
+    printf 'Focused gate: make web-check-fast\nFull gate: make web-check\n'
+    ;;
+  contracts/*|contracts)
+    printf '\nOwner: contracts/openapi.yaml; generated consumer: apps/web/src/shared/api/generated\n'
+    printf 'Rule: CONTRACT-001\n'
+    printf 'Focused gate: make contract-check\nFull gate: make test-system\n'
+    ;;
+  *)
+    printf '\nRepository gate: make check-fast\nFull gate: make check\n'
+    ;;
+esac

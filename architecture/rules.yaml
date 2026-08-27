@@ -1,0 +1,51 @@
+version: 1
+rules:
+  - id: GO-ARCH-001
+    severity: error
+    scope: apps/api/internal/domain
+    summary: Domain imports the Go standard library only.
+    enforcement: apps/api/tools/archlint
+    documentation: docs/rules/GO-ARCH-001.md
+    exceptions: ADR with owner and expiry required
+  - id: GO-ARCH-002
+    severity: error
+    scope: apps/api/internal and apps/api/cmd/api
+    summary: Imports follow the declared layer dependency matrix.
+    enforcement: apps/api/tools/archlint
+    documentation: docs/rules/GO-ARCH-002.md
+    exceptions: ADR with owner and expiry required
+  - id: GO-CTX-001
+    severity: error
+    scope: apps/api/internal/transport/httpapi
+    summary: Request paths propagate request context.
+    enforcement: apps/api/tools/archlint
+    documentation: docs/rules/GO-CTX-001.md
+    exceptions: No request-path exception; process lifecycle belongs in bootstrap
+  - id: GO-HTTP-001
+    severity: error
+    scope: apps/api/internal/transport/httpapi
+    summary: HTTP JSON bodies use the bounded shared decoder.
+    enforcement: apps/api/tools/archlint
+    documentation: docs/rules/GO-HTTP-001.md
+    exceptions: ADR for a bounded streaming protocol
+  - id: WEB-ARCH-001
+    severity: error
+    scope: apps/web/src
+    summary: Web imports follow shared <- features <- routes <- app and feature internals stay private.
+    enforcement: apps/web/dependency-cruiser.cjs
+    documentation: docs/rules/WEB-ARCH-001.md
+    exceptions: ADR with owner and expiry required
+  - id: WEB-STATE-001
+    severity: error
+    scope: apps/web/src/features
+    summary: Server, URL, workflow, form, and component state each have one authoritative owner.
+    enforcement: ESLint, dependency-cruiser, and focused behavior tests
+    documentation: docs/rules/WEB-STATE-001.md
+    exceptions: ADR with an explicit synchronization protocol and expiry
+  - id: CONTRACT-001
+    severity: error
+    scope: contracts/openapi.yaml and generated consumers
+    summary: The root OpenAPI file is the only editable API contract and generated output must not drift.
+    enforcement: make contract-check
+    documentation: docs/rules/CONTRACT-001.md
+    exceptions: none

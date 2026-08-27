@@ -1,0 +1,101 @@
+#!/bin/sh
+set -eu
+
+failures=0
+
+require() {
+  if command -v "$1" >/dev/null 2>&1; then
+    printf 'ok   %-16s %s\n' "$1" "$(command -v "$1")"
+  else
+    printf 'FAIL %-16s %s\n' "$1" "$2" >&2
+    failures=$((failures + 1))
+  fi
+}
+
+version_at_least() {
+  awk -v actual="$1" -v required="$2" 'BEGIN {
+    split(actual, a, "."); split(required, r, ".")
+    for (i = 1; i <= 3; i++) {
+      a[i] += 0; r[i] += 0
+      if (a[i] > r[i]) exit 0
+      if (a[i] < r[i]) exit 1
+    }
+    exit 0
+  }'
+}
+
+require_version() {
+  name=$1
+  actual=$2
+  required=$3
+  if version_at_least "$actual" "$required"; then
+    printf 'ok   %-16s %s (minimum %s)\n' "$name" "$actual" "$required"
+  else
+    printf 'FAIL %-16s %s is older than required %s\n' "$name" "$actual" "$required" >&2
+    failures=$((failures + 1))
+  fi
+}
+
+require git 'install Git'
+require go 'install Go with automatic toolchain selection enabled'
+require node 'install Node.js 20.19 or newer'
+require pnpm 'install pnpm 9.15.0'
+require docker 'install Docker with Compose v2'
+require rg 'install ripgrep'
+
+if command -v go >/dev/null 2>&1; then
+  if go_version=$(go -C apps/api env GOVERSION 2>/dev/null | sed 's/^go//'); then
+    require_version 'Go toolchain' "$go_version" '1.26.6'
+  else
+    printf 'FAIL %-16s could not resolve apps/api toolchain\n' 'Go toolchain' >&2
+    failures=$((failures + 1))
+  fi
+fi
+if command -v node >/dev/null 2>&1; then
+  node_version=$(node --version | sed 's/^v//')
+  require_version 'Node.js' "$node_version" '20.19.0'
+fi
+if command -v pnpm >/dev/null 2>&1; then
+  pnpm_version=$(pnpm --version)
+  if [ "$pnpm_version" = '9.15.0' ]; then
+    printf 'ok   %-16s %s (repository pin)\n' 'pnpm' "$pnpm_version"
+  else
+    printf 'FAIL %-16s %s does not match repository pin 9.15.0\n' 'pnpm' "$pnpm_version" >&2
+    failures=$((failures + 1))
+  fi
+fi
+
+if command -v docker >/dev/null 2>&1 && ! docker compose version >/dev/null 2>&1; then
+  printf 'FAIL %-16s install Docker Compose v2\n' docker-compose >&2
+  failures=$((failures + 1))
+fi
+
+if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
+  docker info >/dev/null 2>&1 &
+  docker_pid=$!
+  attempts=0
+  while kill -0 "$docker_pid" 2>/dev/null && [ "$attempts" -lt 50 ]; do
+    sleep 0.1
+    attempts=$((attempts + 1))
+  done
+  if kill -0 "$docker_pid" 2>/dev/null; then
+    kill -TERM "$docker_pid" 2>/dev/null || true
+    sleep 0.1
+    kill -KILL "$docker_pid" 2>/dev/null || true
+    wait "$docker_pid" 2>/dev/null || true
+    printf 'FAIL %-16s daemon did not answer within 5 seconds\n' 'Docker daemon' >&2
+    failures=$((failures + 1))
+  elif wait "$docker_pid"; then
+    printf 'ok   %-16s reachable\n' 'Docker daemon'
+  else
+    printf 'FAIL %-16s unavailable; start Docker before infrastructure checks\n' 'Docker daemon' >&2
+    failures=$((failures + 1))
+  fi
+fi
+
+if [ "$failures" -ne 0 ]; then
+  printf '\ndoctor: %s prerequisite(s) failed\n' "$failures" >&2
+  exit 1
+fi
+
+printf '\ndoctor: pinned monorepo prerequisites are available\n'

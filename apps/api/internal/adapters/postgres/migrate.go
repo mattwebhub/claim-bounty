@@ -5,7 +5,7 @@ import (
 	"database/sql"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
-	"github.com/mattwebhub/micro1-go-template/migrations"
+	"github.com/mattwebhub/micro1-template/apps/api/migrations"
 	"github.com/pressly/goose/v3"
 )
 

@@ -12,9 +12,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/mattwebhub/micro1-go-template/internal/config"
-	"github.com/mattwebhub/micro1-go-template/internal/observability"
-	"github.com/mattwebhub/micro1-go-template/internal/transport/httpapi"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/config"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/observability"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/transport/httpapi"
 )
 
 type Module struct {

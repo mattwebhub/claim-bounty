@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mattwebhub/micro1-go-template/internal/bootstrap"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/bootstrap"
 )
 
 func main() {

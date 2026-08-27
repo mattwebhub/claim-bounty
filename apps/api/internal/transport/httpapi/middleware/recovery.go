@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/mattwebhub/micro1-go-template/internal/transport/httpapi/response"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/transport/httpapi/response"
 )
 
 func Recovery(logger *slog.Logger) Middleware {

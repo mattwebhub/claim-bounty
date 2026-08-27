@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mattwebhub/micro1-go-template/internal/domain"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/domain"
 )
 
 const validProjectID = "123e4567-e89b-12d3-a456-426614174000"

@@ -10,10 +10,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mattwebhub/micro1-go-template/internal/domain"
-	"github.com/mattwebhub/micro1-go-template/internal/services"
-	"github.com/mattwebhub/micro1-go-template/internal/transport/httpapi/middleware"
-	"github.com/mattwebhub/micro1-go-template/internal/transport/httpapi/response"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/domain"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/services"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/transport/httpapi/middleware"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/transport/httpapi/response"
 )
 
 type ProjectCreator interface {
@@ -25,27 +25,41 @@ type ProjectReader interface {
 	ListProjects(context.Context, services.ListProjectsQuery) (services.ListProjectsResult, error)
 }
 
-type WorkspaceReaderWriter interface {
+type WorkspaceReader interface {
 	GetWorkspace(context.Context, services.GetWorkspaceQuery) (services.GetWorkspaceResult, error)
+}
+
+type WorkspaceSaver interface {
 	SaveWorkspace(context.Context, services.SaveWorkspaceCommand) (services.SaveWorkspaceResult, error)
 }
 
 type ProjectRoutes struct {
-	creator      ProjectCreator
-	projects     ProjectReader
-	workspaces   WorkspaceReaderWriter
-	logger       *slog.Logger
-	maxBodyBytes int64
+	creator        ProjectCreator
+	projects       ProjectReader
+	workspaces     WorkspaceReader
+	workspaceSaver WorkspaceSaver
+	logger         *slog.Logger
+	maxBodyBytes   int64
 }
 
-func NewProjectRoutes(creator ProjectCreator, projects ProjectReader, workspaces WorkspaceReaderWriter, logger *slog.Logger, maxBodyBytes int64) (*ProjectRoutes, error) {
-	if creator == nil || projects == nil || workspaces == nil {
+func NewProjectRoutes(
+	creator ProjectCreator,
+	projects ProjectReader,
+	workspaces WorkspaceReader,
+	workspaceSaver WorkspaceSaver,
+	logger *slog.Logger,
+	maxBodyBytes int64,
+) (*ProjectRoutes, error) {
+	if creator == nil || projects == nil || workspaces == nil || workspaceSaver == nil {
 		return nil, errors.New("httpapi: project route dependencies are required")
 	}
 	if logger == nil {
 		logger = slog.Default()
 	}
-	return &ProjectRoutes{creator: creator, projects: projects, workspaces: workspaces, logger: logger, maxBodyBytes: maxBodyBytes}, nil
+	return &ProjectRoutes{
+		creator: creator, projects: projects, workspaces: workspaces,
+		workspaceSaver: workspaceSaver, logger: logger, maxBodyBytes: maxBodyBytes,
+	}, nil
 }
 
 func (routes *ProjectRoutes) RegisterRoutes(mux *http.ServeMux) {
@@ -184,7 +198,7 @@ func (routes *ProjectRoutes) saveWorkspace(w http.ResponseWriter, r *http.Reques
 		routes.writeError(w, r, err)
 		return
 	}
-	result, err := routes.workspaces.SaveWorkspace(r.Context(), services.SaveWorkspaceCommand{
+	result, err := routes.workspaceSaver.SaveWorkspace(r.Context(), services.SaveWorkspaceCommand{
 		ProjectID: id, ExpectedVersion: expectedVersion, Document: document,
 	})
 	if err != nil {

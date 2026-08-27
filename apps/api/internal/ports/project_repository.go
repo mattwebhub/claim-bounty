@@ -3,7 +3,7 @@ package ports
 import (
 	"context"
 
-	"github.com/mattwebhub/micro1-go-template/internal/domain"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/domain"
 )
 
 // ProjectRepository is the non-transactional read capability consumed by

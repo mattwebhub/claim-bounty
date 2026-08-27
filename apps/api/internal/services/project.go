@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/mattwebhub/micro1-go-template/internal/domain"
-	"github.com/mattwebhub/micro1-go-template/internal/ports"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/domain"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/ports"
 )
 
 const (
@@ -19,8 +19,7 @@ type CreateProjectCommand struct {
 }
 
 type CreateProjectResult struct {
-	Project   domain.Project
-	Workspace domain.Workspace
+	Project domain.Project
 }
 
 // ProjectCommandService owns the one project mutation. It intentionally does
@@ -63,7 +62,7 @@ func (s *ProjectCommandService) CreateProject(
 		return CreateProjectResult{}, fmt.Errorf("create initial workspace: %w", err)
 	}
 
-	err = s.transactions.WithinTransaction(ctx, func(repositories ports.TransactionRepositories) error {
+	err = s.transactions.WithinTransaction(ctx, func(transactionCtx context.Context, repositories ports.TransactionRepositories) error {
 		if repositories == nil {
 			return ErrInvalidDependencies
 		}
@@ -72,10 +71,10 @@ func (s *ProjectCommandService) CreateProject(
 		if projects == nil || workspaces == nil {
 			return ErrInvalidDependencies
 		}
-		if err := projects.Create(ctx, project); err != nil {
+		if err := projects.Create(transactionCtx, project); err != nil {
 			return fmt.Errorf("persist project: %w", err)
 		}
-		if err := workspaces.Create(ctx, workspace); err != nil {
+		if err := workspaces.Create(transactionCtx, workspace); err != nil {
 			return fmt.Errorf("persist initial workspace: %w", err)
 		}
 		return nil
@@ -84,7 +83,7 @@ func (s *ProjectCommandService) CreateProject(
 		return CreateProjectResult{}, fmt.Errorf("create project transaction: %w", err)
 	}
 
-	return CreateProjectResult{Project: project, Workspace: workspace}, nil
+	return CreateProjectResult{Project: project}, nil
 }
 
 type GetProjectQuery struct {

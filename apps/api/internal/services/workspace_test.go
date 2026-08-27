@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mattwebhub/micro1-go-template/internal/domain"
-	"github.com/mattwebhub/micro1-go-template/internal/services"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/domain"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/services"
 )
 
 func TestSaveWorkspaceAppliesDomainVersionAndAtomicRepositoryCheck(t *testing.T) {
@@ -14,10 +14,11 @@ func TestSaveWorkspaceAppliesDomainVersionAndAtomicRepositoryCheck(t *testing.T)
 
 	current := mustWorkspace(t)
 	document := mustDocument(t, "object-1")
-	repository := &fakeWorkspaceRepository{workspace: current}
-	service, err := services.NewWorkspaceService(repository, fixedClock{now: fixedTime.Add(1)})
+	reader := &fakeWorkspaceReader{workspace: current}
+	saver := &fakeWorkspaceSaver{}
+	service, err := services.NewWorkspaceCommandService(reader, saver, fixedClock{now: fixedTime.Add(1)})
 	if err != nil {
-		t.Fatalf("NewWorkspaceService() error = %v", err)
+		t.Fatalf("NewWorkspaceCommandService() error = %v", err)
 	}
 
 	result, err := service.SaveWorkspace(context.Background(), services.SaveWorkspaceCommand{
@@ -26,10 +27,10 @@ func TestSaveWorkspaceAppliesDomainVersionAndAtomicRepositoryCheck(t *testing.T)
 	if err != nil {
 		t.Fatalf("SaveWorkspace() error = %v", err)
 	}
-	if repository.saveCalls != 1 || repository.expectedVersion != 1 {
-		t.Fatalf("Save() calls/version = %d/%d, want 1/1", repository.saveCalls, repository.expectedVersion)
+	if saver.saveCalls != 1 || saver.expectedVersion != 1 {
+		t.Fatalf("Save() calls/version = %d/%d, want 1/1", saver.saveCalls, saver.expectedVersion)
 	}
-	if got, want := repository.saved.Version(), uint64(2); got != want {
+	if got, want := saver.saved.Version(), uint64(2); got != want {
 		t.Fatalf("saved version = %d, want %d", got, want)
 	}
 	if got, want := result.Workspace.Version(), uint64(2); got != want {
@@ -40,10 +41,11 @@ func TestSaveWorkspaceAppliesDomainVersionAndAtomicRepositoryCheck(t *testing.T)
 func TestSaveWorkspaceRejectsStaleVersionBeforeWrite(t *testing.T) {
 	t.Parallel()
 
-	repository := &fakeWorkspaceRepository{workspace: mustWorkspace(t)}
-	service, err := services.NewWorkspaceService(repository, fixedClock{now: fixedTime.Add(1)})
+	reader := &fakeWorkspaceReader{workspace: mustWorkspace(t)}
+	saver := &fakeWorkspaceSaver{}
+	service, err := services.NewWorkspaceCommandService(reader, saver, fixedClock{now: fixedTime.Add(1)})
 	if err != nil {
-		t.Fatalf("NewWorkspaceService() error = %v", err)
+		t.Fatalf("NewWorkspaceCommandService() error = %v", err)
 	}
 
 	_, err = service.SaveWorkspace(context.Background(), services.SaveWorkspaceCommand{
@@ -52,21 +54,19 @@ func TestSaveWorkspaceRejectsStaleVersionBeforeWrite(t *testing.T) {
 	if !errors.Is(err, domain.ErrVersionConflict) {
 		t.Fatalf("SaveWorkspace() error = %v, want version conflict", err)
 	}
-	if repository.saveCalls != 0 {
-		t.Fatalf("Save() calls = %d, want 0", repository.saveCalls)
+	if saver.saveCalls != 0 {
+		t.Fatalf("Save() calls = %d, want 0", saver.saveCalls)
 	}
 }
 
 func TestSaveWorkspacePreservesConcurrentRepositoryConflict(t *testing.T) {
 	t.Parallel()
 
-	repository := &fakeWorkspaceRepository{
-		workspace: mustWorkspace(t),
-		saveErr:   domain.NewVersionConflictError(1, 2),
-	}
-	service, err := services.NewWorkspaceService(repository, fixedClock{now: fixedTime.Add(1)})
+	reader := &fakeWorkspaceReader{workspace: mustWorkspace(t)}
+	saver := &fakeWorkspaceSaver{saveErr: domain.NewVersionConflictError(1, 2)}
+	service, err := services.NewWorkspaceCommandService(reader, saver, fixedClock{now: fixedTime.Add(1)})
 	if err != nil {
-		t.Fatalf("NewWorkspaceService() error = %v", err)
+		t.Fatalf("NewWorkspaceCommandService() error = %v", err)
 	}
 
 	_, err = service.SaveWorkspace(context.Background(), services.SaveWorkspaceCommand{
@@ -80,46 +80,89 @@ func TestSaveWorkspacePreservesConcurrentRepositoryConflict(t *testing.T) {
 func TestSaveWorkspaceRejectsMissingVersionBeforeIO(t *testing.T) {
 	t.Parallel()
 
-	repository := &fakeWorkspaceRepository{}
-	service, err := services.NewWorkspaceService(repository, fixedClock{now: fixedTime})
+	reader := &fakeWorkspaceReader{}
+	saver := &fakeWorkspaceSaver{}
+	service, err := services.NewWorkspaceCommandService(reader, saver, fixedClock{now: fixedTime})
 	if err != nil {
-		t.Fatalf("NewWorkspaceService() error = %v", err)
+		t.Fatalf("NewWorkspaceCommandService() error = %v", err)
 	}
 
 	_, err = service.SaveWorkspace(context.Background(), services.SaveWorkspaceCommand{})
 	if !errors.Is(err, domain.ErrValidation) {
 		t.Fatalf("SaveWorkspace() error = %v, want validation error", err)
 	}
-	if repository.getCalls != 0 {
-		t.Fatalf("GetByProjectID() calls = %d, want 0", repository.getCalls)
+	if reader.getCalls != 0 {
+		t.Fatalf("GetByProjectID() calls = %d, want 0", reader.getCalls)
 	}
 }
 
-type fakeWorkspaceRepository struct {
-	workspace       domain.Workspace
-	getErr          error
-	getCalls        int
+func TestGetWorkspaceUsesReadCapabilityOnly(t *testing.T) {
+	t.Parallel()
+
+	workspace := mustWorkspace(t)
+	reader := &fakeWorkspaceReader{workspace: workspace}
+	service, err := services.NewWorkspaceQueryService(reader)
+	if err != nil {
+		t.Fatalf("NewWorkspaceQueryService() error = %v", err)
+	}
+
+	result, err := service.GetWorkspace(context.Background(), services.GetWorkspaceQuery{ProjectID: mustProjectID(t)})
+	if err != nil {
+		t.Fatalf("GetWorkspace() error = %v", err)
+	}
+	if reader.getCalls != 1 || result.Workspace.ProjectID() != workspace.ProjectID() {
+		t.Fatalf("GetWorkspace() calls/result = %d/%v", reader.getCalls, result.Workspace.ProjectID())
+	}
+}
+
+func TestWorkspaceServiceConstructorsRejectMissingCapabilities(t *testing.T) {
+	t.Parallel()
+
+	reader := &fakeWorkspaceReader{}
+	saver := &fakeWorkspaceSaver{}
+	clock := fixedClock{now: fixedTime}
+	if _, err := services.NewWorkspaceQueryService(nil); !errors.Is(err, services.ErrInvalidDependencies) {
+		t.Fatalf("NewWorkspaceQueryService() error = %v, want invalid dependencies", err)
+	}
+	for name, build := range map[string]func() error{
+		"reader": func() error { _, err := services.NewWorkspaceCommandService(nil, saver, clock); return err },
+		"saver":  func() error { _, err := services.NewWorkspaceCommandService(reader, nil, clock); return err },
+		"clock":  func() error { _, err := services.NewWorkspaceCommandService(reader, saver, nil); return err },
+	} {
+		if err := build(); !errors.Is(err, services.ErrInvalidDependencies) {
+			t.Errorf("missing %s error = %v, want invalid dependencies", name, err)
+		}
+	}
+}
+
+type fakeWorkspaceReader struct {
+	workspace domain.Workspace
+	getErr    error
+	getCalls  int
+}
+
+func (reader *fakeWorkspaceReader) GetByProjectID(context.Context, domain.ProjectID) (domain.Workspace, error) {
+	reader.getCalls++
+	return reader.workspace, reader.getErr
+}
+
+type fakeWorkspaceSaver struct {
 	saved           domain.Workspace
 	expectedVersion uint64
 	saveErr         error
 	saveCalls       int
 }
 
-func (repository *fakeWorkspaceRepository) GetByProjectID(context.Context, domain.ProjectID) (domain.Workspace, error) {
-	repository.getCalls++
-	return repository.workspace, repository.getErr
-}
-
-func (repository *fakeWorkspaceRepository) Save(
+func (saver *fakeWorkspaceSaver) Save(
 	_ context.Context,
 	workspace domain.Workspace,
 	expectedVersion uint64,
 ) (domain.Workspace, error) {
-	repository.saveCalls++
-	repository.saved = workspace
-	repository.expectedVersion = expectedVersion
-	if repository.saveErr != nil {
-		return domain.Workspace{}, repository.saveErr
+	saver.saveCalls++
+	saver.saved = workspace
+	saver.expectedVersion = expectedVersion
+	if saver.saveErr != nil {
+		return domain.Workspace{}, saver.saveErr
 	}
 	return workspace, nil
 }

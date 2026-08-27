@@ -1,0 +1,60 @@
+#!/bin/sh
+set -eu
+
+registry=architecture/rules.yaml
+[ -f "$registry" ] || { printf 'ARCH-REGISTRY-001 missing %s\n' "$registry" >&2; exit 1; }
+
+temporary=$(mktemp /tmp/micro1-architecture-rules.XXXXXX)
+trap 'unlink "$temporary" 2>/dev/null || true' EXIT INT TERM
+
+awk '
+  $1 == "-" && $2 == "id:" {
+    if (id != "") print id "|" severity "|" scope "|" enforcement "|" documentation
+    id=$3; severity=""; scope=""; enforcement=""; documentation=""
+    next
+  }
+  $1 == "severity:" { severity=$2; next }
+  $1 == "scope:" { $1=""; sub(/^ /, ""); scope=$0; next }
+  $1 == "enforcement:" { $1=""; sub(/^ /, ""); enforcement=$0; next }
+  $1 == "documentation:" { documentation=$2; next }
+  END { if (id != "") print id "|" severity "|" scope "|" enforcement "|" documentation }
+' "$registry" > "$temporary"
+
+failed=0
+count=0
+ids=
+while IFS='|' read -r id severity scope enforcement documentation; do
+  count=$((count + 1))
+  case " $ids " in
+    *" $id "*) printf 'ARCH-REGISTRY-002 duplicate rule ID: %s\n' "$id" >&2; failed=1 ;;
+  esac
+  ids="$ids $id"
+  case "$id" in
+    *[!A-Z0-9-]*|'') printf 'ARCH-REGISTRY-003 invalid rule ID: %s\n' "$id" >&2; failed=1 ;;
+  esac
+  case "$severity" in
+    error|warning) ;;
+    *) printf 'ARCH-REGISTRY-004 %s has invalid severity: %s\n' "$id" "$severity" >&2; failed=1 ;;
+  esac
+  if [ -z "$scope" ] || [ -z "$enforcement" ]; then
+    printf 'ARCH-REGISTRY-005 %s requires scope and enforcement\n' "$id" >&2
+    failed=1
+  fi
+  if [ ! -f "$documentation" ]; then
+    printf 'ARCH-REGISTRY-006 %s documentation is missing: %s\n' "$id" "$documentation" >&2
+    failed=1
+  elif ! grep -Fq "$id" "$documentation"; then
+    printf 'ARCH-REGISTRY-007 %s documentation does not identify its rule\n' "$id" >&2
+    failed=1
+  fi
+done < "$temporary"
+
+if [ "$count" -eq 0 ]; then
+  printf 'ARCH-REGISTRY-008 registry contains no rules\n' >&2
+  failed=1
+fi
+if [ "$failed" -ne 0 ]; then
+  exit 1
+fi
+
+printf 'architecture: registry is complete (%s rules)\n' "$count"
