@@ -17,7 +17,7 @@ ENV VITE_APP_NAME=$VITE_APP_NAME \
     VITE_API_TIMEOUT_MS=$VITE_API_TIMEOUT_MS
 RUN pnpm --filter @micro1/web build && pnpm --filter @micro1/web bundle:check
 
-FROM caddy:2.10-alpine@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d AS runtime
+FROM caddy:2.11-alpine@sha256:5f5c8640aae01df9654968d946d8f1a56c497f1dd5c5cda4cf95ab7c14d58648 AS runtime
 RUN mkdir -p /config/caddy /data/caddy && chown -R 1000:1000 /config /data
 COPY apps/web/Caddyfile /etc/caddy/Caddyfile
 COPY --from=build /repo/apps/web/dist /srv
