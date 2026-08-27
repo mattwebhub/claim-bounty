@@ -4,6 +4,7 @@ WORKDIR /repo
 RUN npm install --global pnpm@9.15.0
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web/package.json apps/web/package.json
+COPY scripts/install-hooks scripts/install-hooks
 RUN pnpm install --frozen-lockfile
 
 COPY contracts/ contracts/

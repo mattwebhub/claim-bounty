@@ -19,7 +19,13 @@
     "architecture:check": "./scripts/check-architecture",
     "format": "prettier --write . --ignore-unknown && pnpm --filter @micro1/web format && gofmt -w apps/api",
     "format:check": "prettier --check . --ignore-unknown && pnpm --filter @micro1/web format:check",
+    "postinstall": "./scripts/install-hooks",
     "hooks:install": "lefthook install"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "lefthook"
+    ]
   },
   "devDependencies": {
     "@redocly/cli": "2.49.0",

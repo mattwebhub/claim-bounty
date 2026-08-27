@@ -42,6 +42,15 @@ require node 'install Node.js 20.19 or newer'
 require pnpm 'install pnpm 9.15.0'
 require docker 'install Docker with Compose v2'
 require rg 'install ripgrep'
+require curl 'install curl for pinned local tool downloads'
+require tar 'install tar for pinned local tool extraction'
+
+if ! command -v sha256sum >/dev/null 2>&1 && ! command -v shasum >/dev/null 2>&1; then
+  printf 'FAIL %-16s install sha256sum or shasum\n' checksum >&2
+  failures=$((failures + 1))
+else
+  printf 'ok   %-16s available\n' checksum
+fi
 
 if command -v go >/dev/null 2>&1; then
   if go_version=$(go -C apps/api env GOVERSION 2>/dev/null | sed 's/^go//'); then
@@ -61,6 +70,17 @@ if command -v pnpm >/dev/null 2>&1; then
     printf 'ok   %-16s %s (repository pin)\n' 'pnpm' "$pnpm_version"
   else
     printf 'FAIL %-16s %s does not match repository pin 9.15.0\n' 'pnpm' "$pnpm_version" >&2
+    failures=$((failures + 1))
+  fi
+fi
+
+if git rev-parse --git-dir >/dev/null 2>&1; then
+  precommit_hook=$(git rev-parse --git-path hooks/pre-commit)
+  prepush_hook=$(git rev-parse --git-path hooks/pre-push)
+  if [ -x "$precommit_hook" ] && [ -x "$prepush_hook" ] && grep -q lefthook "$precommit_hook" && grep -q lefthook "$prepush_hook"; then
+    printf 'ok   %-16s pre-commit and pre-push active\n' 'Git hooks'
+  else
+    printf 'FAIL %-16s run pnpm install --frozen-lockfile or make hooks\n' 'Git hooks' >&2
     failures=$((failures + 1))
   fi
 fi

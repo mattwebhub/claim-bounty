@@ -8,9 +8,9 @@ pre-commit:
     architecture-registry:
       glob: '{architecture/rules.yaml,docs/rules/*.md,scripts/check-architecture,scripts/explain-rule}'
       run: ./scripts/check-architecture
-    go-fast:
+    go-guardrails:
       glob: 'apps/api/**/*.{go,mod,sum,sql,yaml,yml}'
-      run: make api-check-fast
+      run: make api-precommit
     web-fast:
       glob: '{package.json,pnpm-lock.yaml,pnpm-workspace.yaml,apps/web/**/*.{ts,tsx,js,mjs,json,css,html,yaml,yml}}'
       run: make web-check-fast

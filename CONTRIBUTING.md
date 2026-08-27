@@ -2,6 +2,8 @@
 
 Use a short descriptive branch without the `agent/` prefix. Keep commits focused and open a pull request against protected `main`.
 
+`pnpm install --frozen-lockfile` installs the pinned Lefthook binary and activates the repository hooks. Run `make hooks` if a Git client or worktree needs them refreshed.
+
 Before handoff:
 
 1. Run `./scripts/agent-context <changed-path>`.

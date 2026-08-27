@@ -15,7 +15,7 @@ SYSTEM_TEST_DATABASE_URL ?= postgres://postgres:postgres@127.0.0.1:$(SYSTEM_POST
 COMPOSE := docker compose --project-name $(COMPOSE_PROJECT_NAME) --file infra/compose.yaml
 
 .PHONY: help install doctor dev db-up db-down contract-generate contract-check \
-	architecture-registry arch arch-explain api-check-fast api-check web-check-fast web-check check-fast check \
+	architecture-registry arch arch-explain api-check-fast api-precommit api-check web-check-fast web-check check-fast check \
 	test-integration test-system vulnerability docker-build public-release check-ci hooks clean
 
 help: ## Show the monorepo command contract.
@@ -55,6 +55,9 @@ arch-explain: ## Print one stable architecture rule (RULE=GO-ARCH-001).
 
 api-check-fast: ## Run fast deterministic Go architecture, vet, and unit gates.
 	$(MAKE) -C $(API_DIR) check-fast
+
+api-precommit: ## Run backend architecture, tests, and lint for newly changed code.
+	$(MAKE) -C $(API_DIR) precommit
 
 api-check: ## Run the complete Go handoff gate.
 	$(MAKE) -C $(API_DIR) check

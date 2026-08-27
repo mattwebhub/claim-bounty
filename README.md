@@ -21,9 +21,10 @@ Requirements: Go 1.26.6, Node.js 20.19+ (Node 22 is pinned in `.node-version`), 
 ```bash
 pnpm install --frozen-lockfile
 make doctor
-make hooks
 make dev
 ```
+
+The pinned pnpm install activates the repository's pre-commit and pre-push hooks automatically. `make hooks` remains available to repair or refresh them explicitly.
 
 The web application runs at <http://localhost:5173> and the API at <http://localhost:8080>.
 
