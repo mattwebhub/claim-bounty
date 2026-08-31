@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "agent",
+  "public_id": "claim-bounty-verification/blind-method-reviewer-alpha",
+  "record_uri": "trajectory://agent/claim-bounty-verification/blind-method-reviewer-alpha",
+  "evidence_grade": "exact",
+  "source_revision_relation": "predecessor",
+  "summary": "Independently identified duplicate candidate families and execution-gate issues before admissibility resolution.",
+  "status": "represented",
+  "outcome": null,
+  "proves_current_revision_end_to_end_completion": false,
+  "timestamps": {
+    "started_at_utc": null,
+    "finished_at_utc": null
+  },
+  "step_order": [
+    {
+      "position": 1,
+      "public_step_id": "review-candidates-alpha",
+      "status": "represented"
+    }
+  ],
+  "retry_count": null,
+  "correction_count": null,
+  "handoffs": {
+    "received_from": [
+      "claim-bounty-robustness/robustness-lead"
+    ],
+    "delivered_to": [
+      "claim-bounty-robustness/robustness-lead"
+    ]
+  },
+  "input_classes": [
+    "sanitized_workflow_state"
+  ],
+  "bounded_errors": [],
+  "output_artifact_kinds": [
+    "blind_review_alpha"
+  ],
+  "schema_status": "not_reported",
+  "integrity": {
+    "algorithm": null,
+    "evidence_id": null,
+    "hash_match": null
+  },
+  "release_limitations": [
+    "predecessor_revision_only"
+  ],
+  "redactions_applied": [
+    "research_content_removed",
+    "identity_details_removed",
+    "runtime_metadata_removed",
+    "interaction_content_removed",
+    "local_identifiers_replaced",
+    "integrity_values_replaced",
+    "uncleared_artifacts_removed"
+  ],
+  "contains_research_payload": false,
+  "contains_session_metadata": false
+}

@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "agent",
+  "public_id": "claim-bounty-operations/claimbounty-orchestrator",
+  "record_uri": "trajectory://agent/claim-bounty-operations/claimbounty-orchestrator",
+  "evidence_grade": "equivalent_predecessor",
+  "source_revision_relation": "predecessor",
+  "summary": "Gated bounded stages, corrected ordering, joined verification, and reached limited predecessor delivery.",
+  "status": "represented",
+  "outcome": null,
+  "proves_current_revision_end_to_end_completion": false,
+  "timestamps": {
+    "started_at_utc": null,
+    "finished_at_utc": null
+  },
+  "step_order": [
+    {
+      "position": 1,
+      "public_step_id": "invoke-build-study-case",
+      "status": "represented"
+    },
+    {
+      "position": 2,
+      "public_step_id": "decide-reproduction-continuation",
+      "status": "represented"
+    },
+    {
+      "position": 3,
+      "public_step_id": "invoke-verify-findings",
+      "status": "represented"
+    },
+    {
+      "position": 4,
+      "public_step_id": "invoke-deliver-audit",
+      "status": "represented"
+    }
+  ],
+  "retry_count": 2,
+  "correction_count": null,
+  "handoffs": {
+    "received_from": [],
+    "delivered_to": [
+      "claim-bounty-intake/claim-mapper",
+      "claim-bounty-reproduction/reproduction-engineer",
+      "claim-bounty-verification/verification-lead",
+      "claim-bounty-delivery/audit-report-builder"
+    ]
+  },
+  "input_classes": [
+    "sanitized_workflow_state"
+  ],
+  "bounded_errors": [],
+  "output_artifact_kinds": [
+    "audit_package"
+  ],
+  "schema_status": "not_reported",
+  "integrity": {
+    "algorithm": null,
+    "evidence_id": null,
+    "hash_match": null
+  },
+  "release_limitations": [
+    "predecessor_revision_only",
+    "current_revision_partial"
+  ],
+  "redactions_applied": [
+    "research_content_removed",
+    "identity_details_removed",
+    "runtime_metadata_removed",
+    "interaction_content_removed",
+    "local_identifiers_replaced",
+    "integrity_values_replaced",
+    "uncleared_artifacts_removed"
+  ],
+  "contains_research_payload": false,
+  "contains_session_metadata": false
+}

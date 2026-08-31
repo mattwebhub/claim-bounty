@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="ClaimBounty deterministic audit renderer 1.0.0">
+  <title>{{audit_title}}</title>
+  <style>
+    :root { color-scheme: light; font-family: Arial, Helvetica, sans-serif; line-height: 1.45; }
+    body { color: #172033; background: #ffffff; margin: 0 auto; max-width: 1120px; padding: 32px; }
+    header, section, footer { margin-bottom: 28px; }
+    h1, h2, h3 { color: #102044; page-break-after: avoid; }
+    h1 { font-size: 2rem; margin-bottom: 8px; }
+    h2 { border-bottom: 2px solid #d9e1f2; font-size: 1.35rem; padding-bottom: 6px; }
+    table { border-collapse: collapse; margin: 12px 0; width: 100%; }
+    th, td { border: 1px solid #bcc7db; padding: 8px; text-align: left; vertical-align: top; }
+    th { background: #edf2fa; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { background: #f5f7fb; border: 1px solid #d9e1f2; overflow-wrap: anywhere; padding: 12px; white-space: pre-wrap; }
+    .meta { display: grid; gap: 8px 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .label { color: #4c5a73; font-weight: 700; }
+    .status { border: 1px solid #7e8aa1; border-radius: 4px; display: inline-block; font-weight: 700; padding: 2px 8px; }
+    .blocking { background: #fde8e8; border-color: #b42318; color: #7a271a; }
+    .limited { background: #fff4d6; border-color: #b54708; color: #7a2e0e; }
+    .pass { background: #e6f4ea; border-color: #18794e; color: #0f5132; }
+    .page-break { break-before: page; page-break-before: always; }
+    a { color: #174ea6; overflow-wrap: anywhere; }
+    @media print {
+      body { max-width: none; padding: 16mm; }
+      a { color: inherit; text-decoration: none; }
+      thead { display: table-header-group; }
+      tr, figure, pre { break-inside: avoid; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body data-schema-version="{{schema_version}}" data-audit-version="{{audit_version}}" data-workflow-run-id="{{workflow_run_id}}">
+  <header>
+    <h1>{{audit_title}}</h1>
+    <p>{{purpose}}</p>
+    <div class="meta" aria-label="Audit metadata">
+      <div><span class="label">Audit ID:</span> <code>{{audit_id}}</code></div>
+      <div><span class="label">Case ID:</span> <code>{{case_id}}</code></div>
+      <div><span class="label">Audit version:</span> {{audit_version}}</div>
+      <div><span class="label">Generated:</span> {{generated_at}}</div>
+      <div><span class="label">Workflow run:</span> <code>{{workflow_run_id}}</code></div>
+      <div><span class="label">Terminal status:</span> <span class="status {{terminal_status_class}}">{{terminal_status}}</span></div>
+    </div>
+  </header>
+
+  <main>
+    <section id="executive-summary" aria-labelledby="executive-summary-heading">
+      <h2 id="executive-summary-heading">Executive summary</h2>
+      <p>{{executive_summary}}</p>
+    </section>
+
+    <section id="scope" aria-labelledby="scope-heading">
+      <h2 id="scope-heading">Audit scope</h2>
+      <p>{{audit_scope_summary}}</p>
+      <p><span class="label">Release scope:</span> {{release_scope}}</p>
+      <p><span class="label">External research:</span> {{external_search_status}}</p>
+    </section>
+
+    <section id="claim-statuses" aria-labelledby="claim-statuses-heading">
+      <h2 id="claim-statuses-heading">Claim status</h2>
+      <table>
+        <thead><tr><th>Claim</th><th>Reproduction</th><th>Robustness</th><th>Evidence alignment</th><th>Summary</th></tr></thead>
+        <tbody>
+          {{#claim_statuses}}
+          <tr><td><code>{{claim_id}}</code></td><td>{{reproduction}}</td><td>{{robustness}}</td><td>{{evidence_alignment}}</td><td>{{summary}}</td></tr>
+          {{/claim_statuses}}
+          {{^claim_statuses}}<tr><td colspan="5">No claim status was available.</td></tr>{{/claim_statuses}}
+        </tbody>
+      </table>
+    </section>
+
+    <section id="findings" aria-labelledby="findings-heading">
+      <h2 id="findings-heading">Verified findings</h2>
+      {{#findings}}
+      <article id="finding-{{finding_id}}">
+        <h3>{{statement}}</h3>
+        <p><span class="label">Validity:</span> {{validity}} · <span class="label">Severity:</span> {{severity}} · <span class="label">Confidence:</span> {{confidence}}</p>
+        <p><span class="label">Allowed wording:</span> {{allowed_wording}}</p>
+        <p><span class="label">Evidence:</span> {{evidence_summary}}</p>
+      </article>
+      {{/findings}}
+      {{^findings}}<p>No verified findings were released.</p>{{/findings}}
+    </section>
+
+    <section id="recommendations" aria-labelledby="recommendations-heading">
+      <h2 id="recommendations-heading">Recommendations</h2>
+      <table>
+        <thead><tr><th>Priority</th><th>Action</th><th>Owner</th><th>Expected effect</th><th>Verification</th></tr></thead>
+        <tbody>
+          {{#recommendations}}<tr><td>{{priority}}</td><td>{{action}}</td><td>{{owner}}</td><td>{{expected_effect}}</td><td>{{verification_method}}</td></tr>{{/recommendations}}
+          {{^recommendations}}<tr><td colspan="5">No recommendation was issued.</td></tr>{{/recommendations}}
+        </tbody>
+      </table>
+    </section>
+
+    <section id="limitations" aria-labelledby="limitations-heading">
+      <h2 id="limitations-heading">Limitations and untested areas</h2>
+      <ul>
+        {{#limitations}}<li id="limitation-{{id}}"><strong>{{area}}:</strong> {{description}} Consequence: {{consequence}}</li>{{/limitations}}
+        {{^limitations}}<li>No residual limitation was recorded.</li>{{/limitations}}
+      </ul>
+    </section>
+
+    <section id="methods" class="page-break" aria-labelledby="methods-heading">
+      <h2 id="methods-heading">Methods and tested decision space</h2>
+      <p>{{methods_summary}}</p>
+      <pre>{{decision_space_summary}}</pre>
+    </section>
+
+    <section id="sources" aria-labelledby="sources-heading">
+      <h2 id="sources-heading">Source evidence</h2>
+      <table>
+        <thead><tr><th>Artifact</th><th>Location</th><th>Relationship</th><th>Content hash</th></tr></thead>
+        <tbody>
+          {{#evidence_links}}<tr><td><code>{{artifact_id}}</code></td><td>{{location}}</td><td>{{relationship}}</td><td><code>{{content_hash}}</code></td></tr>{{/evidence_links}}
+          {{^evidence_links}}<tr><td colspan="4">No source evidence link was released.</td></tr>{{/evidence_links}}
+        </tbody>
+      </table>
+    </section>
+
+    <section id="replay" aria-labelledby="replay-heading">
+      <h2 id="replay-heading">Provenance and replay</h2>
+      <p><span class="label">Replay status:</span> {{replay.status}}</p>
+      <p><span class="label">Package:</span> <code>{{replay.package_path}}</code></p>
+      <p><span class="label">Entrypoint:</span> <code>{{replay.entrypoint}}</code></p>
+      <pre>{{provenance_summary}}</pre>
+    </section>
+
+    <section id="release-gates" aria-labelledby="release-gates-heading">
+      <h2 id="release-gates-heading">Release gates</h2>
+      <table>
+        <thead><tr><th>Gate</th><th>Status</th><th>Details</th></tr></thead>
+        <tbody>
+          {{#release_gates}}<tr><td>{{name}}</td><td><span class="status {{status}}">{{status}}</span></td><td>{{details}}</td></tr>{{/release_gates}}
+        </tbody>
+      </table>
+    </section>
+
+    <section id="manifest" aria-labelledby="manifest-heading">
+      <h2 id="manifest-heading">Package manifest and access</h2>
+      <table>
+        <thead><tr><th>File</th><th>Path</th><th>Media type</th><th>SHA-256</th><th>Access</th></tr></thead>
+        <tbody>
+          {{#manifest}}<tr><td><code>{{id}}</code></td><td><code>{{path}}</code></td><td>{{media_type}}</td><td><code>{{sha256}}</code></td><td>{{access}}</td></tr>{{/manifest}}
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>Rendered from frozen ClaimBounty audit objects using template version 1.0.0.</p>
+  </footer>
+</body>
+</html>

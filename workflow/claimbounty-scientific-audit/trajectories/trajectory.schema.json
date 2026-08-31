@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://claimbounty.example/schemas/public-trajectory.schema.json",
+  "title": "ClaimBounty Sanitized Public Trajectory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_type",
+    "public_id",
+    "record_uri",
+    "evidence_grade",
+    "source_revision_relation",
+    "summary",
+    "status",
+    "outcome",
+    "proves_current_revision_end_to_end_completion",
+    "timestamps",
+    "step_order",
+    "retry_count",
+    "correction_count",
+    "handoffs",
+    "input_classes",
+    "bounded_errors",
+    "output_artifact_kinds",
+    "schema_status",
+    "integrity",
+    "release_limitations",
+    "redactions_applied",
+    "contains_research_payload",
+    "contains_session_metadata"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "record_type": { "enum": ["routine", "agent"] },
+    "public_id": { "type": "string", "pattern": "^[a-z0-9]+(?:[/-][a-z0-9]+)*$" },
+    "record_uri": { "type": "string", "pattern": "^trajectory://(routine|agent)/[a-z0-9/-]+$" },
+    "evidence_grade": { "enum": ["exact", "equivalent_predecessor", "reconstructed"] },
+    "source_revision_relation": { "enum": ["current", "predecessor"] },
+    "summary": { "type": "string", "minLength": 1, "maxLength": 400 },
+    "status": { "enum": ["completed", "completed_with_limits", "partial", "represented"] },
+    "outcome": { "type": ["string", "null"], "maxLength": 100 },
+    "proves_current_revision_end_to_end_completion": { "const": false },
+    "timestamps": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["started_at_utc", "finished_at_utc"],
+      "properties": {
+        "started_at_utc": { "$ref": "#/$defs/timestampOrNull" },
+        "finished_at_utc": { "$ref": "#/$defs/timestampOrNull" }
+      }
+    },
+    "step_order": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["position", "public_step_id", "status"],
+        "properties": {
+          "position": { "type": "integer", "minimum": 1 },
+          "public_step_id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "status": { "enum": ["completed", "represented", "partial", "not_evidenced"] }
+        }
+      }
+    },
+    "retry_count": { "type": ["integer", "null"], "minimum": 0 },
+    "correction_count": { "type": ["integer", "null"], "minimum": 0 },
+    "handoffs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["received_from", "delivered_to"],
+      "properties": {
+        "received_from": { "$ref": "#/$defs/idArray" },
+        "delivered_to": { "$ref": "#/$defs/idArray" }
+      }
+    },
+    "input_classes": { "$ref": "#/$defs/slugArray" },
+    "bounded_errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "summary"],
+        "properties": {
+          "code": { "type": "string", "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$" },
+          "summary": { "type": "string", "minLength": 1, "maxLength": 180 }
+        }
+      }
+    },
+    "output_artifact_kinds": { "$ref": "#/$defs/slugArray" },
+    "schema_status": { "enum": ["validated", "reported_valid", "not_reported"] },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "evidence_id", "hash_match"],
+      "properties": {
+        "algorithm": { "enum": ["sha256", null] },
+        "evidence_id": {
+          "type": ["string", "null"],
+          "pattern": "^trajectory-evidence://[a-z0-9/-]+$"
+        },
+        "hash_match": { "type": ["boolean", "null"] }
+      }
+    },
+    "release_limitations": { "$ref": "#/$defs/slugArray" },
+    "redactions_applied": { "$ref": "#/$defs/slugArray" },
+    "contains_research_payload": { "const": false },
+    "contains_session_metadata": { "const": false }
+  },
+  "$defs": {
+    "timestampOrNull": {
+      "anyOf": [{ "type": "null" }, { "type": "string", "format": "date-time" }]
+    },
+    "idArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(?:[/-][a-z0-9]+)*$" }
+    },
+    "slugArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$" }
+    }
+  }
+}

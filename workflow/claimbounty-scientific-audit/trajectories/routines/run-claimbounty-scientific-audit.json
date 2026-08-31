@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "routine",
+  "public_id": "run-claimbounty-scientific-audit",
+  "record_uri": "trajectory://routine/run-claimbounty-scientific-audit",
+  "evidence_grade": "equivalent_predecessor",
+  "source_revision_relation": "predecessor",
+  "summary": "Representative predecessor orchestration recovered a bounded stage failure, enforced verification ordering, joined corrections, and reached limited delivery.",
+  "status": "completed_with_limits",
+  "outcome": "audit_completed_with_limits",
+  "proves_current_revision_end_to_end_completion": false,
+  "timestamps": {
+    "started_at_utc": null,
+    "finished_at_utc": null
+  },
+  "step_order": [
+    {
+      "position": 1,
+      "public_step_id": "invoke-build-study-case",
+      "status": "represented"
+    },
+    {
+      "position": 2,
+      "public_step_id": "invoke-reproduce-result",
+      "status": "represented"
+    },
+    {
+      "position": 3,
+      "public_step_id": "decide-reproduction-continuation",
+      "status": "represented"
+    },
+    {
+      "position": 4,
+      "public_step_id": "invoke-stress-test",
+      "status": "represented"
+    },
+    {
+      "position": 5,
+      "public_step_id": "invoke-research-evidence",
+      "status": "represented"
+    },
+    {
+      "position": 6,
+      "public_step_id": "invoke-verify-findings",
+      "status": "represented"
+    },
+    {
+      "position": 7,
+      "public_step_id": "invoke-deliver-audit",
+      "status": "represented"
+    }
+  ],
+  "retry_count": null,
+  "correction_count": 2,
+  "handoffs": {
+    "received_from": [],
+    "delivered_to": [
+      "build-and-freeze-study-case",
+      "reproduce-original-result",
+      "stress-test-analysis",
+      "research-methods-and-evidence",
+      "verify-and-adjudicate-findings",
+      "assemble-final-audit"
+    ]
+  },
+  "input_classes": [
+    "audit_request",
+    "execution_policy",
+    "scientific_policy",
+    "case_bundle"
+  ],
+  "bounded_errors": [
+    {
+      "code": "stage_failure_recovered",
+      "summary": "A bounded stage failure was recovered before continuation."
+    },
+    {
+      "code": "delivery_sequence_rejected",
+      "summary": "Delivery was held until verification and adjudication joined."
+    }
+  ],
+  "output_artifact_kinds": [
+    "audit_package"
+  ],
+  "schema_status": "not_reported",
+  "integrity": {
+    "algorithm": null,
+    "evidence_id": null,
+    "hash_match": null
+  },
+  "release_limitations": [
+    "predecessor_revision_only",
+    "current_revision_partial"
+  ],
+  "redactions_applied": [
+    "research_content_removed",
+    "identity_details_removed",
+    "runtime_metadata_removed",
+    "interaction_content_removed",
+    "local_identifiers_replaced",
+    "integrity_values_replaced",
+    "uncleared_artifacts_removed"
+  ],
+  "contains_research_payload": false,
+  "contains_session_metadata": false
+}

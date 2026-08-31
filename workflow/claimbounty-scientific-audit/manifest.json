@@ -1,0 +1,247 @@
+{
+  "schemaVersion": "1.0.0",
+  "packageRoot": "workflow/claimbounty-scientific-audit",
+  "pathPolicy": "repository-relative",
+  "entries": [
+    {
+      "path": "README.md",
+      "bytes": 2756,
+      "sha256": "7b4017751040ed0f8792a0a292a7da90a57b95a01e7bbec4a5ee366e5254324d"
+    },
+    {
+      "path": "project-template/claimbounty/config/audit-schema.json",
+      "bytes": 10173,
+      "sha256": "8f41733bc1d20a1d84837871f2122304f32c43d67f569d8e47b3129daf40fec9"
+    },
+    {
+      "path": "project-template/claimbounty/config/audit-template.html",
+      "bytes": 7994,
+      "sha256": "de22175e08ac00b05cbc1d5e55f00463b0d0201ed54b37e5a394be828bfd775f"
+    },
+    {
+      "path": "project-template/claimbounty/config/canonical-schemas.json",
+      "bytes": 17754,
+      "sha256": "da297ba7e9ad72dda3d985f26ac4549dd1713ee36f3f7ee38a6112e8d2628f84"
+    },
+    {
+      "path": "project-template/claimbounty/execution/README.md",
+      "bytes": 4341,
+      "sha256": "73f1360de93c4e1c3b269bf182973b670277302dea9bdd714d3e77bbc2f93434"
+    },
+    {
+      "path": "project-template/claimbounty/execution/execution-manifest.schema.json",
+      "bytes": 1097,
+      "sha256": "9b682d09b1d2c2b81e4f2a63b3c2434260b7daad15fc24fad2632a2cecbb11ed"
+    },
+    {
+      "path": "project-template/claimbounty/execution/execution-profile.schema.json",
+      "bytes": 4078,
+      "sha256": "26054fe9579ab02be1a119c814157575cf8c79d31de1013cd511b5fa9796453c"
+    },
+    {
+      "path": "project-template/claimbounty/execution/runner.py",
+      "bytes": 76161,
+      "sha256": "fed82a88ced045d318f36f5fdd305ff3499575469013ac170e97e89c100079f1"
+    },
+    {
+      "path": "project-template/claimbounty/execution/tests/test_runner.py",
+      "bytes": 38742,
+      "sha256": "238ed70b2c4d5fa7f325aa5327df095b2b063987a64b68343290efa00551cf60"
+    },
+    {
+      "path": "routines/assemble-final-audit.md",
+      "bytes": 13773,
+      "sha256": "35bca57045183290cd1054d4e4361a1d6e3f17017c5a116eecaf6d688f10b4e1"
+    },
+    {
+      "path": "routines/build-and-freeze-study-case.md",
+      "bytes": 16082,
+      "sha256": "bad5232633c4421a25710a029718e993a4515a77cf423632810ecfd6e390c928"
+    },
+    {
+      "path": "routines/reproduce-original-result.md",
+      "bytes": 32124,
+      "sha256": "321235ea050d313dee8b2e484de876867355d00dd960f5bc6929022ea08d8fd4"
+    },
+    {
+      "path": "routines/research-methods-and-evidence.md",
+      "bytes": 21076,
+      "sha256": "e36c15b5dde7a676f321e790be8a294bb3ee47fce9f2de43dba4ba6ba85b7cfb"
+    },
+    {
+      "path": "routines/run-claimbounty-scientific-audit.md",
+      "bytes": 40300,
+      "sha256": "d4c7fd9456aeb005f0350266f082f1b37f53dd2a80f22cd4b018cf8df103b256"
+    },
+    {
+      "path": "routines/stress-test-analysis.md",
+      "bytes": 25818,
+      "sha256": "e9d3d66d3ad7cba0b70e02aaa0181c2d8623e9400af1f572d5a963f02f57f421"
+    },
+    {
+      "path": "routines/verify-and-adjudicate-findings.md",
+      "bytes": 19833,
+      "sha256": "c2e72103769f036cf35df4efd47650a9fe57511fb7d3334429a4a4adfcc3e805"
+    },
+    {
+      "path": "trajectories/MANIFEST.sha256",
+      "bytes": 3438,
+      "sha256": "054309f88268a5dd15aab75fb0a694070e49f6cabd30f315f0e0b511b56c2e7a"
+    },
+    {
+      "path": "trajectories/README.md",
+      "bytes": 1767,
+      "sha256": "4b3ee823b9fa264abc3322337c0cd37ca63ac0d7abe326b14def541647f7f1c5"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-delivery__audit-report-builder.json",
+      "bytes": 1787,
+      "sha256": "a2ffa157008fc88ed0afa375cf7af4d5f1a196e4ca9aaffca45d74fb01f5040a"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-delivery__release-quality-reviewer.json",
+      "bytes": 1677,
+      "sha256": "445e2240ac49258c6fdba014fc7159b836f10ffee3d6a59e75d272c2f213c686"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-intake__claim-mapper.json",
+      "bytes": 1813,
+      "sha256": "ca5a172a55b04e4f543d7eddd457811579535824a1bdeb575be2bc21c847bc09"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-intake__variable-mapper.json",
+      "bytes": 1512,
+      "sha256": "c225d59ef6f6e4f6b5773668706fcc0e0162c76a248fe2b278dad6a21a5608d2"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-operations__claimbounty-orchestrator.json",
+      "bytes": 2117,
+      "sha256": "552363c0305a6e9e2ae52149b7c8b0cbc8884dafd09de3e52b0d8f16078d9632"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-reproduction__reproduction-engineer.json",
+      "bytes": 2308,
+      "sha256": "33a5c3f1cb03f5162a8ae4ea3b30005b2991c0d57d929ba6841d7ff2c5c6398f"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-robustness__data-choices-analyst.json",
+      "bytes": 1621,
+      "sha256": "2deef8dd0be0754fd7842a2cbd67b57feff7626c0c7c58715a1e2c3ea174ca42"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-robustness__inference-analyst.json",
+      "bytes": 1593,
+      "sha256": "c390f192f4db9af0db0374baaae129e2468869830bb645896f37c32b3892abe1"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-robustness__model-and-covariate-analyst.json",
+      "bytes": 1627,
+      "sha256": "c13cbe07627bb29ffe86d0135cc02e39e0b176b1626bf807f6f1839055bee129"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-robustness__robustness-lead.json",
+      "bytes": 2251,
+      "sha256": "d2604b294b0f4255517f5e7f485c87a1b1c7763b6f66e68bf3bc93ebde0b5ecc"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-verification__blind-method-reviewer-alpha.json",
+      "bytes": 1642,
+      "sha256": "f2b795757cc012982b7be145eaadb236e3bd789148a677ab4479405da0f25865"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-verification__blind-method-reviewer-beta.json",
+      "bytes": 1625,
+      "sha256": "84bf1c6adba52872520a899e3aed894d62f42523335baa8cca0969f67951dfbf"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-verification__scientific-adjudicator.json",
+      "bytes": 1791,
+      "sha256": "06593478d32961894e9f3b964b30d037771707833151117fcc6e62152109f57a"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-verification__source-evidence-verifier.json",
+      "bytes": 1643,
+      "sha256": "2aa256160b2a5df1579d43412a4a2be17fe3dbf7be14d533ce29f16520213604"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-verification__statistical-evidence-verifier.json",
+      "bytes": 1662,
+      "sha256": "e478b13be2cefbcae3022d37705037a0bcf476c34aa2e3ddf8c40da74dab4d57"
+    },
+    {
+      "path": "trajectories/agents/claim-bounty-verification__verification-lead.json",
+      "bytes": 1840,
+      "sha256": "008049c7bbefb52ac32c75f95321d2c165dede59f35847bd1f6bbe6f53d29a3f"
+    },
+    {
+      "path": "trajectories/agents/research-and-insights__literature-searcher.json",
+      "bytes": 1598,
+      "sha256": "60296dd6e252365d689e0f3f3f475b61647b6e4c5757a1b276bf17f1ced2396d"
+    },
+    {
+      "path": "trajectories/agents/research-and-insights__researcher.json",
+      "bytes": 1784,
+      "sha256": "4e9415b9e0d1edf9840dd219ff246243137989d6819e89e92f70716e536e7d67"
+    },
+    {
+      "path": "trajectories/agents/research-and-insights__source-extractor.json",
+      "bytes": 1839,
+      "sha256": "bb4c9878887d65a7e99baccec52ff8d5fed7273be8cc1088897e92c0c038b5bc"
+    },
+    {
+      "path": "trajectories/index.json",
+      "bytes": 9567,
+      "sha256": "3aa9adf4941eb958814843c82305c325f02ee98eccecdcc4af91a0258cc7b0c2"
+    },
+    {
+      "path": "trajectories/routines/assemble-final-audit.json",
+      "bytes": 2202,
+      "sha256": "9c1fdc830c69f0706ab63bc0b61266d07a93ac6bec70f39066f6df8d12c90c0d"
+    },
+    {
+      "path": "trajectories/routines/build-and-freeze-study-case.json",
+      "bytes": 2122,
+      "sha256": "4ed8b37aee4a673b750a57588845c7ba7a114acbd8b02a25934e8bff1a808c78"
+    },
+    {
+      "path": "trajectories/routines/reproduce-original-result.json",
+      "bytes": 3085,
+      "sha256": "1d03d9c32190bdc4fe901ab9e73ebff1a4d735e9c52747e2378675a8aaddc198"
+    },
+    {
+      "path": "trajectories/routines/research-methods-and-evidence.json",
+      "bytes": 2614,
+      "sha256": "8eb1fb9286611d37671fa760b738aa36d38a4a5e80a778cf30f6a5e9570db6da"
+    },
+    {
+      "path": "trajectories/routines/run-claimbounty-scientific-audit.json",
+      "bytes": 2854,
+      "sha256": "ab4e4860ef9cc48d8a1c0b2a224a69fc6373fa73640d5ad23b22c44b1a40930c"
+    },
+    {
+      "path": "trajectories/routines/stress-test-analysis.json",
+      "bytes": 2815,
+      "sha256": "253d5530abf368eb0f7298a3356df54213f1636fda2ec8031db6e4ded76d18e3"
+    },
+    {
+      "path": "trajectories/routines/verify-and-adjudicate-findings.json",
+      "bytes": 2444,
+      "sha256": "35852101fd016482554a1102f797fa98d5c399aad093aa7ef3282792b2d23ffe"
+    },
+    {
+      "path": "trajectories/sanitization-policy.md",
+      "bytes": 1865,
+      "sha256": "1a6915d914b18b05de78959c493ba8bc03f54e48a44e9e744f4e9448c013c148"
+    },
+    {
+      "path": "trajectories/trajectory.schema.json",
+      "bytes": 4429,
+      "sha256": "cc18ee182d174492c2392be78d41acf8fe6bfdcc0308ea56c4bc150a4212930f"
+    },
+    {
+      "path": "workflow.json",
+      "bytes": 866,
+      "sha256": "e596e5934e8fc118e07f38972f7b8d29560411043655f3893a8cba8fbe2dbc15"
+    }
+  ]
+}

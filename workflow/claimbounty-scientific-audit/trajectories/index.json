@@ -1,0 +1,232 @@
+{
+  "schema_version": "1.0.0",
+  "package_status": "representative_sanitized_projection",
+  "routine_count": 7,
+  "agent_count": 19,
+  "workflow_step_count": 47,
+  "current_revision_end_to_end_run_claimed": false,
+  "allowed_evidence_grades": [
+    "exact",
+    "equivalent_predecessor",
+    "reconstructed"
+  ],
+  "allowed_source_revision_relations": [
+    "current",
+    "predecessor"
+  ],
+  "records": [
+    {
+      "record_type": "routine",
+      "public_id": "run-claimbounty-scientific-audit",
+      "evidence_grade": "equivalent_predecessor",
+      "source_revision_relation": "predecessor",
+      "path": "routines/run-claimbounty-scientific-audit.json",
+      "record_uri": "trajectory://routine/run-claimbounty-scientific-audit"
+    },
+    {
+      "record_type": "routine",
+      "public_id": "build-and-freeze-study-case",
+      "evidence_grade": "exact",
+      "source_revision_relation": "current",
+      "path": "routines/build-and-freeze-study-case.json",
+      "record_uri": "trajectory://routine/build-and-freeze-study-case"
+    },
+    {
+      "record_type": "routine",
+      "public_id": "reproduce-original-result",
+      "evidence_grade": "exact",
+      "source_revision_relation": "current",
+      "path": "routines/reproduce-original-result.json",
+      "record_uri": "trajectory://routine/reproduce-original-result"
+    },
+    {
+      "record_type": "routine",
+      "public_id": "stress-test-analysis",
+      "evidence_grade": "equivalent_predecessor",
+      "source_revision_relation": "predecessor",
+      "path": "routines/stress-test-analysis.json",
+      "record_uri": "trajectory://routine/stress-test-analysis"
+    },
+    {
+      "record_type": "routine",
+      "public_id": "research-methods-and-evidence",
+      "evidence_grade": "equivalent_predecessor",
+      "source_revision_relation": "predecessor",
+      "path": "routines/research-methods-and-evidence.json",
+      "record_uri": "trajectory://routine/research-methods-and-evidence"
+    },
+    {
+      "record_type": "routine",
+      "public_id": "verify-and-adjudicate-findings",
+      "evidence_grade": "equivalent_predecessor",
+      "source_revision_relation": "predecessor",
+      "path": "routines/verify-and-adjudicate-findings.json",
+      "record_uri": "trajectory://routine/verify-and-adjudicate-findings"
+    },
+    {
+      "record_type": "routine",
+      "public_id": "assemble-final-audit",
+      "evidence_grade": "equivalent_predecessor",
+      "source_revision_relation": "predecessor",
+      "path": "routines/assemble-final-audit.json",
+      "record_uri": "trajectory://routine/assemble-final-audit"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-operations/claimbounty-orchestrator",
+      "evidence_grade": "equivalent_predecessor",
+      "source_revision_relation": "predecessor",
+      "path": "agents/claim-bounty-operations__claimbounty-orchestrator.json",
+      "record_uri": "trajectory://agent/claim-bounty-operations/claimbounty-orchestrator"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-intake/claim-mapper",
+      "evidence_grade": "exact",
+      "source_revision_relation": "current",
+      "path": "agents/claim-bounty-intake__claim-mapper.json",
+      "record_uri": "trajectory://agent/claim-bounty-intake/claim-mapper"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-intake/variable-mapper",
+      "evidence_grade": "exact",
+      "source_revision_relation": "current",
+      "path": "agents/claim-bounty-intake__variable-mapper.json",
+      "record_uri": "trajectory://agent/claim-bounty-intake/variable-mapper"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-reproduction/reproduction-engineer",
+      "evidence_grade": "exact",
+      "source_revision_relation": "current",
+      "path": "agents/claim-bounty-reproduction__reproduction-engineer.json",
+      "record_uri": "trajectory://agent/claim-bounty-reproduction/reproduction-engineer"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-verification/source-evidence-verifier",
+      "evidence_grade": "exact",
+      "source_revision_relation": "current",
+      "path": "agents/claim-bounty-verification__source-evidence-verifier.json",
+      "record_uri": "trajectory://agent/claim-bounty-verification/source-evidence-verifier"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-robustness/robustness-lead",
+      "evidence_grade": "equivalent_predecessor",
+      "source_revision_relation": "predecessor",
+      "path": "agents/claim-bounty-robustness__robustness-lead.json",
+      "record_uri": "trajectory://agent/claim-bounty-robustness/robustness-lead"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-robustness/data-choices-analyst",
+      "evidence_grade": "reconstructed",
+      "source_revision_relation": "predecessor",
+      "path": "agents/claim-bounty-robustness__data-choices-analyst.json",
+      "record_uri": "trajectory://agent/claim-bounty-robustness/data-choices-analyst"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-robustness/model-and-covariate-analyst",
+      "evidence_grade": "reconstructed",
+      "source_revision_relation": "predecessor",
+      "path": "agents/claim-bounty-robustness__model-and-covariate-analyst.json",
+      "record_uri": "trajectory://agent/claim-bounty-robustness/model-and-covariate-analyst"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-robustness/inference-analyst",
+      "evidence_grade": "reconstructed",
+      "source_revision_relation": "predecessor",
+      "path": "agents/claim-bounty-robustness__inference-analyst.json",
+      "record_uri": "trajectory://agent/claim-bounty-robustness/inference-analyst"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-verification/blind-method-reviewer-alpha",
+      "evidence_grade": "exact",
+      "source_revision_relation": "predecessor",
+      "path": "agents/claim-bounty-verification__blind-method-reviewer-alpha.json",
+      "record_uri": "trajectory://agent/claim-bounty-verification/blind-method-reviewer-alpha"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-verification/blind-method-reviewer-beta",
+      "evidence_grade": "exact",
+      "source_revision_relation": "predecessor",
+      "path": "agents/claim-bounty-verification__blind-method-reviewer-beta.json",
+      "record_uri": "trajectory://agent/claim-bounty-verification/blind-method-reviewer-beta"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "research-and-insights/researcher",
+      "evidence_grade": "exact",
+      "source_revision_relation": "predecessor",
+      "path": "agents/research-and-insights__researcher.json",
+      "record_uri": "trajectory://agent/research-and-insights/researcher"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "research-and-insights/literature-searcher",
+      "evidence_grade": "reconstructed",
+      "source_revision_relation": "predecessor",
+      "path": "agents/research-and-insights__literature-searcher.json",
+      "record_uri": "trajectory://agent/research-and-insights/literature-searcher"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "research-and-insights/source-extractor",
+      "evidence_grade": "exact",
+      "source_revision_relation": "predecessor",
+      "path": "agents/research-and-insights__source-extractor.json",
+      "record_uri": "trajectory://agent/research-and-insights/source-extractor"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-verification/verification-lead",
+      "evidence_grade": "exact",
+      "source_revision_relation": "predecessor",
+      "path": "agents/claim-bounty-verification__verification-lead.json",
+      "record_uri": "trajectory://agent/claim-bounty-verification/verification-lead"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-verification/statistical-evidence-verifier",
+      "evidence_grade": "equivalent_predecessor",
+      "source_revision_relation": "predecessor",
+      "path": "agents/claim-bounty-verification__statistical-evidence-verifier.json",
+      "record_uri": "trajectory://agent/claim-bounty-verification/statistical-evidence-verifier"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-verification/scientific-adjudicator",
+      "evidence_grade": "exact",
+      "source_revision_relation": "predecessor",
+      "path": "agents/claim-bounty-verification__scientific-adjudicator.json",
+      "record_uri": "trajectory://agent/claim-bounty-verification/scientific-adjudicator"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-delivery/audit-report-builder",
+      "evidence_grade": "exact",
+      "source_revision_relation": "predecessor",
+      "path": "agents/claim-bounty-delivery__audit-report-builder.json",
+      "record_uri": "trajectory://agent/claim-bounty-delivery/audit-report-builder"
+    },
+    {
+      "record_type": "agent",
+      "public_id": "claim-bounty-delivery/release-quality-reviewer",
+      "evidence_grade": "exact",
+      "source_revision_relation": "predecessor",
+      "path": "agents/claim-bounty-delivery__release-quality-reviewer.json",
+      "record_uri": "trajectory://agent/claim-bounty-delivery/release-quality-reviewer"
+    }
+  ],
+  "release_limitations": [
+    "no_current_revision_end_to_end_completion_claim",
+    "predecessor_records_are_representative_only",
+    "research_payload_excluded"
+  ]
+}

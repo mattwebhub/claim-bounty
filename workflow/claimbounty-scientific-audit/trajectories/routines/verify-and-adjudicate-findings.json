@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "routine",
+  "public_id": "verify-and-adjudicate-findings",
+  "record_uri": "trajectory://routine/verify-and-adjudicate-findings",
+  "evidence_grade": "equivalent_predecessor",
+  "source_revision_relation": "predecessor",
+  "summary": "Representative predecessor evidence joined independent statistical and source checks, preserved disagreements, and denied delivery until adjudication completed.",
+  "status": "completed_with_limits",
+  "outcome": "verification_incomplete",
+  "proves_current_revision_end_to_end_completion": false,
+  "timestamps": {
+    "started_at_utc": null,
+    "finished_at_utc": null
+  },
+  "step_order": [
+    {
+      "position": 1,
+      "public_step_id": "freeze-verification-inputs",
+      "status": "represented"
+    },
+    {
+      "position": 2,
+      "public_step_id": "verify-statistical-evidence",
+      "status": "represented"
+    },
+    {
+      "position": 3,
+      "public_step_id": "verify-source-evidence",
+      "status": "represented"
+    },
+    {
+      "position": 4,
+      "public_step_id": "adjudicate-verified-findings",
+      "status": "represented"
+    }
+  ],
+  "retry_count": null,
+  "correction_count": 2,
+  "handoffs": {
+    "received_from": [
+      "stress-test-analysis",
+      "research-methods-and-evidence"
+    ],
+    "delivered_to": [
+      "assemble-final-audit"
+    ]
+  },
+  "input_classes": [
+    "reproduction_package",
+    "robustness_map",
+    "literature_evidence_package"
+  ],
+  "bounded_errors": [
+    {
+      "code": "control_profile_rejected",
+      "summary": "An invalid verification preflight was rejected before analysis."
+    },
+    {
+      "code": "premature_delivery_denied",
+      "summary": "Delivery was denied until both independent checks joined."
+    }
+  ],
+  "output_artifact_kinds": [
+    "adjudication_package",
+    "manuscript_recommendations"
+  ],
+  "schema_status": "not_reported",
+  "integrity": {
+    "algorithm": null,
+    "evidence_id": null,
+    "hash_match": null
+  },
+  "release_limitations": [
+    "predecessor_revision_only",
+    "unresolved_disagreements"
+  ],
+  "redactions_applied": [
+    "research_content_removed",
+    "identity_details_removed",
+    "runtime_metadata_removed",
+    "interaction_content_removed",
+    "local_identifiers_replaced",
+    "integrity_values_replaced",
+    "uncleared_artifacts_removed"
+  ],
+  "contains_research_payload": false,
+  "contains_session_metadata": false
+}

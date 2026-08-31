@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "ClaimBounty Scientific Audit",
+  "routineSchemaVersion": 2,
+  "parentRoutine": "routines/run-claimbounty-scientific-audit.md",
+  "childRoutines": [
+    "routines/build-and-freeze-study-case.md",
+    "routines/reproduce-original-result.md",
+    "routines/research-methods-and-evidence.md",
+    "routines/stress-test-analysis.md",
+    "routines/verify-and-adjudicate-findings.md",
+    "routines/assemble-final-audit.md"
+  ],
+  "resourceRoot": "project-template/claimbounty",
+  "targetBindings": {
+    "scheme": "project://",
+    "root": "claimbounty"
+  },
+  "availability": {
+    "localImport": "scaffolded_pending_clean_install_verification",
+    "exploreWorkflows": "unverified"
+  },
+  "sourceProjection": {
+    "updated": "2026-08-31",
+    "includesOrganizationConfiguration": false,
+    "includesCaseEvidence": false
+  }
+}

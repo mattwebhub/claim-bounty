@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://claimbounty.local/schemas/execution-profile-1.2.0.json",
+  "title": "ClaimBounty frozen execution profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "policyVersion",
+    "runClass",
+    "releaseScope",
+    "outputRoot",
+    "runtime",
+    "sandbox",
+    "limits",
+    "mounts"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.2.0" },
+    "policyVersion": { "type": "string", "minLength": 1 },
+    "runClass": { "const": "manual_local_operator" },
+    "releaseScope": { "const": "internal" },
+    "outputRoot": { "type": "string", "minLength": 1 },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "command",
+        "executable",
+        "executableSha256",
+        "version",
+        "requiredPackages",
+        "readRoots"
+      ],
+      "properties": {
+        "kind": { "enum": ["R", "Python"] },
+        "command": { "enum": ["Rscript", "python3"] },
+        "executable": { "type": "string", "minLength": 1 },
+        "executableSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "version": { "type": "string", "pattern": "^[0-9]+(?:\\.[0-9]+)+$" },
+        "requiredPackages": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "readRoots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "kind", "sha256"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1 },
+              "kind": { "enum": ["file", "directory"] },
+              "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+            }
+          }
+        },
+        "libraryPath": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256"],
+          "properties": {
+            "path": { "type": "string", "minLength": 1 },
+            "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "R" } } },
+          "then": { "properties": { "command": { "const": "Rscript" } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "Python" } } },
+          "then": { "properties": { "command": { "const": "python3" } } }
+        }
+      ]
+    },
+    "sandbox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "isolationRequired",
+        "networkDuringAnalysis",
+        "dependencyAcquisition",
+        "expandArchivesAutomatically"
+      ],
+      "properties": {
+        "isolationRequired": { "const": true },
+        "networkDuringAnalysis": { "const": "disabled" },
+        "dependencyAcquisition": { "const": "disabled" },
+        "expandArchivesAutomatically": { "const": false }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["timeoutSeconds", "maximumMemoryBytes", "maximumWorkingStorageBytes"],
+      "properties": {
+        "timeoutSeconds": { "type": "integer", "minimum": 1, "maximum": 600 },
+        "maximumMemoryBytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8589934592
+        },
+        "maximumWorkingStorageBytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5368709120
+        }
+      }
+    },
+    "mounts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "mode", "verifyUnchanged", "sha256"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "mode": { "const": "read-only" },
+          "verifyUnchanged": { "const": true },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    }
+  }
+}

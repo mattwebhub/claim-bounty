@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "routine",
+  "public_id": "reproduce-original-result",
+  "record_uri": "trajectory://routine/reproduce-original-result",
+  "evidence_grade": "exact",
+  "source_revision_relation": "current",
+  "summary": "The current revision mapped execution, applied one bounded repair, ran one secondary target, and packaged a partial reproduction.",
+  "status": "partial",
+  "outcome": "partial_reproduction",
+  "proves_current_revision_end_to_end_completion": false,
+  "timestamps": {
+    "started_at_utc": "2026-08-30T19:55:51Z",
+    "finished_at_utc": "2026-08-30T20:41:35Z"
+  },
+  "step_order": [
+    {
+      "position": 1,
+      "public_step_id": "freeze-reproduction-inputs",
+      "status": "represented"
+    },
+    {
+      "position": 2,
+      "public_step_id": "preflight-execution",
+      "status": "represented"
+    },
+    {
+      "position": 3,
+      "public_step_id": "run-primary-unchanged",
+      "status": "represented"
+    },
+    {
+      "position": 4,
+      "public_step_id": "compare-primary-result",
+      "status": "represented"
+    },
+    {
+      "position": 5,
+      "public_step_id": "diagnose-freeze-repairs",
+      "status": "represented"
+    },
+    {
+      "position": 6,
+      "public_step_id": "test-repair-1",
+      "status": "represented"
+    },
+    {
+      "position": 7,
+      "public_step_id": "test-repair-2",
+      "status": "represented"
+    },
+    {
+      "position": 8,
+      "public_step_id": "test-repair-3",
+      "status": "represented"
+    },
+    {
+      "position": 9,
+      "public_step_id": "run-secondary-target-1",
+      "status": "represented"
+    },
+    {
+      "position": 10,
+      "public_step_id": "run-secondary-target-2",
+      "status": "represented"
+    },
+    {
+      "position": 11,
+      "public_step_id": "run-secondary-target-3",
+      "status": "represented"
+    },
+    {
+      "position": 12,
+      "public_step_id": "package-reproduction",
+      "status": "represented"
+    }
+  ],
+  "retry_count": null,
+  "correction_count": null,
+  "handoffs": {
+    "received_from": [
+      "build-and-freeze-study-case"
+    ],
+    "delivered_to": [
+      "run-claimbounty-scientific-audit"
+    ]
+  },
+  "input_classes": [
+    "frozen_study_case",
+    "execution_policy",
+    "scientific_policy",
+    "case_bundle"
+  ],
+  "bounded_errors": [
+    {
+      "code": "nonclean_entrypoint",
+      "summary": "The untouched entry point required one bounded repair."
+    }
+  ],
+  "output_artifact_kinds": [
+    "reproduction_package"
+  ],
+  "schema_status": "not_reported",
+  "integrity": {
+    "algorithm": null,
+    "evidence_id": null,
+    "hash_match": null
+  },
+  "release_limitations": [
+    "partial_reproduction",
+    "current_revision_not_end_to_end"
+  ],
+  "redactions_applied": [
+    "research_content_removed",
+    "identity_details_removed",
+    "runtime_metadata_removed",
+    "interaction_content_removed",
+    "local_identifiers_replaced",
+    "integrity_values_replaced",
+    "uncleared_artifacts_removed"
+  ],
+  "contains_research_payload": false,
+  "contains_session_metadata": false
+}
