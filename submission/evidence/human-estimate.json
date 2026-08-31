@@ -1,0 +1,165 @@
+{
+  "schemaVersion": "1.0.0",
+  "estimateId": "qualified-human-scientific-audit-v1",
+  "classification": "estimate_not_observation",
+  "unit": "active_person_hours",
+  "personCount": 1,
+  "qualification": "qualified researcher",
+  "scope": "The same frozen scientific-audit task, including claim mapping, package inspection, environment reconstruction, exact reproduction, robustness analysis, cross-source verification, discrepancy adjudication, corrections, reporting, provenance, and quality control.",
+  "scenarios": {
+    "low": 21,
+    "base": 56,
+    "high": 124
+  },
+  "workPackages": [
+    {
+      "id": "claim-map",
+      "task": "Read manuscript and map target claim",
+      "low": 3,
+      "base": 5,
+      "high": 8
+    },
+    {
+      "id": "inventory",
+      "task": "Inventory evidence and inspect data and code",
+      "low": 2,
+      "base": 4,
+      "high": 8
+    },
+    {
+      "id": "reproduce",
+      "task": "Rebuild environment and reproduce result",
+      "low": 3,
+      "base": 8,
+      "high": 18
+    },
+    {
+      "id": "robustness-design",
+      "task": "Design robustness and sensitivity plan",
+      "low": 2,
+      "base": 6,
+      "high": 12
+    },
+    {
+      "id": "robustness-execute",
+      "task": "Execute and interpret robustness suite",
+      "low": 4,
+      "base": 14,
+      "high": 32
+    },
+    {
+      "id": "verify",
+      "task": "Verify sources and cross-artifact consistency",
+      "low": 2,
+      "base": 6,
+      "high": 14
+    },
+    {
+      "id": "adjudicate",
+      "task": "Adjudicate discrepancies and draft corrections",
+      "low": 2,
+      "base": 5,
+      "high": 12
+    },
+    {
+      "id": "report",
+      "task": "Produce report, evidence table, provenance, and quality control",
+      "low": 3,
+      "base": 8,
+      "high": 20
+    }
+  ],
+  "scenarioAssumptions": {
+    "low": "Complete, documented, compatible package; few discrepancies; narrow robustness plan; no substantial repair.",
+    "base": "Ordinary environment reconstruction, source checking, analysis decisions, discrepancy handling, and reporting across the full frozen scope.",
+    "high": "Dependency repair, ambiguous methods, access constraints, material discrepancies, and an extensive robustness suite."
+  },
+  "accountingRules": {
+    "aggregation": "additive_work_packages",
+    "overlap": "Assign each activity to the package where its evidence or decision becomes final; do not count it again elsewhere.",
+    "parallelism": "Parallel scheduling does not reduce one person's total active person-hours."
+  },
+  "exclusions": [
+    "unattended computation",
+    "scheduler waits",
+    "blocked time",
+    "data-access delays",
+    "procurement and institutional approvals",
+    "publication administration",
+    "additional specialists",
+    "work outside the frozen scope"
+  ],
+  "sensitivityDrivers": [
+    "environment and dependency repair",
+    "data and licence access",
+    "method ambiguity",
+    "robustness-suite breadth and runtime",
+    "discrepancies requiring adjudication",
+    "replication-package completeness"
+  ],
+  "interpretation": {
+    "observedDuration": false,
+    "humanQualityScore": false,
+    "monetaryCost": false,
+    "speedupClaimAllowed": false,
+    "unattendedComputeExcluded": true,
+    "literatureRole": "The sources anchor task complexity, reproducibility practice, and plausible effort categories; they do not establish an exact duration for this case."
+  },
+  "sourcesAccessedOn": "2026-08-31",
+  "sources": [
+    {
+      "id": "aczel-2021",
+      "citation": "Aczel, Szaszi, and Holcombe (2021), A billion-dollar donation: estimating the cost of researchers' time spent on peer review, Research Integrity and Peer Review 6:14.",
+      "url": "https://doi.org/10.1186/s41073-021-00118-2",
+      "accessedOn": "2026-08-31"
+    },
+    {
+      "id": "prc-2016",
+      "citation": "Ware and Publishing Research Consortium (2016), Peer Review Survey 2015, Mark Ware Consulting.",
+      "url": "https://www.elsevier.com/__data/assets/pdf_file/0007/655756/PRC-peer-review-survey-report-Final-2016-05-19.pdf",
+      "accessedOn": "2026-08-31"
+    },
+    {
+      "id": "management-science-reproducibility",
+      "citation": "Fišar et al. and the Management Science Reproducibility Collaboration (2024), Reproducibility in Management Science, Management Science 70(3):1343-1356.",
+      "url": "https://doi.org/10.1287/mnsc.2023.03556",
+      "accessedOn": "2026-08-31"
+    },
+    {
+      "id": "colliard-cascad",
+      "citation": "Colliard, Hurlin, and Pérignon (2022), The Economics of Research Reproducibility, working paper.",
+      "url": "https://www.cascad.tech/download-article-front/110",
+      "accessedOn": "2026-08-31"
+    },
+    {
+      "id": "krafczyk-2021",
+      "citation": "Krafczyk, Shi, Bhaskar, Marinov, and Stodden (2021), Learning from reproducing computational results: introducing three principles and the Reproduction Package, Philosophical Transactions A 379:20200069.",
+      "url": "https://doi.org/10.1098/rsta.2020.0069",
+      "accessedOn": "2026-08-31"
+    },
+    {
+      "id": "hoogeveen-2022",
+      "citation": "Hoogeveen et al. (2023, published online 2022), A many-analysts approach to the relation between religiosity and well-being, Religion, Brain & Behavior 13(3):237-283.",
+      "url": "https://doi.org/10.1080/2153599X.2022.2070255",
+      "accessedOn": "2026-08-31"
+    },
+    {
+      "id": "brodeur-2026",
+      "citation": "Brodeur et al. (2026), Reproducibility and robustness of economics and political science research, Nature 652:151-156.",
+      "url": "https://doi.org/10.1038/s41586-026-10251-x",
+      "accessedOn": "2026-08-31"
+    },
+    {
+      "id": "schindler-2024",
+      "citation": "Schindler, Hossain, Spors, and Krüger (2024), A multilevel analysis of data quality for formal software citation, Quantitative Science Studies 5(3):637-667.",
+      "url": "https://doi.org/10.1162/qss_a_00309",
+      "accessedOn": "2026-08-31"
+    },
+    {
+      "id": "economic-journal-faq",
+      "citation": "Economic Journal Data Editor, Frequently Asked Questions.",
+      "url": "https://ejdataeditor.github.io/faqs.html",
+      "accessedOn": "2026-08-31"
+    }
+  ]
+}

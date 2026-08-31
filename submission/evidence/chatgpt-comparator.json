@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "sealed",
+  "comparator": {
+    "product": "ChatGPT",
+    "mode": "standard_chat",
+    "chatContext": "non_personalized_temporary_chat",
+    "visibleSetting": "High",
+    "exposedModelName": null,
+    "modelInferenceAllowed": false
+  },
+  "frozenInputs": {
+    "fileCount": 5,
+    "manifestOrderPreserved": true,
+    "allHashesVerified": true,
+    "fileDetailsPublished": false
+  },
+  "prompt": {
+    "sha256": "da014c3be55d7a37a35a57816d72adf5ce112a54d4af6c306dd2134f762f4ae2",
+    "submittedCount": 1
+  },
+  "interactionCounts": {
+    "followUps": 0,
+    "continueActions": 0,
+    "regenerations": 0,
+    "edits": 0,
+    "branches": 0,
+    "retries": 0
+  },
+  "preSendStaging": {
+    "filePickerSelectorFailures": 1,
+    "hiddenFileInputUsed": true,
+    "sessionHadPriorSubmittedPrompt": false,
+    "effectOnSubmittedPromptCount": "none"
+  },
+  "timing": {
+    "confirmedSendAt": "2026-08-31T03:52:52.532Z",
+    "terminalDetectedAt": "2026-08-31T04:05:58.072Z",
+    "elapsedSeconds": 785.539676
+  },
+  "terminalClassification": "truncated_or_malformed_output",
+  "completePreservedOutput": [
+    "Reviewed PDF pages, audited feeder data, and reproduced GLMM results",
+    "Computed robust binomial models, tests, and phase-by-reward effects"
+  ],
+  "requiredReviewerReport": {
+    "status": "absent",
+    "requestedSections": 8,
+    "presentSections": 0,
+    "missingSections": 8,
+    "progressSummariesCountAsCompletedEvidence": false
+  },
+  "cost": {
+    "amount": null,
+    "currency": null,
+    "status": "unmeasured"
+  },
+  "independentScoring": {
+    "scaleMaximum": 100,
+    "alphaScore": 1,
+    "betaScore": 2
+  },
+  "adjudication": {
+    "score": 1,
+    "scaleMaximum": 100,
+    "capApplied": false,
+    "decision": "invalid_incomplete"
+  },
+  "qualityScore": {
+    "value": 1,
+    "scaleMaximum": 100,
+    "source": "adjudication",
+    "decision": "invalid_incomplete"
+  },
+  "speedup": null,
+  "publicProjection": {
+    "restrictedScreenshotsIncluded": false,
+    "rawBrowserTracesIncluded": false,
+    "authenticationOrSessionMetadataIncluded": false,
+    "absoluteInternalPathsIncluded": false
+  }
+}

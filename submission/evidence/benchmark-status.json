@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "comparator_scored_claimbounty_protocol_deviation_unscored",
+  "candidate": {
+    "label": "Heliconius Experiment 1",
+    "citation": "Moura et al. (2023)",
+    "articleDoi": "10.1016/j.cub.2023.06.009",
+    "articleUrl": "https://doi.org/10.1016/j.cub.2023.06.009",
+    "dataCodeRecordDoi": "10.5281/zenodo.7985236",
+    "dataCodeRecordUrl": "https://doi.org/10.5281/zenodo.7985236"
+  },
+  "freeze": {
+    "status": "complete_validated",
+    "fileCount": 5,
+    "manifestOrderPreserved": true,
+    "allFileHashesVerified": true,
+    "publicManifestPath": null,
+    "publicProjectionStatus": "file_details_not_redistributed"
+  },
+  "evaluationSample": {
+    "challengeRecommendedMinimumWhenFeasible": 10,
+    "frozenCaseCount": 1,
+    "scope": "single_case_deadline_constrained",
+    "constraints": [
+      "measured multi-hour full-workflow runtime",
+      "case preparation",
+      "licence review",
+      "freeze validation",
+      "isolated execution"
+    ],
+    "defensibleTenCaseEvaluationCompleted": false,
+    "generalPerformanceClaimAllowed": false,
+    "humanQualitySuperiorityClaimAllowed": false,
+    "broadSpeedupClaimAllowed": false
+  },
+  "baselineExecution": {
+    "status": "pending",
+    "resultPath": null
+  },
+  "chatGptComparator": {
+    "status": "completed",
+    "terminalClassification": "truncated_or_malformed_output",
+    "independentScores": {
+      "alpha": 1,
+      "beta": 2,
+      "scaleMaximum": 100
+    },
+    "adjudicatedScore": 1,
+    "capApplied": false,
+    "decision": "invalid_incomplete",
+    "resultPath": "submission/evidence/chatgpt-comparator.json"
+  },
+  "claimBountyExecution": {
+    "status": "protocol_deviation_unscored",
+    "qualificationStatus": "blocked_two_independent_deviations",
+    "independentDeviationCount": 2,
+    "resultPath": "submission/evidence/claimbounty-exploratory-attempt.json"
+  },
+  "independentScoring": {
+    "status": "comparator_complete_claimbounty_not_scored",
+    "comparatorResultPath": "submission/evidence/chatgpt-comparator.json",
+    "claimBountyResultPath": null
+  },
+  "adjudication": {
+    "status": "comparator_complete_claimbounty_not_adjudicated",
+    "comparatorResultPath": "submission/evidence/chatgpt-comparator.json",
+    "claimBountyResultPath": null
+  },
+  "qualityResult": {
+    "status": "not_comparable",
+    "value": null,
+    "comparatorAdjudicatedScore": 1,
+    "scaleMaximum": 100,
+    "reason": "The comparator was adjudicated invalid and incomplete. The ClaimBounty attempt failed exact prompt identity and injected two out-of-contract case-specific values from outside the frozen participant bundle, so it remains exploratory and unscored. No qualified head-to-head result or speedup is available."
+  }
+}

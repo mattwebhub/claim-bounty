@@ -3,15 +3,55 @@ set -eu
 
 failed=0
 for required in README.md LICENSE SECURITY.md CONTRIBUTING.md AGENTS.md ARCHITECTURE.md \
-  architecture/rules.yaml contracts/openapi.yaml package.json pnpm-lock.yaml pnpm-workspace.yaml \
-  redocly.yaml .node-version scripts/golangci-lint scripts/install-hooks; do
+  THIRD_PARTY_NOTICES.md IMPROVEMENT_CHANGELOG.md architecture/rules.yaml contracts/openapi.yaml \
+  apps/web/public/claimbounty-fox-loupe-icon.png \
+  apps/web/public/claimbounty-archival-projection-v3.png \
+  package.json pnpm-lock.yaml pnpm-workspace.yaml redocly.yaml .node-version \
+  docs/SETUP.md docs/REPRODUCE.md docs/ARCHITECTURE.md docs/BENCHMARK_PROTOCOL.md \
+  docs/BENCHMARK_RESULTS.md docs/LIMITATIONS.md docs/PREEXISTING_WORK.md \
+  docs/TRAJECTORIES.md docs/VIDEO_SCRIPT.md docs/SUBMISSION.md docs/ASSET_PROVENANCE.md \
+  docs/HUMAN_BASELINE.md docs/USAGE_AND_COST.md \
+  submission/reviewer/README.md submission/reviewer/reviewer-guide.pdf \
+  submission/reviewer/guide/index.html submission/reviewer/guide/guide.css \
+  submission/reviewer/guide/render.mjs submission/reviewer/guide/check.mjs \
+  submission/evidence/README.md \
+  submission/evidence/benchmark-status.json submission/evidence/chatgpt-comparator.json \
+  submission/evidence/claimbounty-exploratory-attempt.json \
+  submission/evidence/human-estimate.json submission/evidence/timing-observations.json \
+  submission/evidence/usage-and-cost.json submission/evidence/expected-evidence.json \
+  workflow/claimbounty-scientific-audit/README.md \
+  workflow/claimbounty-scientific-audit/workflow.json \
+  workflow/claimbounty-scientific-audit/project-template/claimbounty/execution/execution-manifest.schema.json \
+  workflow/claimbounty-scientific-audit/project-template/claimbounty/execution/execution-profile.schema.json \
+  workflow/claimbounty-scientific-audit/project-template/claimbounty/execution/runner.py \
+  workflow/claimbounty-scientific-audit/trajectories/README.md \
+  workflow/claimbounty-scientific-audit/trajectories/sanitization-policy.md \
+  workflow/claimbounty-scientific-audit/trajectories/trajectory.schema.json \
+  workflow/claimbounty-scientific-audit/trajectories/index.json \
+  workflow/claimbounty-scientific-audit/trajectories/MANIFEST.sha256 \
+  scripts/golangci-lint scripts/install-hooks \
+  scripts/check-public-links.mjs scripts/check-improvement-changelog.mjs \
+  scripts/check-public-assets.mjs \
+  scripts/check-release-workflow.mjs \
+  scripts/check-comparator-disclosure.mjs \
+  scripts/check-human-estimate.mjs scripts/check-usage-disclosure.mjs \
+  scripts/check-public-trajectories.mjs scripts/generate-public-trajectories.mjs \
+  scripts/generate-public-manifests.mjs scripts/sync-public-workflow.mjs; do
   if [ ! -f "$required" ]; then
     printf 'PUBLIC-001 missing required public file: %s\n' "$required" >&2
     failed=1
   fi
 done
 
-for executable in scripts/golangci-lint scripts/install-hooks; do
+for executable in scripts/golangci-lint scripts/install-hooks scripts/check-public-links.mjs \
+  scripts/check-improvement-changelog.mjs scripts/check-comparator-disclosure.mjs \
+  scripts/check-public-assets.mjs \
+  scripts/check-release-workflow.mjs \
+  scripts/check-human-estimate.mjs \
+  scripts/check-usage-disclosure.mjs \
+  scripts/check-public-trajectories.mjs scripts/generate-public-trajectories.mjs \
+  scripts/generate-public-manifests.mjs \
+  scripts/sync-public-workflow.mjs; do
   if [ -f "$executable" ] && [ ! -x "$executable" ]; then
     printf 'PUBLIC-008 repository runner must be executable: %s\n' "$executable" >&2
     failed=1
@@ -29,9 +69,128 @@ if rg -n --hidden --glob '!.git/**' --glob '!**/node_modules/**' --glob '!script
   failed=1
 fi
 
-private_pattern='toone|truleaf|/Users/[^/]+|micro1-go-template|micro1-react-template|go-backend-template|react-frontend-template'
+private_pattern='truleaf|/Users/[^/]+|micro1-go-template|micro1-react-template|go-backend-template|react-frontend-template'
 if rg -n -i --hidden --glob '!.git/**' --glob '!**/node_modules/**' --glob '!scripts/check-public-release' -- "$private_pattern" .; then
   printf 'PUBLIC-004 private-source or obsolete standalone reference found\n' >&2
+  failed=1
+fi
+
+# Toone may be named only where the public setup or exported workflow requires it.
+# This allowlist does not permit organization paths, which remain covered by the
+# private-path scan above.
+toone_files=$(rg -l -i --hidden --glob '!.git/**' --glob '!**/node_modules/**' \
+  --glob '!scripts/check-public-release' -- 'toone' . || true)
+for file in $toone_files; do
+  case "$file" in
+    README.md|./README.md|infra/README.md|./infra/README.md|docs/SETUP.md|./docs/SETUP.md|docs/REPRODUCE.md|./docs/REPRODUCE.md|docs/ARCHITECTURE.md|./docs/ARCHITECTURE.md|docs/PREEXISTING_WORK.md|./docs/PREEXISTING_WORK.md|docs/VIDEO_SCRIPT.md|./docs/VIDEO_SCRIPT.md|submission/reviewer/guide/index.html|./submission/reviewer/guide/index.html|workflow/claimbounty-scientific-audit/*|./workflow/claimbounty-scientific-audit/*)
+      ;;
+    *)
+      printf 'PUBLIC-004 Toone reference outside approved setup/workflow documentation: %s\n' "$file" >&2
+      failed=1
+      ;;
+  esac
+done
+
+if find submission workflow -type f \( -iname '*dev-01*' -o -iname '*answer-key*' \
+  -o -iname '*assessment-bundle*' -o -iname '*.zip' -o -iname '*.tar' -o -iname '*.gz' \
+  -o -iname '*.rds' -o -iname '*.docx' \) | grep -q .; then
+  printf 'PUBLIC-009 restricted or non-scaffold payload found in a public package\n' >&2
+  failed=1
+fi
+
+if find submission workflow -type f -iname '*.pdf' \
+  ! -path 'submission/reviewer/reviewer-guide.pdf' | grep -q .; then
+  printf 'PUBLIC-009 only submission/reviewer/reviewer-guide.pdf may be published as a PDF\n' >&2
+  failed=1
+fi
+
+if find submission workflow -type f -size +10M | grep -q .; then
+  printf 'PUBLIC-010 unexpectedly large public-package payload found\n' >&2
+  failed=1
+fi
+
+if rg -n --hidden --glob '!**/node_modules/**' -- '\.toone/' README.md docs submission workflow; then
+  printf 'PUBLIC-012 internal organization path found in the public projection\n' >&2
+  failed=1
+fi
+
+if rg -n -i -- 'Routine Schema' README.md docs submission workflow; then
+  printf 'PUBLIC-015 obsolete Toone routine-schema wording found in public copy\n' >&2
+  failed=1
+fi
+
+trajectory_auth_pattern='("?(access[_-]?token|session[_-]?token|refresh[_-]?token|id[_-]?token|authorization|set-cookie|cookie|auth|authentication)"?[[:space:]]*:)|Bearer[[:space:]]+[A-Za-z0-9._~+/-]{12,}'
+if rg -n -i -- "$trajectory_auth_pattern" docs/TRAJECTORIES.md submission/evidence submission/reviewer; then
+  printf 'PUBLIC-013 authentication or session data found in public trajectory/evidence files\n' >&2
+  failed=1
+fi
+
+personal_emails=$(rg -n -o -i -- '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}' \
+  docs/TRAJECTORIES.md submission/evidence submission/reviewer \
+  | grep -Evi '@(example\.(com|net|org)|[^@[:space:]]+\.test)$' || true)
+if [ -n "$personal_emails" ]; then
+  printf '%s\n' "$personal_emails"
+  printf 'PUBLIC-013 personal email found in public trajectory/evidence files\n' >&2
+  failed=1
+fi
+
+absolute_local_pattern='(^|["`[:space:]])(/Users/|/home/|/var/|/tmp/|/private/|/Applications/|[A-Za-z]:\\)'
+if rg -n -- "$absolute_local_pattern" docs/TRAJECTORIES.md submission/evidence submission/reviewer; then
+  printf 'PUBLIC-014 absolute local path found in public trajectory/evidence files\n' >&2
+  failed=1
+fi
+
+for document in README.md THIRD_PARTY_NOTICES.md IMPROVEMENT_CHANGELOG.md SECURITY.md \
+  docs/SETUP.md docs/REPRODUCE.md docs/ARCHITECTURE.md docs/BENCHMARK_PROTOCOL.md \
+  docs/BENCHMARK_RESULTS.md docs/LIMITATIONS.md docs/PREEXISTING_WORK.md \
+  docs/TRAJECTORIES.md docs/VIDEO_SCRIPT.md docs/SUBMISSION.md docs/ASSET_PROVENANCE.md \
+  docs/HUMAN_BASELINE.md docs/USAGE_AND_COST.md \
+  submission/reviewer/README.md submission/evidence/README.md \
+  workflow/claimbounty-scientific-audit/README.md \
+  $(find submission workflow -type f -name '*.md' | sort); do
+  if ! sed -n '3p' "$document" | grep -q '^> \*\*Status\*\*:'; then
+    printf 'PUBLIC-011 missing Markdown metadata header: %s\n' "$document" >&2
+    failed=1
+  fi
+done
+
+if ! node scripts/check-public-links.mjs; then
+  failed=1
+fi
+
+if ! node scripts/check-improvement-changelog.mjs; then
+  failed=1
+fi
+
+if ! node scripts/check-public-assets.mjs; then
+  failed=1
+fi
+
+if ! node scripts/check-release-workflow.mjs; then
+  failed=1
+fi
+
+if ! node scripts/check-comparator-disclosure.mjs; then
+  failed=1
+fi
+
+if ! node scripts/check-human-estimate.mjs; then
+  failed=1
+fi
+
+if ! node scripts/check-usage-disclosure.mjs; then
+  failed=1
+fi
+
+if ! node scripts/generate-public-trajectories.mjs --check; then
+  failed=1
+fi
+
+if ! node scripts/check-public-trajectories.mjs; then
+  failed=1
+fi
+
+if ! node scripts/generate-public-manifests.mjs --check; then
   failed=1
 fi
 

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "protocol_deviation_unscored",
+  "classification": "exploratory_same_case_attempt",
+  "execution": {
+    "parentInvocations": 1,
+    "externalRestarts": 0,
+    "startedAt": "2026-08-31T04:12:11.625158Z",
+    "endedAt": "2026-08-31T05:15:31.561714Z",
+    "elapsedSeconds": 3799.936556
+  },
+  "stageOutcomes": {
+    "build": "case_frozen_with_limits",
+    "reproduction": "not_executable",
+    "scientificCommandsExecuted": 0,
+    "repairsApplied": 0,
+    "downstreamStagesSkipped": 5
+  },
+  "protocolConformance": {
+    "status": "deviated",
+    "qualificationStatus": "blocked",
+    "independentDeviationCount": 2,
+    "independentDeviations": [
+      {
+        "code": "prompt_final_lf_mismatch",
+        "classification": "exact_input_identity_failure",
+        "dispatchedTaskContractBytes": 1275,
+        "frozenPromptFileBytes": 1276,
+        "summary": "The dispatched task contract omitted the frozen prompt file's final LF byte."
+      },
+      {
+        "code": "case_specific_values_not_in_participant_inputs",
+        "classification": "out_of_contract_contamination",
+        "projectedValueCount": 2,
+        "caseSpecificProjectedValuesIncluded": false,
+        "contaminationDisclosed": true,
+        "presentInFrozenPrompt": false,
+        "presentInParticipantFiles": false,
+        "summary": "The comparison routine injected two case-specific values from outside the frozen participant bundle. They were absent from the frozen prompt and every participant file and are omitted from this public record."
+      }
+    ],
+    "blockedGates": ["G2", "G3", "G4"]
+  },
+  "interpretation": {
+    "scoringAllowed": false,
+    "qualifiedHeadToHeadComparisonAllowed": false,
+    "speedupClaimAllowed": false,
+    "reason": "Exact input identity failed and the comparison routine injected out-of-contract case-specific values from outside the frozen participant bundle. Reproduction was not executable and no scientific command ran."
+  },
+  "publicProjection": {
+    "runIdentifierIncluded": false,
+    "absoluteInternalPathsIncluded": false,
+    "restrictedCaseFilesIncluded": false,
+    "graderOnlyMaterialIncluded": false,
+    "rawDiagnosticsIncluded": false
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "packageRoot": "submission/reviewer",
+  "pathPolicy": "repository-relative",
+  "entries": [
+    {
+      "path": "README.md",
+      "bytes": 3175,
+      "sha256": "d8306373d0adced23c044addf923b0285667f5fb6205f9f0a6654a56b1afabdc"
+    },
+    {
+      "path": "guide/check.mjs",
+      "bytes": 2547,
+      "sha256": "4ab5cb7f82597c7008db72c0b95fc102b97d401e01e730c67a8d5f6430979ecf"
+    },
+    {
+      "path": "guide/guide.css",
+      "bytes": 8343,
+      "sha256": "91d3d4ff2a8ae42f2622a23d07f3b114e92b09c340179c478754454f5706e502"
+    },
+    {
+      "path": "guide/index.html",
+      "bytes": 49325,
+      "sha256": "4034c5efa9384e509349301d58334511d34ddd0886efedd1d53c89198784a553"
+    },
+    {
+      "path": "guide/render.mjs",
+      "bytes": 1102,
+      "sha256": "a8b28beb8ae88c827e330c92ec4d03cd66957be2031a0eb3ebeb77e56422df4f"
+    },
+    {
+      "path": "reviewer-guide.pdf",
+      "bytes": 798075,
+      "sha256": "16d68dee7ad398b08ec398ac5a16d0956de88646aee30f8c6aef326457483492"
+    }
+  ]
+}

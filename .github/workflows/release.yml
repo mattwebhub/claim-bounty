@@ -40,8 +40,12 @@ jobs:
         env:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          if [[ ! "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+          if [[ ! "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)(\.(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$ ]]; then
             echo "release tag must use semantic vMAJOR.MINOR.PATCH syntax" >&2
+            exit 1
+          fi
+          if [ "${#RELEASE_TAG}" -gt 80 ]; then
+            echo "release tag exceeds the injective container-tag encoding limit" >&2
             exit 1
           fi
       - name: Require release commit on main
@@ -61,12 +65,72 @@ jobs:
           pnpm --filter @micro1/web dead-code:check
           pnpm --filter @micro1/web build
           pnpm --filter @micro1/web bundle:check
+      - name: Install Playwright-pinned Chromium
+        run: pnpm --filter @micro1/web exec playwright install --with-deps chromium
+      - name: Check reviewer PDF source
+        run: make reviewer-guide-check
       - name: Check public-release hygiene
         run: sh ./scripts/check-public-release
 
+  scientific-runner:
+    name: Verify scientific runner host boundary
+    runs-on: macos-15
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-python@a309aee8db712ecb2eec7aa752f24e5f08a759ef # v6
+        with:
+          python-version: '3.13'
+      - name: Test frozen policy and live sandbox escapes
+        run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v workflow/claimbounty-scientific-audit/project-template/claimbounty/execution/tests/test_runner.py
+
+  release-identity:
+    name: Guard release and tag identity
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+      - name: Verify remote tag and existing release identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -eu
+          local_commit=$(git rev-parse "refs/tags/${RELEASE_TAG}^{commit}")
+          test "$local_commit" = "$GITHUB_SHA" || {
+            echo "release tag does not resolve to the workflow commit" >&2
+            exit 1
+          }
+          remote_object=$(git ls-remote --refs origin "refs/tags/${RELEASE_TAG}" | awk 'NR == 1 {print $1}')
+          test -n "$remote_object" || {
+            echo "release tag is absent from origin" >&2
+            exit 1
+          }
+          local_object=$(git rev-parse "refs/tags/${RELEASE_TAG}")
+          test "$remote_object" = "$local_object" || {
+            echo "remote release tag object differs from the checked-out tag" >&2
+            exit 1
+          }
+          release_error=$(mktemp)
+          trap 'rm -f "$release_error"' EXIT
+          if gh api "repos/${GH_REPO}/releases/tags/${RELEASE_TAG}" >/dev/null 2>"$release_error"; then
+            echo "release $RELEASE_TAG already exists; refusing container registry mutation" >&2
+            exit 1
+          elif ! grep -Eq 'HTTP 404|status: 404' "$release_error"; then
+            cat "$release_error" >&2
+            echo "cannot prove GitHub release absence" >&2
+            exit 1
+          fi
+
   api-artifacts:
     name: Build API release archives
-    needs: verify
+    needs: [verify, scientific-runner]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -81,6 +145,8 @@ jobs:
           CGO_ENABLED: '0'
         run: |
           set -eu
+          SOURCE_DATE_EPOCH=$(git show -s --format=%ct "$GITHUB_SHA")
+          export SOURCE_DATE_EPOCH
           mkdir -p dist
           for target in linux/amd64 linux/arm64 darwin/amd64 darwin/arm64; do
             os=${target%/*}
@@ -89,7 +155,9 @@ jobs:
             stage="dist/${name}"
             mkdir -p "$stage"
             (cd apps/api && GOOS="$os" GOARCH="$arch" go build -trimpath -ldflags="-s -w -buildid=" -o "$GITHUB_WORKSPACE/$stage/api" ./cmd/api)
-            tar -C "$stage" -czf "dist/${name}.tar.gz" api
+            tar --sort=name --mtime="@${SOURCE_DATE_EPOCH}" --owner=0 --group=0 \
+              --numeric-owner --format=gnu -C "$stage" -cf - api \
+              | gzip -n > "dist/${name}.tar.gz"
           done
       - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
@@ -100,7 +168,7 @@ jobs:
 
   web-artifact:
     name: Build web release archive
-    needs: verify
+    needs: [verify, scientific-runner]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -119,8 +187,12 @@ jobs:
       - run: pnpm --filter @micro1/web bundle:check
       - name: Archive static web distribution
         run: |
+          set -eu
+          SOURCE_DATE_EPOCH=$(git show -s --format=%ct "$GITHUB_SHA")
           mkdir -p dist
-          tar -C apps/web/dist -czf "dist/micro1-template-web_${GITHUB_REF_NAME}.tar.gz" .
+          tar --sort=name --mtime="@${SOURCE_DATE_EPOCH}" --owner=0 --group=0 \
+            --numeric-owner --format=gnu -C apps/web/dist -cf - . \
+            | gzip -n > "dist/micro1-template-web_${GITHUB_REF_NAME}.tar.gz"
       - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: release-web
@@ -130,7 +202,7 @@ jobs:
 
   containers:
     name: Publish ${{ matrix.image }} container
-    needs: verify
+    needs: [scientific-runner, release-identity]
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
@@ -154,24 +226,29 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - id: metadata
-        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
-        with:
-          images: ghcr.io/${{ github.repository }}-${{ matrix.image }}
-          tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha
       - id: build
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
           file: ${{ matrix.dockerfile }}
-          push: true
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
+          outputs: type=image,name=ghcr.io/${{ github.repository }}-${{ matrix.image }},push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=release-${{ matrix.image }}
           cache-to: type=gha,mode=max,scope=release-${{ matrix.image }}
+      - name: Record pull-by-digest reference
+        env:
+          IMAGE: ghcr.io/${{ github.repository }}-${{ matrix.image }}
+          SUBJECT_DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          set -eu
+          mkdir -p container-reference
+          printf '%s@%s\n' "$IMAGE" "$SUBJECT_DIGEST" > "container-reference/${{ matrix.image }}-image.txt"
+      - name: Upload pull-by-digest reference
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: release-container-${{ matrix.image }}
+          path: container-reference/${{ matrix.image }}-image.txt
+          if-no-files-found: error
       - name: Attest container provenance
         uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
         with:
@@ -195,18 +272,47 @@ jobs:
           merge-multiple: true
       - name: Create checksums
         working-directory: release-assets
-        run: find . -maxdepth 1 -type f -name '*.tar.gz' -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+        run: find . -maxdepth 1 -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
       - name: Attest release artifacts
         uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
         with:
           subject-path: release-assets/*
-      - name: Publish or refresh GitHub release
+      - name: Publish immutable GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            gh release upload "$GITHUB_REF_NAME" release-assets/* --clobber
-          else
-            gh release create "$GITHUB_REF_NAME" release-assets/* --verify-tag --generate-notes --title "$GITHUB_REF_NAME"
+          set -eu
+          release_error=$(mktemp)
+          if gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${GITHUB_REF_NAME}" >/dev/null 2>"$release_error"; then
+            existing=$(mktemp -d)
+            trap 'rm -rf "$existing"; rm -f "$release_error"' EXIT
+            gh release download "$GITHUB_REF_NAME" --dir "$existing"
+            test -f "$existing/SHA256SUMS" || {
+              echo "existing release has no SHA256SUMS; refusing to replace assets" >&2
+              exit 1
+            }
+            cmp -s release-assets/SHA256SUMS "$existing/SHA256SUMS" || {
+              echo "existing release checksums differ; refusing to replace assets" >&2
+              exit 1
+            }
+            (cd "$existing" && sha256sum --check SHA256SUMS) || {
+              echo "existing release assets do not match their checksums" >&2
+              exit 1
+            }
+            find release-assets -maxdepth 1 -type f -printf '%f\n' | sort > "$existing/.new-assets.txt"
+            find "$existing" -maxdepth 1 -type f ! -name .new-assets.txt ! -name .existing-assets.txt -printf '%f\n' | sort > "$existing/.existing-assets.txt"
+            cmp -s "$existing/.new-assets.txt" "$existing/.existing-assets.txt" || {
+              echo "existing release asset set differs; refusing to replace assets" >&2
+              exit 1
+            }
+            echo "existing release assets match exactly; leaving them unchanged"
+            exit 0
+          elif ! grep -Eq 'HTTP 404|status: 404' "$release_error"; then
+            cat "$release_error" >&2
+            rm -f "$release_error"
+            echo "cannot prove GitHub release absence" >&2
+            exit 1
           fi
+          rm -f "$release_error"
+          gh release create "$GITHUB_REF_NAME" release-assets/* --verify-tag --generate-notes --title "$GITHUB_REF_NAME"

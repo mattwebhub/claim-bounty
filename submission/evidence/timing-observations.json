@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0.0",
+  "observedInternalWorkflow": {
+    "classification": "observed_elapsed_duration",
+    "runId": "97A93515-89D6-4292-BB32-64A98F64BE20",
+    "duration": "PT6H49M6S",
+    "seconds": 24546,
+    "scope": "primary scientific workflow wall time",
+    "headlineRuntime": true,
+    "selectedBenchmarkMeasurement": false,
+    "qualityEvidence": false
+  },
+  "parentThreadEnvelope": {
+    "classification": "supporting_activity_envelope",
+    "duration": "PT8H12M30S",
+    "seconds": 29550,
+    "includes": ["concurrency", "pauses", "retries", "post-workflow work"],
+    "headlineRuntime": false,
+    "selectedBenchmarkMeasurement": false,
+    "qualityEvidence": false
+  },
+  "humanComparison": {
+    "classification": "estimate_not_observation",
+    "unit": "active_person_hours",
+    "personCount": 1,
+    "baseHours": 56,
+    "rangeHours": {
+      "minimum": 21,
+      "maximum": 124
+    },
+    "measured": false,
+    "humanQualityScore": false,
+    "unattendedComputeAndWaitingExcluded": true,
+    "sourcePath": "submission/evidence/human-estimate.json"
+  },
+  "comparability": "not_comparable",
+  "speedup": {
+    "status": "not_calculated",
+    "value": null
+  }
+}

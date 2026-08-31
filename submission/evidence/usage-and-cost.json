@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "verified_usage_cost_unmeasured",
+  "provider": "openai",
+  "model": "gpt-5.6-sol",
+  "accountingRules": {
+    "sessionUnit": "unique_cli_session",
+    "countEachSessionOnce": true,
+    "included": ["retries", "correction rounds"],
+    "excluded": ["repeated cumulative events", "later assessment sessions"],
+    "cachedInputIncludedWithinInput": true,
+    "reasoningOutputIncludedWithinOutput": true
+  },
+  "runs": [
+    {
+      "role": "primary",
+      "runId": "97A93515-89D6-4292-BB32-64A98F64BE20",
+      "uniqueCliSessions": 91,
+      "tokens": {
+        "input": 157669522,
+        "cachedInput": 148934912,
+        "output": 1697629,
+        "reasoningOutput": 425605,
+        "total": 159367151
+      }
+    },
+    {
+      "role": "secondary",
+      "runId": "99AB2FDF-9953-4FA8-B499-7FE75256EC9E",
+      "uniqueCliSessions": 18,
+      "tokens": {
+        "input": 22184313,
+        "cachedInput": 20737024,
+        "output": 251200,
+        "reasoningOutput": 63907,
+        "total": 22435513
+      }
+    }
+  ],
+  "combined": {
+    "uniqueCliSessions": 109,
+    "tokens": {
+      "input": 179853835,
+      "cachedInput": 169671936,
+      "output": 1948829,
+      "reasoningOutput": 489512,
+      "total": 181802664
+    }
+  },
+  "runtimeDisclosure": {
+    "headlineScientificWorkflow": {
+      "runId": "97A93515-89D6-4292-BB32-64A98F64BE20",
+      "duration": "PT6H49M6S",
+      "seconds": 24546
+    },
+    "parentThreadEnvelope": {
+      "duration": "PT8H12M30S",
+      "seconds": 29550,
+      "classification": "supporting_context_only",
+      "includes": ["concurrency", "pauses", "retries", "post-workflow work"]
+    }
+  },
+  "monetaryCost": {
+    "status": "unmeasured",
+    "recordedPlan": "Pro",
+    "contemporaneousSubscriptionAllocationAvailable": false,
+    "invoiceAvailable": false,
+    "apiRateAvailable": false,
+    "perRunDollarChargeAvailable": false,
+    "zeroDollarClaimSupported": false,
+    "retroactiveCurrentApiPricingAllowed": false
+  },
+  "benchmarkQualityEvidence": false
+}

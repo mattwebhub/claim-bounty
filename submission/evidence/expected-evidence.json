@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "completed_attempts_not_comparable",
+  "artifacts": [
+    {
+      "name": "sealed ChatGPT comparator",
+      "status": "complete",
+      "path": "submission/evidence/chatgpt-comparator.json"
+    },
+    {
+      "name": "qualified-human effort estimate",
+      "status": "complete_estimate_not_observation",
+      "path": "submission/evidence/human-estimate.json"
+    },
+    {
+      "name": "frozen public case manifest",
+      "status": "complete_validated_not_redistributed",
+      "path": "submission/evidence/frozen-case/manifest.json"
+    },
+    {
+      "name": "public-safe ClaimBounty exploratory attempt",
+      "status": "complete_protocol_deviation_unscored",
+      "path": "submission/evidence/claimbounty-exploratory-attempt.json"
+    },
+    {
+      "name": "public benchmark result",
+      "status": "not_available_protocol_deviation",
+      "path": null
+    },
+    {
+      "name": "comparator independent scoring record",
+      "status": "complete",
+      "path": "submission/evidence/chatgpt-comparator.json"
+    },
+    {
+      "name": "comparator adjudication record",
+      "status": "complete_invalid_incomplete",
+      "path": "submission/evidence/chatgpt-comparator.json"
+    }
+  ]
+}
