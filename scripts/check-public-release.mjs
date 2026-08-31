@@ -115,8 +115,21 @@ function scanReachableHistory() {
     if (legacyBrand.test(commitMetadata)) {
       failures.push(`legacy brand exists in reachable commit metadata: ${commit}`);
     }
-    const [, authorEmail, , committerEmail] = commitMetadata.trimEnd().split("\n");
-    if (!publicCommitEmail.test(authorEmail) || !publicCommitEmail.test(committerEmail)) {
+    const [, authorEmail, committerName, committerEmail, subject] = commitMetadata.trimEnd().split("\n");
+    const isSyntheticPullRequestMerge =
+      process.env.GITHUB_ACTIONS === "true" &&
+      process.env.GITHUB_EVENT_NAME === "pull_request" &&
+      commit === execFileSync("git", ["rev-parse", "HEAD"], {cwd: root, encoding: "utf8"}).trim() &&
+      committerName === "GitHub" &&
+      committerEmail === "noreply@github.com" &&
+      /^Merge [0-9a-f]{40} into [0-9a-f]{40}$/.test(subject) &&
+      execFileSync("git", ["show", "-s", "--format=%P", commit], {cwd: root, encoding: "utf8"})
+        .trim()
+        .split(/\s+/).length === 2;
+    if (
+      !isSyntheticPullRequestMerge &&
+      (!publicCommitEmail.test(authorEmail) || !publicCommitEmail.test(committerEmail))
+    ) {
       failures.push(`non-public author or committer email exists in reachable commit metadata: ${commit}`);
     }
     const records = execFileSync("git", ["ls-tree", "-r", "-z", "--full-tree", commit], {
