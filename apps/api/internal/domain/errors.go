@@ -13,6 +13,17 @@ var (
 	ErrWorkspaceNotFound = errors.New("workspace not found")
 	ErrProjectExists     = errors.New("project already exists")
 	ErrVersionConflict   = errors.New("workspace version conflict")
+	ErrUnauthorized      = errors.New("authentication required")
+	ErrForbidden         = errors.New("operation forbidden")
+	ErrOrderNotFound     = errors.New("order not found")
+	ErrFileNotFound      = errors.New("file not found")
+	ErrExportNotFound    = errors.New("export not found")
+	ErrInvalidChallenge  = errors.New("email verification invalid")
+	ErrRateLimited       = errors.New("rate limited")
+	ErrStateConflict     = errors.New("resource state conflict")
+	ErrFileNotClean      = errors.New("file not clean")
+	ErrExportNotReady    = errors.New("export not ready")
+	ErrIdempotency       = errors.New("idempotency conflict")
 )
 
 // FieldIssue is a stable, machine-readable description of invalid domain

@@ -381,6 +381,24 @@ func mapError(err error) (int, string, string, []response.FieldIssue) {
 		return http.StatusConflict, "project_exists", "project already exists", nil
 	case errors.Is(err, domain.ErrVersionConflict):
 		return http.StatusConflict, "version_conflict", "workspace was changed by another client", nil
+	case errors.Is(err, domain.ErrUnauthorized):
+		return http.StatusUnauthorized, "unauthorized", "authentication is required", nil
+	case errors.Is(err, domain.ErrForbidden):
+		return http.StatusForbidden, "forbidden", "operation is forbidden", nil
+	case errors.Is(err, domain.ErrOrderNotFound), errors.Is(err, domain.ErrFileNotFound), errors.Is(err, domain.ErrExportNotFound):
+		return http.StatusNotFound, "order_not_found", "resource not found", nil
+	case errors.Is(err, domain.ErrInvalidChallenge):
+		return http.StatusUnauthorized, "email_verification_invalid", "email verification is invalid or expired", nil
+	case errors.Is(err, domain.ErrRateLimited):
+		return http.StatusTooManyRequests, "rate_limited", "request rate limit exceeded", nil
+	case errors.Is(err, domain.ErrStateConflict):
+		return http.StatusConflict, "conflict", "resource state does not allow this operation", nil
+	case errors.Is(err, domain.ErrFileNotClean):
+		return http.StatusConflict, "file_not_clean", "file has not passed inspection", nil
+	case errors.Is(err, domain.ErrExportNotReady):
+		return http.StatusConflict, "export_not_ready", "export is not ready", nil
+	case errors.Is(err, domain.ErrIdempotency):
+		return http.StatusConflict, "idempotency_conflict", "idempotency key was used for another request", nil
 	default:
 		return http.StatusInternalServerError, "internal_error", "an unexpected error occurred", nil
 	}

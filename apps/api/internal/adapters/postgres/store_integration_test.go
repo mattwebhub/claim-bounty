@@ -51,6 +51,29 @@ func TestMigrationsReplayUpDownUp(t *testing.T) {
 	}
 }
 
+func TestClaimBountyDeletionOutboxAcceptsDetachedObjectCleanup(t *testing.T) {
+	baseURL := os.Getenv("TEST_DATABASE_URL")
+	if baseURL == "" {
+		t.Skip("TEST_DATABASE_URL is not set")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 45*time.Second)
+	defer cancel()
+	databaseURL, cleanup := isolatedSchema(t, ctx, baseURL)
+	defer cleanup()
+	if err := postgres.Migrate(ctx, databaseURL); err != nil {
+		t.Fatal(err)
+	}
+	database, err := sql.Open("pgx", databaseURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer database.Close()
+
+	if _, err := database.ExecContext(ctx, `INSERT INTO claimbounty_outbox(kind,storage_key,object_generation) VALUES('delete_object','quarantine/test-object','version-1')`); err != nil {
+		t.Fatalf("detached delete_object outbox insert failed: %v", err)
+	}
+}
+
 func TestStoreRoundTripTransactionPaginationAndConflict(t *testing.T) {
 	baseURL := os.Getenv("TEST_DATABASE_URL")
 	if baseURL == "" {

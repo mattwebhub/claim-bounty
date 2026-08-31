@@ -35,19 +35,24 @@ type Store struct {
 	pool         *pgxpool.Pool
 	queries      *sqlc.Queries
 	queryTimeout time.Duration
+	emails       ports.EmailProtector
 }
 
-func NewStore(pool *pgxpool.Pool, queryTimeout time.Duration) (*Store, error) {
+func NewStore(pool *pgxpool.Pool, queryTimeout time.Duration, emails ...ports.EmailProtector) (*Store, error) {
 	if pool == nil {
 		return nil, errors.New("postgres: pool is required")
 	}
 	if queryTimeout <= 0 {
 		queryTimeout = defaultQueryTimeout
 	}
-	return &Store{pool: pool, queries: sqlc.New(pool), queryTimeout: queryTimeout}, nil
+	var protector ports.EmailProtector
+	if len(emails) > 0 {
+		protector = emails[0]
+	}
+	return &Store{pool: pool, queries: sqlc.New(pool), queryTimeout: queryTimeout, emails: protector}, nil
 }
 
-func Open(ctx context.Context, databaseURL string, maxConnections int32, queryTimeout time.Duration) (*Store, error) {
+func Open(ctx context.Context, databaseURL string, maxConnections int32, queryTimeout time.Duration, emails ...ports.EmailProtector) (*Store, error) {
 	if databaseURL == "" {
 		return nil, errors.New("postgres: database URL is required")
 	}
@@ -62,7 +67,7 @@ func Open(ctx context.Context, databaseURL string, maxConnections int32, queryTi
 	if err != nil {
 		return nil, databaseFailure("open pool", err)
 	}
-	store, err := NewStore(pool, queryTimeout)
+	store, err := NewStore(pool, queryTimeout, emails...)
 	if err != nil {
 		pool.Close()
 		return nil, err
@@ -72,6 +77,20 @@ func Open(ctx context.Context, databaseURL string, maxConnections int32, queryTi
 		return nil, err
 	}
 	return store, nil
+}
+
+func (s *Store) protectEmail(ctx context.Context, email string) ([]byte, [32]byte, error) {
+	if s.emails == nil {
+		return nil, [32]byte{}, errors.New("postgres: email protector is required for ClaimBounty")
+	}
+	return s.emails.EncryptEmail(ctx, email)
+}
+
+func (s *Store) revealEmail(ctx context.Context, ciphertext []byte) (string, error) {
+	if s.emails == nil {
+		return "", errors.New("postgres: email protector is required for ClaimBounty")
+	}
+	return s.emails.DecryptEmail(ctx, ciphertext)
 }
 
 func (s *Store) Close() { s.pool.Close() }

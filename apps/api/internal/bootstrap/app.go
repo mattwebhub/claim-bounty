@@ -3,6 +3,7 @@ package bootstrap
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -10,8 +11,13 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
+	"strings"
 	"syscall"
 
+	claimexport "github.com/mattwebhub/micro1-template/apps/api/internal/adapters/export"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/adapters/postgres"
+	"github.com/mattwebhub/micro1-template/apps/api/internal/adapters/validation"
 	"github.com/mattwebhub/micro1-template/apps/api/internal/config"
 	"github.com/mattwebhub/micro1-template/apps/api/internal/observability"
 	"github.com/mattwebhub/micro1-template/apps/api/internal/transport/httpapi"
@@ -42,6 +48,7 @@ func NewApplication(cfg config.Config, logger *slog.Logger, modules ...Module) (
 	}
 	readiness := httpapi.NewReadinessRegistry()
 	registrars := make([]httpapi.RouteRegistrar, 0, len(modules))
+	allowedOrigins := append([]string(nil), cfg.HTTP.AllowedOrigins...)
 	seen := make(map[string]struct{}, len(modules))
 	for _, module := range modules {
 		if module.Name == "" {
@@ -53,6 +60,13 @@ func NewApplication(cfg config.Config, logger *slog.Logger, modules ...Module) (
 		seen[module.Name] = struct{}{}
 		if module.Routes != nil {
 			registrars = append(registrars, module.Routes)
+			if provider, ok := module.Routes.(interface{ AllowedOrigins() []string }); ok {
+				for _, origin := range provider.AllowedOrigins() {
+					if !containsString(allowedOrigins, origin) {
+						allowedOrigins = append(allowedOrigins, origin)
+					}
+				}
+			}
 		}
 		if module.Readiness != nil {
 			if err := readiness.Register(module.Name, module.Readiness); err != nil {
@@ -63,10 +77,19 @@ func NewApplication(cfg config.Config, logger *slog.Logger, modules ...Module) (
 	handler := httpapi.NewRouter(httpapi.RouterOptions{
 		Logger: logger, Readiness: readiness,
 		ReadinessTimeout: cfg.Server.ReadinessTimeout,
-		AllowedOrigins:   cfg.HTTP.AllowedOrigins,
+		AllowedOrigins:   allowedOrigins,
 		Registrars:       registrars,
 	})
 	return &Application{config: cfg, logger: logger, modules: modules, readiness: readiness, handler: handler}, nil
+}
+
+func containsString(values []string, candidate string) bool {
+	for _, value := range values {
+		if value == candidate {
+			return true
+		}
+	}
+	return false
 }
 
 func (application *Application) Handler() http.Handler { return application.handler }
@@ -155,9 +178,37 @@ func (application *Application) shutdownModulesWithContext(ctx context.Context, 
 	return result
 }
 
-// Run is the process entry point. Supported commands are serve (default) and
-// validate-config, which performs an offline deployment preflight.
+// Run is the non-interactive process entry point used by the API, worker, and jobs.
 func Run(parent context.Context, arguments []string) error {
+	if (len(arguments) == 3 || len(arguments) == 4) && arguments[0] == "verify-export" {
+		schemas, err := validation.New()
+		if err != nil {
+			return fmt.Errorf("bootstrap: compile ClaimBounty schemas: %w", err)
+		}
+		verifier, err := claimexport.NewVerifier(schemas)
+		if err != nil {
+			return err
+		}
+		destination := strings.TrimSuffix(arguments[1], filepath.Ext(arguments[1])) + "-verified"
+		if len(arguments) == 4 {
+			destination = arguments[3]
+		}
+		paths, err := verifier.VerifyAndExtract(arguments[1], arguments[2], destination)
+		if err != nil {
+			return err
+		}
+		return json.NewEncoder(os.Stdout).Encode(struct {
+			Status           string `json:"status"`
+			Destination      string `json:"destination"`
+			CaseBundle       string `json:"caseBundle"`
+			AuditRequest     string `json:"auditRequest"`
+			ScientificPolicy string `json:"scientificPolicy"`
+			ExecutionPolicy  string `json:"executionPolicy"`
+		}{
+			Status: "verified", Destination: paths.Destination, CaseBundle: paths.CaseBundle,
+			AuditRequest: paths.AuditRequest, ScientificPolicy: paths.ScientificPolicy, ExecutionPolicy: paths.ExecutionPolicy,
+		})
+	}
 	command, err := parseCommand(arguments)
 	if err != nil {
 		return err
@@ -169,6 +220,17 @@ func Run(parent context.Context, arguments []string) error {
 	if command == "validate-config" {
 		return nil
 	}
+	if command == "healthcheck" {
+		return runHealthcheck(parent, cfg)
+	}
+	if command == "migrate" {
+		migrationContext, cancel := context.WithTimeout(parent, cfg.Database.MigrationTimeout)
+		defer cancel()
+		if err := postgres.Migrate(migrationContext, cfg.Database.URL); err != nil {
+			return fmt.Errorf("bootstrap: migrate database: %w", err)
+		}
+		return nil
+	}
 	logger, err := observability.NewLogger(os.Stdout, observability.LoggerOptions{
 		Level: cfg.Log.Level, Format: cfg.Log.Format,
 		Service: "api", Environment: string(cfg.Environment),
@@ -176,26 +238,73 @@ func Run(parent context.Context, arguments []string) error {
 	if err != nil {
 		return fmt.Errorf("bootstrap: initialize logger: %w", err)
 	}
+	runtimeContext, stop := signal.NotifyContext(parent, os.Interrupt, syscall.SIGTERM)
+	defer stop()
+	if command == "worker" {
+		workers, closeWorkers, err := buildClaimBountyWorkers(runtimeContext, cfg, logger)
+		if err != nil {
+			return err
+		}
+		defer closeWorkers()
+		return workers.Run(runtimeContext)
+	}
+	if command == "retention" || command == "retention-cleanup" {
+		cleanupContext, cancel := context.WithTimeout(runtimeContext, cfg.ClaimBounty.RetentionTimeout)
+		defer cancel()
+		return runRetentionCleanup(cleanupContext, cfg)
+	}
 	projectModule, err := buildProjectModule(parent, cfg, logger)
 	if err != nil {
 		return err
 	}
-	application, err := NewApplication(cfg, logger, projectModule)
+	modules := []Module{projectModule}
+	if cfg.ClaimBounty.Enabled {
+		claimModule, claimErr := buildClaimBountyModule(parent, cfg, logger)
+		if claimErr != nil {
+			_ = projectModule.Shutdown(context.Background())
+			return claimErr
+		}
+		modules = append(modules, claimModule)
+	}
+	application, err := NewApplication(cfg, logger, modules...)
 	if err != nil {
-		_ = projectModule.Shutdown(context.Background())
+		for index := len(modules) - 1; index >= 0; index-- {
+			if modules[index].Shutdown != nil {
+				_ = modules[index].Shutdown(context.Background())
+			}
+		}
 		return err
 	}
-	runtimeContext, stop := signal.NotifyContext(parent, os.Interrupt, syscall.SIGTERM)
-	defer stop()
 	return application.Serve(runtimeContext)
+}
+
+func runHealthcheck(parent context.Context, cfg config.Config) error {
+	ctx, cancel := context.WithTimeout(parent, cfg.Server.ReadinessTimeout)
+	defer cancel()
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("http://127.0.0.1:%d/health/ready", cfg.Server.Port), nil)
+	if err != nil {
+		return fmt.Errorf("bootstrap: create readiness request: %w", err)
+	}
+	response, err := (&http.Client{Timeout: cfg.Server.ReadinessTimeout}).Do(request)
+	if err != nil {
+		return fmt.Errorf("bootstrap: readiness request failed: %w", err)
+	}
+	defer response.Body.Close()
+	if response.StatusCode != http.StatusOK {
+		return fmt.Errorf("bootstrap: readiness returned HTTP %d", response.StatusCode)
+	}
+	return nil
 }
 
 func parseCommand(arguments []string) (string, error) {
 	if len(arguments) == 0 {
 		return "serve", nil
 	}
-	if len(arguments) == 1 && (arguments[0] == "serve" || arguments[0] == "validate-config") {
-		return arguments[0], nil
+	if len(arguments) == 1 {
+		switch arguments[0] {
+		case "serve", "migrate", "worker", "retention", "retention-cleanup", "validate-config", "healthcheck":
+			return arguments[0], nil
+		}
 	}
-	return "", errors.New("bootstrap: usage: api [serve|validate-config]")
+	return "", errors.New("bootstrap: usage: api [serve|migrate|worker|retention|retention-cleanup|validate-config|healthcheck] | api verify-export <archive.zip> <expected-sha256-hex> [new-destination]")
 }

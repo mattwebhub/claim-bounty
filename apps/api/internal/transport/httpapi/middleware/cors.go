@@ -27,7 +27,7 @@ func CORS(allowedOrigins []string) Middleware {
 			}
 			w.Header().Set("Access-Control-Allow-Origin", origin)
 			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
-			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, If-Match, Idempotency-Key, X-Request-ID")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, If-Match, Idempotency-Key, X-Csrf-Token, X-Request-ID")
 			w.Header().Set("Access-Control-Expose-Headers", "ETag, Location, X-Request-ID")
 			if r.Method == http.MethodOptions {
 				w.Header().Add("Vary", "Access-Control-Request-Method")
