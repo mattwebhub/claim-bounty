@@ -13,6 +13,14 @@ export const router = createBrowserRouter([
         lazy: () => import('@/routes/home/home.route'),
       },
       {
+        path: 'admin',
+        lazy: () => import('@/routes/admin/admin-orders.route'),
+      },
+      {
+        path: 'admin/orders/:orderId',
+        lazy: () => import('@/routes/admin/admin-order-detail.route'),
+      },
+      {
         path: 'projects',
         lazy: () => import('@/routes/projects/projects.route'),
       },

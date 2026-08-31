@@ -14,7 +14,7 @@ const projectDto = {
 describe('ProjectDetails', () => {
   it('renders project metadata and the workspace destination', async () => {
     mockServer.use(
-      http.get(`http://localhost:8080/api/v1/projects/${projectDto.id}`, () =>
+      http.get(`http://127.0.0.1:8080/api/v1/projects/${projectDto.id}`, () =>
         HttpResponse.json({ data: projectDto }),
       ),
     );

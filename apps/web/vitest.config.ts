@@ -7,6 +7,9 @@ const rootDirectory = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [react()],
+  define: {
+    'import.meta.env.VITE_API_BASE_URL': JSON.stringify('http://127.0.0.1:8080/api/v1'),
+  },
   resolve: {
     alias: {
       '@': path.resolve(rootDirectory, 'src'),

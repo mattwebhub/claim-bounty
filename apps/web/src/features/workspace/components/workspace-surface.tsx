@@ -1,4 +1,3 @@
-import { Box } from 'lucide-react';
 import type { WorkspaceObject } from '../model/workspace';
 
 interface WorkspaceSurfaceProps {
@@ -13,7 +12,6 @@ export function WorkspaceSurface({ objects, onSelect, selectedObjectId }: Worksp
       <div className="workspace-grid" aria-hidden="true" />
       {objects.length === 0 ? (
         <div className="workspace-empty">
-          <Box aria-hidden="true" />
           <h2>Your workspace is ready</h2>
           <p>Add an object from the palette. Every canvas action is also available by keyboard.</p>
         </div>

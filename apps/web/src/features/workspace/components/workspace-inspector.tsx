@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Trash2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button, Input } from '@/shared/ui';
@@ -108,7 +107,7 @@ export function WorkspaceInspector({
               size="icon"
               variant="secondary"
             >
-              <ArrowUp aria-hidden="true" />
+              <span aria-hidden="true">↑</span>
             </Button>
             <Button
               aria-label="Move left"
@@ -118,7 +117,7 @@ export function WorkspaceInspector({
               size="icon"
               variant="secondary"
             >
-              <ArrowLeft aria-hidden="true" />
+              <span aria-hidden="true">←</span>
             </Button>
             <Button
               aria-label="Move down"
@@ -128,7 +127,7 @@ export function WorkspaceInspector({
               size="icon"
               variant="secondary"
             >
-              <ArrowDown aria-hidden="true" />
+              <span aria-hidden="true">↓</span>
             </Button>
             <Button
               aria-label="Move right"
@@ -138,11 +137,11 @@ export function WorkspaceInspector({
               size="icon"
               variant="secondary"
             >
-              <ArrowRight aria-hidden="true" />
+              <span aria-hidden="true">→</span>
             </Button>
           </fieldset>
           <Button onClick={onRemove} size="sm" variant="destructive">
-            <Trash2 aria-hidden="true" /> Remove object
+            Remove object
           </Button>
         </div>
       ) : (

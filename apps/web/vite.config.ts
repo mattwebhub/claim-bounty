@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
 
 const rootDirectory = path.dirname(fileURLToPath(import.meta.url));
+const developmentApiOrigin = process.env.DEV_API_ORIGIN ?? 'http://127.0.0.1:8080';
 const systemTestApiOrigin = process.env.SYSTEM_TEST_API_ORIGIN;
 
 export default defineConfig({
@@ -15,8 +16,14 @@ export default defineConfig({
     },
   },
   server: {
+    host: '127.0.0.1',
     port: 5173,
     strictPort: true,
+    proxy: {
+      '/api': {
+        target: developmentApiOrigin,
+      },
+    },
   },
   preview: {
     port: 4173,

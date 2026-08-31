@@ -1,4 +1,3 @@
-import { FolderKanban, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import {
   Button,
@@ -20,7 +19,7 @@ function ProjectCard({ project }: { project: Project }) {
     <article>
       <Card>
         <CardHeader>
-          <FolderKanban className="feature-icon" aria-hidden="true" />
+          <p className="card-label">Project</p>
           <CardTitle>{project.name}</CardTitle>
         </CardHeader>
         <CardContent>
@@ -55,7 +54,6 @@ export function ProjectsPage() {
 
       <section className="project-create" aria-labelledby="create-project-title">
         <div className="project-section-heading">
-          <Plus aria-hidden="true" />
           <h2 id="create-project-title">New project</h2>
         </div>
         <CreateProjectForm />
@@ -63,7 +61,6 @@ export function ProjectsPage() {
 
       <section aria-labelledby="project-list-title" aria-busy={projectsQuery.isPending}>
         <div className="project-section-heading">
-          <FolderKanban aria-hidden="true" />
           <h2 id="project-list-title">Your projects</h2>
         </div>
 

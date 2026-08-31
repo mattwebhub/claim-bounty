@@ -20,7 +20,7 @@ describe('WorkspaceEditor', () => {
   beforeEach(() => {
     useWorkspaceDraftStore.getState().reset();
     mockServer.use(
-      http.get(`http://localhost:8080/api/v1/projects/${projectId}/workspace`, () =>
+      http.get(`http://127.0.0.1:8080/api/v1/projects/${projectId}/workspace`, () =>
         HttpResponse.json({ data: workspace }),
       ),
     );
@@ -50,7 +50,7 @@ describe('WorkspaceEditor', () => {
     let ifMatch: string | null = null;
     mockServer.use(
       http.put(
-        `http://localhost:8080/api/v1/projects/${projectId}/workspace`,
+        `http://127.0.0.1:8080/api/v1/projects/${projectId}/workspace`,
         async ({ request }) => {
           ifMatch = request.headers.get('if-match');
           const body = (await request.json()) as { document: typeof workspace.document };
@@ -78,7 +78,7 @@ describe('WorkspaceEditor', () => {
       '00000000-0000-4000-8000-000000000010',
     );
     mockServer.use(
-      http.put(`http://localhost:8080/api/v1/projects/${projectId}/workspace`, () =>
+      http.put(`http://127.0.0.1:8080/api/v1/projects/${projectId}/workspace`, () =>
         HttpResponse.json(
           { error: { code: 'version_conflict', message: 'Workspace changed elsewhere.' } },
           { status: 409 },

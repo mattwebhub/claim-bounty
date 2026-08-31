@@ -26,7 +26,7 @@ describe('CreateProjectForm', () => {
 
   it('maps API validation details to the owned form field', async () => {
     mockServer.use(
-      http.post('http://localhost:8080/api/v1/projects', () =>
+      http.post('http://127.0.0.1:8080/api/v1/projects', () =>
         HttpResponse.json(
           {
             error: {
@@ -52,7 +52,7 @@ describe('CreateProjectForm', () => {
 
   it('announces success and returns the mapped project to its owner', async () => {
     mockServer.use(
-      http.post('http://localhost:8080/api/v1/projects', () =>
+      http.post('http://127.0.0.1:8080/api/v1/projects', () =>
         HttpResponse.json({ data: projectDto }, { status: 201 }),
       ),
     );

@@ -11,7 +11,7 @@ describe('workspace service', () => {
     let ifMatch: string | null = null;
     mockServer.use(
       http.put(
-        `http://localhost:8080/api/v1/projects/${projectId}/workspace`,
+        `http://127.0.0.1:8080/api/v1/projects/${projectId}/workspace`,
         async ({ request }) => {
           requestBody = await request.json();
           ifMatch = request.headers.get('if-match');

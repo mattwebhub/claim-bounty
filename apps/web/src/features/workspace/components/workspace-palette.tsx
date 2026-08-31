@@ -1,21 +1,18 @@
-import { CircleDot, FileText, LayoutPanelTop } from 'lucide-react';
 import { Button } from '@/shared/ui';
 import type { WorkspaceObjectKind } from '../model/workspace';
 
 const paletteItems = [
-  { kind: 'note', label: 'Note', description: 'Capture a short idea.', Icon: FileText },
+  { kind: 'note', label: 'Note', description: 'Capture a short idea.' },
   {
     kind: 'card',
     label: 'Card',
     description: 'Group a piece of information.',
-    Icon: LayoutPanelTop,
   },
-  { kind: 'marker', label: 'Marker', description: 'Mark an important position.', Icon: CircleDot },
+  { kind: 'marker', label: 'Marker', description: 'Mark an important position.' },
 ] satisfies readonly {
   kind: WorkspaceObjectKind;
   label: string;
   description: string;
-  Icon: typeof FileText;
 }[];
 
 interface WorkspacePaletteProps {
@@ -37,7 +34,7 @@ export function WorkspacePalette({ hidden = false, onAdd }: WorkspacePaletteProp
         <p>Add an object, then position it on the work surface.</p>
       </div>
       <div className="palette-list">
-        {paletteItems.map(({ description, Icon, kind, label }) => (
+        {paletteItems.map(({ description, kind, label }) => (
           <Button
             className="palette-item"
             key={kind}
@@ -46,7 +43,6 @@ export function WorkspacePalette({ hidden = false, onAdd }: WorkspacePaletteProp
             }}
             variant="secondary"
           >
-            <Icon aria-hidden="true" />
             <span>
               <strong>Add {label}</strong>
               <small>{description}</small>

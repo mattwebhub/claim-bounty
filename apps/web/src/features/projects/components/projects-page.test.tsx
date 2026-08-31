@@ -14,7 +14,7 @@ const projectDto = {
 describe('ProjectsPage', () => {
   it('renders an accessible loading state, then project links', async () => {
     mockServer.use(
-      http.get('http://localhost:8080/api/v1/projects', () =>
+      http.get('http://127.0.0.1:8080/api/v1/projects', () =>
         HttpResponse.json({ data: { items: [projectDto] } }),
       ),
     );
@@ -32,7 +32,7 @@ describe('ProjectsPage', () => {
 
   it('renders the empty state when the collection is empty', async () => {
     mockServer.use(
-      http.get('http://localhost:8080/api/v1/projects', () =>
+      http.get('http://127.0.0.1:8080/api/v1/projects', () =>
         HttpResponse.json({ data: { items: [] } }),
       ),
     );

@@ -14,4 +14,4 @@ export {
   type SaveState,
   type SaveStatusProps,
 } from '@/shared/ui/states';
-export { ThemeProvider, ThemeToggle, useTheme } from '@/shared/ui/theme';
+export { ThemeProvider } from '@/shared/ui/theme';

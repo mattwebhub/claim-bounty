@@ -1,4 +1,3 @@
-import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardContent, CardHeader, CardTitle, ErrorState } from '@/shared/ui';
 import { useProject } from '../api/project.queries';
@@ -40,10 +39,7 @@ export function ProjectDetails({ projectId }: ProjectDetailsProps) {
   return (
     <main id="main-content" className="projects-page" tabIndex={-1}>
       <Button asChild variant="ghost">
-        <Link to="/projects">
-          <ArrowLeft aria-hidden="true" />
-          Back to projects
-        </Link>
+        <Link to="/projects">Back to projects</Link>
       </Button>
       <Card className="project-detail-card">
         <CardHeader>
@@ -70,10 +66,7 @@ export function ProjectDetails({ projectId }: ProjectDetailsProps) {
             </div>
           </dl>
           <Button asChild>
-            <Link to={`/workspace/${project.id}`}>
-              Open workspace
-              <ExternalLink aria-hidden="true" />
-            </Link>
+            <Link to={`/workspace/${project.id}`}>Open workspace</Link>
           </Button>
         </CardContent>
       </Card>

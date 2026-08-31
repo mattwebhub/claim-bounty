@@ -13,7 +13,7 @@ const projectDto = {
 describe('project service', () => {
   it('selects the list endpoint and maps DTO timestamps into the feature model', async () => {
     mockServer.use(
-      http.get('http://localhost:8080/api/v1/projects', ({ request }) => {
+      http.get('http://127.0.0.1:8080/api/v1/projects', ({ request }) => {
         const url = new URL(request.url);
         expect(url.searchParams.get('cursor')).toBe('next page');
         expect(url.searchParams.get('limit')).toBe('10');
@@ -34,7 +34,7 @@ describe('project service', () => {
 
   it('posts normalized create input and maps the created project', async () => {
     mockServer.use(
-      http.post('http://localhost:8080/api/v1/projects', async ({ request }) => {
+      http.post('http://127.0.0.1:8080/api/v1/projects', async ({ request }) => {
         expect(await request.json()).toEqual({ name: 'New project' });
         return HttpResponse.json({ data: { ...projectDto, name: 'New project' } }, { status: 201 });
       }),
@@ -48,7 +48,7 @@ describe('project service', () => {
 
   it('runtime-rejects a project response with an invalid identifier', async () => {
     mockServer.use(
-      http.get('http://localhost:8080/api/v1/projects/not-a-project', () =>
+      http.get('http://127.0.0.1:8080/api/v1/projects/not-a-project', () =>
         HttpResponse.json({ data: { ...projectDto, id: 'not-a-uuid' } }),
       ),
     );

@@ -1,4 +1,3 @@
-import { AlertCircle, Cloud, CloudOff, LoaderCircle, TriangleAlert } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/shared/ui/button';
 
@@ -12,8 +11,8 @@ export function PagePending() {
       aria-live="polite"
       tabIndex={-1}
     >
-      <LoaderCircle className="spinner" aria-hidden="true" />
-      <span>{t('states.loading')}</span>
+      <span className="loading-mark" aria-hidden="true" />
+      <strong>{t('states.loading')}</strong>
     </main>
   );
 }
@@ -27,7 +26,6 @@ export interface EmptyStateProps {
 export function EmptyState({ action, description, title }: EmptyStateProps) {
   return (
     <section className="state-card" aria-labelledby="empty-state-title">
-      <Cloud className="state-icon" aria-hidden="true" />
       <h1 id="empty-state-title">{title}</h1>
       <p>{description}</p>
       {action}
@@ -45,7 +43,6 @@ export interface ErrorStateProps {
 export function ErrorState({ actionLabel, description, onAction, title }: ErrorStateProps) {
   return (
     <section className="state-card" role="alert" aria-labelledby="error-state-title">
-      <AlertCircle className="state-icon state-icon-error" aria-hidden="true" />
       <h1 id="error-state-title">{title}</h1>
       <p>{description}</p>
       {actionLabel && onAction ? <Button onClick={onAction}>{actionLabel}</Button> : null}
@@ -57,7 +54,7 @@ export function OfflineBanner() {
   const { t } = useTranslation('common');
   return (
     <div className="offline-banner" role="status">
-      <CloudOff aria-hidden="true" />
+      <span className="status-label">Offline</span>
       <span>{t('states.offline')}</span>
     </div>
   );
@@ -80,13 +77,9 @@ export function SaveStatus({ onRetry, state }: SaveStatusProps) {
       role={isFailure ? 'alert' : 'status'}
       aria-live={isFailure ? 'assertive' : 'polite'}
     >
-      {isFailure ? (
-        <TriangleAlert aria-hidden="true" />
-      ) : state === 'saving' ? (
-        <LoaderCircle className="spinner" aria-hidden="true" />
-      ) : (
-        <Cloud aria-hidden="true" />
-      )}
+      <span className="status-label" aria-hidden="true">
+        {state}
+      </span>
       <span>{t(`states.save.${state}`)}</span>
       {state === 'error' && onRetry ? (
         <Button onClick={onRetry} size="sm" variant="ghost">
