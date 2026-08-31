@@ -5,13 +5,13 @@
   "entries": [
     {
       "path": "README.md",
-      "bytes": 3175,
-      "sha256": "d8306373d0adced23c044addf923b0285667f5fb6205f9f0a6654a56b1afabdc"
+      "bytes": 2403,
+      "sha256": "2b1cd301344625387f1ef1b13a1a72ff6fd4d42110ab86f44ed53a9e8cc7ba6e"
     },
     {
       "path": "guide/check.mjs",
-      "bytes": 2547,
-      "sha256": "4ab5cb7f82597c7008db72c0b95fc102b97d401e01e730c67a8d5f6430979ecf"
+      "bytes": 2584,
+      "sha256": "e3438bd4573c6f080da118c7ac4b8dc06ce68fbf3b44652a495951ac6252edfc"
     },
     {
       "path": "guide/guide.css",
@@ -20,18 +20,18 @@
     },
     {
       "path": "guide/index.html",
-      "bytes": 45756,
-      "sha256": "9bf49dd631a7336710e37785e8a12b2df78d28303e3a5a2aa220d6a6e2402bf5"
+      "bytes": 46046,
+      "sha256": "c9904e3076303f12cc5baef8b570ef5284c9227899684ea05a6f29abbe0fe386"
     },
     {
       "path": "guide/render.mjs",
-      "bytes": 1102,
-      "sha256": "a8b28beb8ae88c827e330c92ec4d03cd66957be2031a0eb3ebeb77e56422df4f"
+      "bytes": 1149,
+      "sha256": "0c7875d6af3ec296a51b41dbe2dff165aec680bd66a10e8aee8726ff286ce744"
     },
     {
-      "path": "reviewer-guide.pdf",
-      "bytes": 724562,
-      "sha256": "10021582cc8eb0014bda0204ec4fdcf98ef46f34761a6d8fc4ca85052a154091"
+      "path": "peer2paper-product-guide.pdf",
+      "bytes": 725393,
+      "sha256": "ed7dd82adef23e470bdbbdc7183fab80dffb95b0f19f1e39ff7111d08d82e069"
     }
   ]
 }

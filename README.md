@@ -41,9 +41,9 @@ The goal is not to replace scientific judgment. It is to make the evidence behin
 
 ## Product walkthrough
 
-Watch the [Peer2Paper product walkthrough](submission/recordings/claimbounty-submission-video.mp4) for a complete tour of the intake experience, workflow installation, execution model, and resulting audit package.
+Watch the [Peer2Paper product walkthrough](submission/recordings/peer2paper-product-walkthrough.mp4) for a complete tour of the intake experience, workflow installation, execution model, and resulting audit package.
 
-For a deeper visual overview, open the [product guide](submission/reviewer/reviewer-guide.pdf).
+For a deeper visual overview, open the [Peer2Paper product guide](submission/reviewer/peer2paper-product-guide.pdf).
 
 ## Product architecture
 

@@ -1,5 +1,10 @@
 {
   "schemaVersion": "1.0.0",
+  "product": {
+    "name": "Peer2Paper",
+    "domain": "https://peer2paper.com",
+    "legacyIdentifier": "ClaimBounty"
+  },
   "status": "comparator_scored_claimbounty_protocol_deviation_unscored",
   "candidate": {
     "label": "Heliconius Experiment 1",
@@ -71,6 +76,6 @@
     "value": null,
     "comparatorAdjudicatedScore": 1,
     "scaleMaximum": 100,
-    "reason": "The comparator was adjudicated invalid and incomplete. The ClaimBounty attempt failed exact prompt identity and injected two out-of-contract case-specific values from outside the frozen participant bundle, so it remains exploratory and unscored. No qualified head-to-head result or speedup is available."
+    "reason": "The comparator was adjudicated invalid and incomplete. The Peer2Paper attempt failed exact prompt identity and injected two out-of-contract case-specific values from outside the frozen participant bundle, so it remains exploratory and unscored. No qualified head-to-head result or speedup is available."
   }
 }

@@ -11,7 +11,7 @@ for required in README.md LICENSE SECURITY.md CONTRIBUTING.md AGENTS.md ARCHITEC
   docs/BENCHMARK_RESULTS.md docs/LIMITATIONS.md docs/PREEXISTING_WORK.md \
   docs/TRAJECTORIES.md docs/VIDEO_SCRIPT.md docs/SUBMISSION.md docs/ASSET_PROVENANCE.md \
   docs/HUMAN_BASELINE.md docs/USAGE_AND_COST.md \
-  submission/reviewer/README.md submission/reviewer/reviewer-guide.pdf \
+  submission/reviewer/README.md submission/reviewer/peer2paper-product-guide.pdf \
   submission/reviewer/guide/index.html submission/reviewer/guide/guide.css \
   submission/reviewer/guide/render.mjs submission/reviewer/guide/check.mjs \
   submission/evidence/README.md \
@@ -20,7 +20,7 @@ for required in README.md LICENSE SECURITY.md CONTRIBUTING.md AGENTS.md ARCHITEC
   submission/evidence/human-estimate.json submission/evidence/timing-observations.json \
   submission/evidence/usage-and-cost.json submission/evidence/expected-evidence.json \
   submission/recordings/README.md submission/recordings/workflow-source-2026-08-31.mp4 \
-  submission/recordings/claimbounty-submission-video.mp4 \
+  submission/recordings/peer2paper-product-walkthrough.mp4 \
   submission/recordings/manifest.json submission/recordings/MANIFEST.sha256 \
   examples/moura-2023-heliconius-exp1/README.md \
   examples/moura-2023-heliconius-exp1/moura-2023-heliconius.pdf \
@@ -93,7 +93,7 @@ toone_files=$(rg -l -i --hidden --glob '!.git/**' --glob '!**/node_modules/**' \
   --glob '!scripts/check-public-release' -- 'toone' . || true)
 for file in $toone_files; do
   case "$file" in
-    README.md|./README.md|infra/README.md|./infra/README.md|docs/SETUP.md|./docs/SETUP.md|docs/REPRODUCE.md|./docs/REPRODUCE.md|docs/ARCHITECTURE.md|./docs/ARCHITECTURE.md|docs/PREEXISTING_WORK.md|./docs/PREEXISTING_WORK.md|docs/VIDEO_SCRIPT.md|./docs/VIDEO_SCRIPT.md|examples/moura-2023-heliconius-exp1/README.md|./examples/moura-2023-heliconius-exp1/README.md|submission/recordings/README.md|./submission/recordings/README.md|submission/reviewer/guide/index.html|./submission/reviewer/guide/index.html|workflow/claimbounty-scientific-audit/*|./workflow/claimbounty-scientific-audit/*|contracts/openapi.yaml|./contracts/openapi.yaml|apps/api/internal/domain/claimbounty.go|./apps/api/internal/domain/claimbounty.go|apps/api/internal/transport/httpapi/claimbounty_admin.go|./apps/api/internal/transport/httpapi/claimbounty_admin.go|apps/api/internal/transport/httpapi/claimbounty_identity.go|./apps/api/internal/transport/httpapi/claimbounty_identity.go|apps/api/internal/transport/httpapi/claimbounty_test.go|./apps/api/internal/transport/httpapi/claimbounty_test.go|apps/web/src/shared/api/generated/schema.d.ts|./apps/web/src/shared/api/generated/schema.d.ts|apps/web/src/features/admin-orders/api/admin-order.queries.ts|./apps/web/src/features/admin-orders/api/admin-order.queries.ts|apps/web/src/features/admin-orders/api/admin-order.service.ts|./apps/web/src/features/admin-orders/api/admin-order.service.ts|apps/web/src/features/admin-orders/api/admin-order.service.test.ts|./apps/web/src/features/admin-orders/api/admin-order.service.test.ts|apps/web/src/features/admin-orders/components/admin-order-detail.tsx|./apps/web/src/features/admin-orders/components/admin-order-detail.tsx|apps/web/src/features/admin-orders/components/admin-order-detail.test.tsx|./apps/web/src/features/admin-orders/components/admin-order-detail.test.tsx|apps/web/tests/system/claimbounty-compose.system.spec.ts|./apps/web/tests/system/claimbounty-compose.system.spec.ts)
+    README.md|./README.md|infra/README.md|./infra/README.md|docs/SETUP.md|./docs/SETUP.md|docs/REPRODUCE.md|./docs/REPRODUCE.md|docs/ARCHITECTURE.md|./docs/ARCHITECTURE.md|docs/PREEXISTING_WORK.md|./docs/PREEXISTING_WORK.md|docs/VIDEO_SCRIPT.md|./docs/VIDEO_SCRIPT.md|examples/moura-2023-heliconius-exp1/README.md|./examples/moura-2023-heliconius-exp1/README.md|submission/recordings/README.md|./submission/recordings/README.md|submission/reviewer/README.md|./submission/reviewer/README.md|submission/reviewer/guide/index.html|./submission/reviewer/guide/index.html|workflow/claimbounty-scientific-audit/*|./workflow/claimbounty-scientific-audit/*|contracts/openapi.yaml|./contracts/openapi.yaml|apps/api/internal/domain/claimbounty.go|./apps/api/internal/domain/claimbounty.go|apps/api/internal/transport/httpapi/claimbounty_admin.go|./apps/api/internal/transport/httpapi/claimbounty_admin.go|apps/api/internal/transport/httpapi/claimbounty_identity.go|./apps/api/internal/transport/httpapi/claimbounty_identity.go|apps/api/internal/transport/httpapi/claimbounty_test.go|./apps/api/internal/transport/httpapi/claimbounty_test.go|apps/web/src/shared/api/generated/schema.d.ts|./apps/web/src/shared/api/generated/schema.d.ts|apps/web/src/features/admin-orders/api/admin-order.queries.ts|./apps/web/src/features/admin-orders/api/admin-order.queries.ts|apps/web/src/features/admin-orders/api/admin-order.service.ts|./apps/web/src/features/admin-orders/api/admin-order.service.ts|apps/web/src/features/admin-orders/api/admin-order.service.test.ts|./apps/web/src/features/admin-orders/api/admin-order.service.test.ts|apps/web/src/features/admin-orders/components/admin-order-detail.tsx|./apps/web/src/features/admin-orders/components/admin-order-detail.tsx|apps/web/src/features/admin-orders/components/admin-order-detail.test.tsx|./apps/web/src/features/admin-orders/components/admin-order-detail.test.tsx|apps/web/tests/system/claimbounty-compose.system.spec.ts|./apps/web/tests/system/claimbounty-compose.system.spec.ts)
       ;;
     *)
       printf 'PUBLIC-004 Toone reference outside approved setup/workflow documentation: %s\n' "$file" >&2
@@ -110,8 +110,8 @@ if find submission workflow -type f \( -iname '*dev-01*' -o -iname '*answer-key*
 fi
 
 if find submission workflow -type f -iname '*.pdf' \
-  ! -path 'submission/reviewer/reviewer-guide.pdf' | grep -q .; then
-  printf 'PUBLIC-009 only submission/reviewer/reviewer-guide.pdf may be published as a PDF\n' >&2
+  ! -path 'submission/reviewer/peer2paper-product-guide.pdf' | grep -q .; then
+  printf 'PUBLIC-009 only submission/reviewer/peer2paper-product-guide.pdf may be published as a PDF\n' >&2
   failed=1
 fi
 

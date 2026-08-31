@@ -5,13 +5,13 @@
   "entries": [
     {
       "path": "README.md",
-      "bytes": 2749,
-      "sha256": "4d4fd5541d3f0710b223c83416ab46440f3f0c9fd171b61201aa4f7b7691cba8"
+      "bytes": 2848,
+      "sha256": "c1bfb5f4bd51e3e9146b23c523c662a2d186944ece06c053356647f7658ffec3"
     },
     {
       "path": "benchmark-status.json",
-      "bytes": 2756,
-      "sha256": "0b7efc0edd7bfdeaa773bf531b155c7607abad291f90461290ff06782a2402a2"
+      "bytes": 2879,
+      "sha256": "39aabed4aec48a0fa9429669e534d41e3b3969e392927b76b5188ef127cd2613"
     },
     {
       "path": "chatgpt-comparator.json",
@@ -20,13 +20,13 @@
     },
     {
       "path": "claimbounty-exploratory-attempt.json",
-      "bytes": 2217,
-      "sha256": "d023c562442970ddf7f3c13afd8348c390eb3756f92a376707d252ea71c32e12"
+      "bytes": 2341,
+      "sha256": "3a1ec45812460fc5edd8a8ed73a046d8026103574329750e26bb13e2ddfaf780"
     },
     {
       "path": "expected-evidence.json",
-      "bytes": 1244,
-      "sha256": "6e4a44f946c8a1feb8a72bbe5a4c14f8b65e4ed5194d1aef7680af6e08e67eb9"
+      "bytes": 1243,
+      "sha256": "19104a47effde4f432a741640e11649241eebcefb6de480f3f8d20730ce9d1b3"
     },
     {
       "path": "human-estimate.json",

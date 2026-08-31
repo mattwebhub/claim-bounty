@@ -5,8 +5,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const guideDirectory = path.dirname(fileURLToPath(import.meta.url));
 const source = path.join(guideDirectory, 'index.html');
-const output = path.resolve(guideDirectory, '..', 'reviewer-guide.pdf');
-const executablePath = process.env.CLAIMBOUNTY_PDF_CHROME;
+const output = path.resolve(guideDirectory, '..', 'peer2paper-product-guide.pdf');
+const executablePath = process.env.PEER2PAPER_PDF_CHROME ?? process.env.CLAIMBOUNTY_PDF_CHROME;
 
 await access(source);
 if (executablePath) await access(executablePath);

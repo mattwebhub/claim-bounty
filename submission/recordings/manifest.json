@@ -5,13 +5,13 @@
   "entries": [
     {
       "path": "README.md",
-      "bytes": 1575,
-      "sha256": "869043fe4e71ad004746194691990fb5a8c7d400ade5284124f106cd6b05cceb"
+      "bytes": 1461,
+      "sha256": "172ae8ff4ff1e8c8efc5ff317215227fbfb4bc50b88865c8190629ff3f589c31"
     },
     {
-      "path": "claimbounty-submission-video.mp4",
-      "bytes": 9324884,
-      "sha256": "27314c659d8d0ad0f74b65eb7e684ccbadb7a13e53a0121f354f962a7c61df5e"
+      "path": "peer2paper-product-walkthrough.mp4",
+      "bytes": 7038552,
+      "sha256": "dc765cd463619b0d5f72748c298ba89ae0a85a826842971a0999b16193d285e6"
     },
     {
       "path": "workflow-source-2026-08-31.mp4",
