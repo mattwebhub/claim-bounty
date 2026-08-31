@@ -169,6 +169,21 @@ retry that would change a sealed observation set or submission is rejected.
 python3 -m unittest discover -s peer2paper/grading/tests -v
 ```
 
+## Private Kubernetes deployment
+
+The checked-in container and `k8s/` manifests run the grader as a non-root,
+read-only workload in the dedicated `peer2paper` namespace. There is
+deliberately no Service or Ingress: the process binds only to pod loopback and
+the default-deny network policy blocks pod network traffic. A future trusted
+connector must run as a sidecar in the same pod if it needs direct grader
+access.
+
+Before applying the manifests, create `grader-token` in the namespace with a
+random value of at least 32 characters. Provision answer-key files separately
+onto the `grader-keys` claim with mode `0600`; never put them in the image,
+manifest, repository, or a public CI artefact. Receipts persist on the
+`grader-receipts` claim.
+
 ## Current limits
 
 - Authentication uses one local bearer token. A future connector can replace it with a per-run capability.
