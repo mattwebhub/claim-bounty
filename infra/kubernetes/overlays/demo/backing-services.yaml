@@ -1,0 +1,639 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: claimbounty-postgres
+  labels:
+    app.kubernetes.io/name: claimbounty
+    app.kubernetes.io/component: database
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: claimbounty
+    app.kubernetes.io/component: database
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: claimbounty-postgres
+  labels:
+    app.kubernetes.io/name: claimbounty
+    app.kubernetes.io/component: database
+spec:
+  serviceName: claimbounty-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: claimbounty
+      app.kubernetes.io/component: database
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: claimbounty
+        app.kubernetes.io/component: database
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 70
+        fsGroupChangePolicy: OnRootMismatch
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: postgres
+          image: postgres:17.6-alpine3.22@sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94
+          env:
+            - name: POSTGRES_DB
+              value: claimbounty
+            - name: POSTGRES_USER
+              value: claimbounty
+            - name: POSTGRES_PASSWORD
+              value: demo-only-db-password
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          ports:
+            - name: postgres
+              containerPort: 5432
+          readinessProbe:
+            exec:
+              command: [pg_isready, -U, claimbounty, -d, claimbounty]
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 10
+          livenessProbe:
+            exec:
+              command: [pg_isready, -U, claimbounty, -d, claimbounty]
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: '1'
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 70
+            runAsGroup: 70
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+            - name: runtime
+              mountPath: /var/run/postgresql
+            - name: temp
+              mountPath: /tmp
+      volumes:
+        - name: runtime
+          emptyDir:
+            sizeLimit: 16Mi
+        - name: temp
+          emptyDir:
+            sizeLimit: 16Mi
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests:
+            storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: claimbounty-object-storage
+  labels:
+    app.kubernetes.io/name: claimbounty
+    app.kubernetes.io/component: object-storage
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: claimbounty
+    app.kubernetes.io/component: object-storage
+  ports:
+    - name: s3
+      port: 9000
+      targetPort: s3
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: claimbounty-object-storage
+  labels:
+    app.kubernetes.io/name: claimbounty
+    app.kubernetes.io/component: object-storage
+spec:
+  serviceName: claimbounty-object-storage
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: claimbounty
+      app.kubernetes.io/component: object-storage
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: claimbounty
+        app.kubernetes.io/component: object-storage
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: minio
+          image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z@sha256:a1ea29fa28355559ef137d71fc570e508a214ec84ff8083e39bc5428980b015e
+          args:
+            - server
+            - /data
+            - --console-address
+            - ':9001'
+          env:
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: claimbounty-object-storage-root
+                  key: MINIO_ROOT_USER
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: claimbounty-object-storage-root
+                  key: MINIO_ROOT_PASSWORD
+          ports:
+            - name: s3
+              containerPort: 9000
+          readinessProbe:
+            httpGet:
+              path: /minio/health/ready
+              port: s3
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 20
+          livenessProbe:
+            httpGet:
+              path: /minio/health/live
+              port: s3
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: '1'
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: temp
+              mountPath: /tmp
+      volumes:
+        - name: temp
+          emptyDir:
+            sizeLimit: 64Mi
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources:
+          requests:
+            storage: 5Gi
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: claimbounty-object-storage-init
+  labels:
+    app.kubernetes.io/name: claimbounty
+    app.kubernetes.io/component: object-storage-init
+spec:
+  backoffLimit: 10
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: claimbounty
+        app.kubernetes.io/component: object-storage-init
+    spec:
+      restartPolicy: OnFailure
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: initialize
+          image: quay.io/minio/mc:RELEASE.2025-04-16T18-13-26Z@sha256:aead63c77f9db9107f1696fb08ecb0faeda23729cde94b0f663edf4fe09728e3
+          command: [/bin/sh, -ec]
+          args:
+            - |
+              until mc --config-dir /tmp/mc alias set local http://claimbounty-object-storage:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD"; do sleep 2; done
+              mc --config-dir /tmp/mc mb --ignore-existing local/claimbounty-private
+              mc --config-dir /tmp/mc version enable local/claimbounty-private
+              mc --config-dir /tmp/mc anonymous set none local/claimbounty-private
+              mc --config-dir /tmp/mc admin policy create local claimbounty-api /policies/api-policy.json
+              mc --config-dir /tmp/mc admin policy create local claimbounty-worker /policies/worker-policy.json
+              mc --config-dir /tmp/mc admin user add local "$API_ACCESS_KEY" "$API_SECRET_KEY"
+              mc --config-dir /tmp/mc admin user add local "$WORKER_ACCESS_KEY" "$WORKER_SECRET_KEY"
+              mc --config-dir /tmp/mc admin policy attach local claimbounty-api --user "$API_ACCESS_KEY"
+              mc --config-dir /tmp/mc admin policy attach local claimbounty-worker --user "$WORKER_ACCESS_KEY"
+          env:
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: claimbounty-object-storage-root
+                  key: MINIO_ROOT_USER
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: claimbounty-object-storage-root
+                  key: MINIO_ROOT_PASSWORD
+            - name: API_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: claimbounty-api-object-storage
+                  key: CLAIMBOUNTY_S3_ACCESS_KEY
+            - name: API_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: claimbounty-api-object-storage
+                  key: CLAIMBOUNTY_S3_SECRET_KEY
+            - name: WORKER_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: claimbounty-worker-object-storage
+                  key: CLAIMBOUNTY_S3_ACCESS_KEY
+            - name: WORKER_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: claimbounty-worker-object-storage
+                  key: CLAIMBOUNTY_S3_SECRET_KEY
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name: temp
+              mountPath: /tmp
+            - name: policies
+              mountPath: /policies
+              readOnly: true
+      volumes:
+        - name: temp
+          emptyDir:
+            sizeLimit: 16Mi
+        - name: policies
+          configMap:
+            name: claimbounty-object-storage-policies
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: claimbounty-mailpit
+  labels:
+    app.kubernetes.io/name: claimbounty
+    app.kubernetes.io/component: mailpit
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: claimbounty
+    app.kubernetes.io/component: mailpit
+  ports:
+    - name: smtp
+      port: 1025
+      targetPort: smtp
+    - name: http
+      port: 8025
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claimbounty-mailpit
+  labels:
+    app.kubernetes.io/name: claimbounty
+    app.kubernetes.io/component: mailpit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: claimbounty
+      app.kubernetes.io/component: mailpit
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: claimbounty
+        app.kubernetes.io/component: mailpit
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: mailpit
+          image: axllent/mailpit:v1.27.6@sha256:68c257dc344553a364a71c758acd18708f21073a78d0597e0120c3c92f03561f
+          env:
+            - name: MP_DATABASE
+              value: /data/mailpit.db
+            - name: MP_MAX_MESSAGES
+              value: '100'
+          ports:
+            - name: smtp
+              containerPort: 1025
+            - name: http
+              containerPort: 8025
+          readinessProbe:
+            httpGet:
+              path: /livez
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 10
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: temp
+              mountPath: /tmp
+      volumes:
+        - name: data
+          emptyDir:
+            sizeLimit: 128Mi
+        - name: temp
+          emptyDir:
+            sizeLimit: 16Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: claimbounty-scanner
+  labels:
+    app.kubernetes.io/name: claimbounty
+    app.kubernetes.io/component: scanner
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: claimbounty
+    app.kubernetes.io/component: scanner
+  ports:
+    - name: clamd
+      port: 3310
+      targetPort: clamd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claimbounty-scanner
+  labels:
+    app.kubernetes.io/name: claimbounty
+    app.kubernetes.io/component: scanner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: claimbounty
+      app.kubernetes.io/component: scanner
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: claimbounty
+        app.kubernetes.io/component: scanner
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: clamd
+          image: clamav/clamav-debian:1.4.3@sha256:1d261f9c83ef2bbeef3915c7792f125e5707500fde0019d53547461747b90374
+          command: [/init-unprivileged]
+          ports:
+            - name: clamd
+              containerPort: 3310
+          startupProbe:
+            tcpSocket:
+              port: clamd
+            periodSeconds: 10
+            failureThreshold: 30
+          readinessProbe:
+            tcpSocket:
+              port: clamd
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 250m
+              memory: 768Mi
+            limits:
+              cpu: '2'
+              memory: 2Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+          volumeMounts:
+            - name: definitions
+              mountPath: /var/lib/clamav
+            - name: logs
+              mountPath: /var/log/clamav
+            - name: runtime
+              mountPath: /run/clamav
+            - name: locks
+              mountPath: /run/lock
+            - name: temp
+              mountPath: /tmp
+      volumes:
+        - name: definitions
+          emptyDir:
+            sizeLimit: 2Gi
+        - name: logs
+          emptyDir:
+            sizeLimit: 64Mi
+        - name: runtime
+          emptyDir:
+            sizeLimit: 16Mi
+        - name: locks
+          emptyDir:
+            sizeLimit: 16Mi
+        - name: temp
+          emptyDir:
+            sizeLimit: 64Mi
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-api-to-demo-database
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: claimbounty
+      app.kubernetes.io/component: database
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values: [claimbounty]
+              - key: app.kubernetes.io/component
+                operator: In
+                values: [api, migration, retention, worker]
+      ports:
+        - port: 5432
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-private-object-storage-clients
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: claimbounty
+      app.kubernetes.io/component: object-storage
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: In
+                values: [api, object-storage-init, worker]
+      ports:
+        - port: 9000
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-object-storage-initializer-egress
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: claimbounty
+      app.kubernetes.io/component: object-storage-init
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: claimbounty
+              app.kubernetes.io/component: object-storage
+      ports:
+        - port: 9000
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-api-to-demo-mailpit
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: claimbounty
+      app.kubernetes.io/component: mailpit
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: claimbounty
+              app.kubernetes.io/component: api
+      ports:
+        - port: 1025
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-worker-to-demo-scanner
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: claimbounty
+      app.kubernetes.io/component: scanner
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: claimbounty
+              app.kubernetes.io/component: worker
+      ports:
+        - port: 3310
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-demo-scanner-definition-updates
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: claimbounty
+      app.kubernetes.io/component: scanner
+  policyTypes: [Egress]
+  egress:
+    - ports:
+        - port: 80
+          protocol: TCP
+        - port: 443
+          protocol: TCP

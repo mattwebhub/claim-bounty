@@ -1,4 +1,4 @@
-FROM node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32 AS build
+FROM --platform=$BUILDPLATFORM node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32 AS build
 WORKDIR /repo
 
 RUN npm install --global pnpm@9.15.0
@@ -10,7 +10,7 @@ RUN pnpm install --frozen-lockfile
 COPY contracts/ contracts/
 COPY apps/web/ apps/web/
 ARG VITE_APP_NAME="Micro1 Template"
-ARG VITE_API_BASE_URL="http://localhost:8080/api/v1"
+ARG VITE_API_BASE_URL="/api/v1"
 ARG VITE_API_TIMEOUT_MS="10000"
 ENV VITE_APP_NAME=$VITE_APP_NAME \
     VITE_API_BASE_URL=$VITE_API_BASE_URL \

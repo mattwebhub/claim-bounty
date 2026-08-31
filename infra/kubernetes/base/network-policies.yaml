@@ -1,0 +1,152 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+spec:
+  podSelector: {}
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-to-hosted-services
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/component
+        operator: In
+        values: [api, web]
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector: {}
+      ports:
+        - port: 8080
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-web-to-api
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: claimbounty
+      app.kubernetes.io/component: web
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: claimbounty
+              app.kubernetes.io/component: api
+      ports:
+        - port: 8080
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-api-database-and-email
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: claimbounty
+      app.kubernetes.io/component: api
+  policyTypes: [Egress]
+  egress:
+    - ports:
+        - port: 5432
+          protocol: TCP
+        - port: 587
+          protocol: TCP
+        - port: 1025
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-api-object-storage
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: claimbounty
+      app.kubernetes.io/component: api
+  policyTypes: [Egress]
+  egress:
+    - ports:
+        - port: 443
+          protocol: TCP
+        - port: 9000
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-worker-database-and-scanner
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: claimbounty
+      app.kubernetes.io/component: worker
+  policyTypes: [Egress]
+  egress:
+    - ports:
+        - port: 5432
+          protocol: TCP
+        - port: 3310
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-worker-object-storage
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: claimbounty
+      app.kubernetes.io/component: worker
+  policyTypes: [Egress]
+  egress:
+    - ports:
+        - port: 443
+          protocol: TCP
+        - port: 9000
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-database-jobs
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/name
+        operator: In
+        values: [claimbounty]
+      - key: app.kubernetes.io/component
+        operator: In
+        values: [migration, retention]
+  policyTypes: [Egress]
+  egress:
+    - ports:
+        - port: 5432
+          protocol: TCP

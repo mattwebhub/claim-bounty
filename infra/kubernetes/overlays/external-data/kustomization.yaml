@@ -1,0 +1,42 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: claimbounty
+resources:
+  - ../../base
+  - namespace.yaml
+patches:
+  - target:
+      kind: ConfigMap
+      name: claimbounty-config
+    patch: |-
+      - op: replace
+        path: /data/CORS_ALLOWED_ORIGINS
+        value: https://claimbounty.example.com
+      - op: replace
+        path: /data/CLAIMBOUNTY_CANONICAL_ORIGIN
+        value: https://claimbounty.example.com
+      - op: replace
+        path: /data/CLAIMBOUNTY_S3_ENDPOINT
+        value: https://s3.example.com
+      - op: replace
+        path: /data/CLAIMBOUNTY_SMTP_ADDRESS
+        value: smtp.example.com:587
+      - op: replace
+        path: /data/CLAIMBOUNTY_CLAMAV_ADDRESS
+        value: scanner.example.com:3310
+      - op: replace
+        path: /data/CLAIMBOUNTY_SMTP_FROM
+        value: no-reply@claimbounty.example.com
+      - op: replace
+        path: /data/CLAIMBOUNTY_SMTP_TLS_SERVER_NAME
+        value: smtp.example.com
+  - target:
+      kind: Ingress
+      name: claimbounty
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: claimbounty.example.com
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: claimbounty.example.com

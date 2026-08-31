@@ -1,0 +1,94 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: claimbounty-demo
+resources:
+  - ../../base
+  - namespace.yaml
+  - backing-services.yaml
+  - object-storage-policies.yaml
+secretGenerator:
+  - name: claimbounty-runtime
+    literals:
+      - DATABASE_URL=postgres://claimbounty:demo-only-db-password@claimbounty-postgres:5432/claimbounty?sslmode=disable
+      - CLAIMBOUNTY_SESSION_PEPPER=demo-only-identity-token-pepper-change-me
+      - CLAIMBOUNTY_ADMIN_EMAILS=admin@example.test
+      - CLAIMBOUNTY_EMAIL_ENCRYPTION_KEY_B64=MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=
+      - CLAIMBOUNTY_EMAIL_LOOKUP_HMAC_KEY_B64=YWJjZGVmMDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODk=
+  - name: claimbounty-api-object-storage
+    literals:
+      - CLAIMBOUNTY_S3_ACCESS_KEY=claimbounty-api-demo
+      - CLAIMBOUNTY_S3_SECRET_KEY=demo-api-object-store-secret-key
+  - name: claimbounty-worker-object-storage
+    literals:
+      - CLAIMBOUNTY_S3_ACCESS_KEY=claimbounty-worker-demo
+      - CLAIMBOUNTY_S3_SECRET_KEY=demo-worker-object-store-secret
+  - name: claimbounty-object-storage-root
+    literals:
+      - MINIO_ROOT_USER=claimbounty-root-demo
+      - MINIO_ROOT_PASSWORD=demo-only-object-storage-root-key
+generatorOptions:
+  disableNameSuffixHash: true
+patches:
+  - target:
+      kind: ConfigMap
+      name: claimbounty-config
+    patch: |-
+      - op: replace
+        path: /data/APP_ENV
+        value: development
+      - op: replace
+        path: /data/LOG_FORMAT
+        value: text
+      - op: replace
+        path: /data/DATABASE_AUTO_MIGRATE
+        value: "false"
+      - op: replace
+        path: /data/CORS_ALLOWED_ORIGINS
+        value: http://localhost:8080
+      - op: replace
+        path: /data/CLAIMBOUNTY_CANONICAL_ORIGIN
+        value: http://localhost:8080
+      - op: replace
+        path: /data/HTTP_TRUSTED_PROXY_CIDRS
+        value: 10.0.0.0/8
+      - op: replace
+        path: /data/CLAIMBOUNTY_S3_ENDPOINT
+        value: http://claimbounty-object-storage:9000
+      - op: replace
+        path: /data/CLAIMBOUNTY_S3_SECURE
+        value: "false"
+      - op: replace
+        path: /data/CLAIMBOUNTY_SMTP_ADDRESS
+        value: claimbounty-mailpit:1025
+      - op: replace
+        path: /data/CLAIMBOUNTY_SMTP_FROM
+        value: no-reply@claimbounty.test
+      - op: replace
+        path: /data/CLAIMBOUNTY_SMTP_TLS_MODE
+        value: none
+      - op: replace
+        path: /data/CLAIMBOUNTY_CLAMAV_ADDRESS
+        value: claimbounty-scanner:3310
+  - target:
+      kind: Deployment
+      name: claimbounty-api
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+  - target:
+      kind: Deployment
+      name: claimbounty-web
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+  - target:
+      kind: Ingress
+      name: claimbounty
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: localhost
+      - op: remove
+        path: /spec/tls

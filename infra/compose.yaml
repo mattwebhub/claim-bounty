@@ -8,7 +8,7 @@ services:
     ports:
       - '127.0.0.1:${POSTGRES_PORT:-5432}:5432'
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres -d app']
+      test: [CMD-SHELL, pg_isready -U postgres -d app]
       interval: 2s
       timeout: 3s
       retries: 20
@@ -19,5 +19,287 @@ services:
       - no-new-privileges:true
     stop_grace_period: 10s
 
+  object-storage:
+    profiles: [claimbounty]
+    image: quay.io/minio/minio:RELEASE.2025-04-22T22-12-26Z@sha256:a1ea29fa28355559ef137d71fc570e508a214ec84ff8083e39bc5428980b015e
+    command: [server, /data, --console-address, ':9001']
+    environment:
+      MINIO_ROOT_PASSWORD: ${CLAIMBOUNTY_S3_ROOT_SECRET_KEY:-demo-only-object-storage-root-key}
+      MINIO_ROOT_USER: ${CLAIMBOUNTY_S3_ROOT_ACCESS_KEY:-claimbounty-root-demo}
+    expose: ['9000']
+    read_only: true
+    tmpfs:
+      - /tmp:size=67108864,mode=0700,uid=1000,gid=1000
+    volumes:
+      - object-storage-data:/data
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 20s
+
+  object-storage-init:
+    profiles: [claimbounty]
+    image: quay.io/minio/mc:RELEASE.2025-04-16T18-13-26Z@sha256:aead63c77f9db9107f1696fb08ecb0faeda23729cde94b0f663edf4fe09728e3
+    depends_on:
+      object-storage:
+        condition: service_started
+    environment:
+      API_ACCESS_KEY: ${CLAIMBOUNTY_API_S3_ACCESS_KEY:-claimbounty-api-demo}
+      API_SECRET_KEY: ${CLAIMBOUNTY_API_S3_SECRET_KEY:-demo-api-object-store-secret-key}
+      MINIO_ROOT_PASSWORD: ${CLAIMBOUNTY_S3_ROOT_SECRET_KEY:-demo-only-object-storage-root-key}
+      MINIO_ROOT_USER: ${CLAIMBOUNTY_S3_ROOT_ACCESS_KEY:-claimbounty-root-demo}
+      WORKER_ACCESS_KEY: ${CLAIMBOUNTY_WORKER_S3_ACCESS_KEY:-claimbounty-worker-demo}
+      WORKER_SECRET_KEY: ${CLAIMBOUNTY_WORKER_S3_SECRET_KEY:-demo-worker-object-store-secret}
+    entrypoint: [/bin/sh, -ec]
+    command:
+      - |
+        until mc --config-dir /tmp/mc alias set local http://object-storage:9000 "$${MINIO_ROOT_USER}" "$${MINIO_ROOT_PASSWORD}"; do sleep 2; done
+        mc --config-dir /tmp/mc mb --ignore-existing local/claimbounty-private
+        mc --config-dir /tmp/mc version enable local/claimbounty-private
+        mc --config-dir /tmp/mc anonymous set none local/claimbounty-private
+        mc --config-dir /tmp/mc admin policy create local claimbounty-api /policies/api-policy.json
+        mc --config-dir /tmp/mc admin policy create local claimbounty-worker /policies/worker-policy.json
+        mc --config-dir /tmp/mc admin user add local "$${API_ACCESS_KEY}" "$${API_SECRET_KEY}"
+        mc --config-dir /tmp/mc admin user add local "$${WORKER_ACCESS_KEY}" "$${WORKER_SECRET_KEY}"
+        mc --config-dir /tmp/mc admin policy attach local claimbounty-api --user "$${API_ACCESS_KEY}"
+        mc --config-dir /tmp/mc admin policy attach local claimbounty-worker --user "$${WORKER_ACCESS_KEY}"
+    user: '1000:1000'
+    read_only: true
+    tmpfs:
+      - /tmp:size=16777216,mode=0700,uid=1000,gid=1000
+    volumes:
+      - ./object-storage:/policies:ro
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+
+  mailpit:
+    profiles: [claimbounty]
+    image: axllent/mailpit:v1.27.6@sha256:68c257dc344553a364a71c758acd18708f21073a78d0597e0120c3c92f03561f
+    environment:
+      MP_DATABASE: /data/mailpit.db
+      MP_MAX_MESSAGES: '100'
+    ports:
+      - '127.0.0.1:${MAILPIT_UI_PORT:-8025}:8025'
+    expose: ['1025']
+    volumes:
+      - mailpit-data:/data
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+
+  scanner:
+    profiles: [claimbounty]
+    image: clamav/clamav-debian:1.4.3@sha256:1d261f9c83ef2bbeef3915c7792f125e5707500fde0019d53547461747b90374
+    entrypoint: [/init-unprivileged]
+    expose: ['3310']
+    user: '1000:1000'
+    read_only: true
+    tmpfs:
+      - /run/clamav:size=16777216,mode=0770,uid=1000,gid=1000
+      - /run/lock:size=16777216,mode=0770,uid=1000,gid=1000
+      - /tmp:size=67108864,mode=0700,uid=1000,gid=1000
+      - /var/log/clamav:size=67108864,mode=0770,uid=1000,gid=1000
+    volumes:
+      - scanner-data:/var/lib/clamav
+    healthcheck:
+      test: [CMD, /usr/local/bin/clamdcheck.sh]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 45s
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+
+  migrate:
+    profiles: [claimbounty]
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    image: claimbounty-api:local
+    command: [migrate]
+    environment: &api-environment
+      APP_ENV: development
+      CLAIMBOUNTY_ADMIN_ALLOWLIST_VERSION: ${CLAIMBOUNTY_ADMIN_ALLOWLIST_VERSION:-admin-allowlist-v1}
+      CLAIMBOUNTY_ADMIN_EMAILS: ${CLAIMBOUNTY_ADMIN_EMAILS:-admin@example.test}
+      CLAIMBOUNTY_AUTHORIZATION_VERSION: ${CLAIMBOUNTY_AUTHORIZATION_VERSION:-admin-policy-v1}
+      CLAIMBOUNTY_ROUTINE_REVISION: ${CLAIMBOUNTY_ROUTINE_REVISION:-sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa}
+      CLAIMBOUNTY_ROUTINE_VALIDATED_AT: ${CLAIMBOUNTY_ROUTINE_VALIDATED_AT:-2026-08-30T11:50:00Z}
+      CLAIMBOUNTY_ROUTINE_EVIDENCE_SHA256: ${CLAIMBOUNTY_ROUTINE_EVIDENCE_SHA256:-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb}
+      CLAIMBOUNTY_CANONICAL_ORIGIN: http://127.0.0.1:${CLAIMBOUNTY_WEB_PORT:-8081}
+      CLAIMBOUNTY_CLAMAV_ADDRESS: scanner:3310
+      CLAIMBOUNTY_CLAMAV_TIMEOUT: 2m
+      CLAIMBOUNTY_EMAIL_ENCRYPTION_KEY_B64: ${CLAIMBOUNTY_EMAIL_ENCRYPTION_KEY_B64:-MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=}
+      CLAIMBOUNTY_EMAIL_LOOKUP_HMAC_KEY_B64: ${CLAIMBOUNTY_EMAIL_LOOKUP_HMAC_KEY_B64:-YWJjZGVmMDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODk=}
+      CLAIMBOUNTY_ENABLED: 'true'
+      CLAIMBOUNTY_S3_ACCEPTED_PREFIX: accepted/
+      CLAIMBOUNTY_S3_ACCESS_KEY: ${CLAIMBOUNTY_API_S3_ACCESS_KEY:-claimbounty-api-demo}
+      CLAIMBOUNTY_S3_BUCKET: claimbounty-private
+      CLAIMBOUNTY_S3_CREATE_BUCKET: 'false'
+      CLAIMBOUNTY_S3_ENDPOINT: http://object-storage:9000
+      CLAIMBOUNTY_S3_EXPORT_PREFIX: exports/
+      CLAIMBOUNTY_S3_QUARANTINE_PREFIX: quarantine/
+      CLAIMBOUNTY_S3_REGION: us-east-1
+      CLAIMBOUNTY_S3_SECRET_KEY: ${CLAIMBOUNTY_API_S3_SECRET_KEY:-demo-api-object-store-secret-key}
+      CLAIMBOUNTY_S3_SECURE: 'false'
+      CLAIMBOUNTY_SESSION_PEPPER: ${CLAIMBOUNTY_SESSION_PEPPER:-demo-only-identity-token-pepper-change-me}
+      CLAIMBOUNTY_SMTP_ADDRESS: mailpit:1025
+      CLAIMBOUNTY_SMTP_DEVELOPMENT_LOG: 'false'
+      CLAIMBOUNTY_SMTP_FROM: no-reply@claimbounty.test
+      CLAIMBOUNTY_SMTP_TLS_MODE: none
+      CLAIMBOUNTY_WORKER_INTERVAL: 2s
+      CLAIMBOUNTY_ABANDONED_AFTER: ${CLAIMBOUNTY_ABANDONED_AFTER:-168h}
+      PII_RETENTION_POLICY_VERSION: ${PII_RETENTION_POLICY_VERSION:-intake-30d-v1}
+      RETENTION_BATCH_SIZE: ${RETENTION_BATCH_SIZE:-25}
+      RETENTION_COMMAND_TIMEOUT: ${RETENTION_COMMAND_TIMEOUT:-10m}
+      SOURCE_RETENTION_MAX_DURATION: ${SOURCE_RETENTION_MAX_DURATION:-720h}
+      PII_RETENTION_MAX_DURATION: ${PII_RETENTION_MAX_DURATION:-720h}
+      CORS_ALLOWED_ORIGINS: http://127.0.0.1:${CLAIMBOUNTY_WEB_PORT:-8081}
+      DATABASE_AUTO_MIGRATE: 'false'
+      DATABASE_MAX_CONNECTIONS: '10'
+      DATABASE_MIGRATION_TIMEOUT: 5m
+      DATABASE_QUERY_TIMEOUT: 5s
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/app?sslmode=disable
+      HTTP_MAX_BODY_BYTES: '263192576'
+      HTTP_TRUSTED_PROXY_CIDRS: 172.16.0.0/12,192.168.0.0/16
+      LOG_FORMAT: text
+      LOG_LEVEL: info
+      SERVER_HOST: 0.0.0.0
+      SERVER_PORT: '8080'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+
+  api:
+    profiles: [claimbounty]
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    image: claimbounty-api:local
+    command: [serve]
+    environment: *api-environment
+    depends_on:
+      mailpit:
+        condition: service_started
+      migrate:
+        condition: service_completed_successfully
+      object-storage-init:
+        condition: service_completed_successfully
+      scanner:
+        condition: service_healthy
+    ports:
+      - '127.0.0.1:${CLAIMBOUNTY_API_PORT:-8080}:8080'
+    read_only: true
+    tmpfs:
+      - /tmp:size=67108864,mode=0700,uid=65532,gid=65532
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    stop_grace_period: 40s
+
+  worker:
+    profiles: [claimbounty]
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    image: claimbounty-api:local
+    command: [worker]
+    environment:
+      <<: *api-environment
+      CLAIMBOUNTY_S3_ACCESS_KEY: ${CLAIMBOUNTY_WORKER_S3_ACCESS_KEY:-claimbounty-worker-demo}
+      CLAIMBOUNTY_S3_SECRET_KEY: ${CLAIMBOUNTY_WORKER_S3_SECRET_KEY:-demo-worker-object-store-secret}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      object-storage-init:
+        condition: service_completed_successfully
+      scanner:
+        condition: service_healthy
+    read_only: true
+    tmpfs:
+      - /tmp:size=2147483648,mode=0700,uid=65532,gid=65532
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    stop_grace_period: 40s
+
+  retention:
+    profiles: [maintenance]
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    image: claimbounty-api:local
+    command: [retention]
+    environment:
+      <<: *api-environment
+      CLAIMBOUNTY_S3_ACCESS_KEY: ${CLAIMBOUNTY_WORKER_S3_ACCESS_KEY:-claimbounty-worker-demo}
+      CLAIMBOUNTY_S3_SECRET_KEY: ${CLAIMBOUNTY_WORKER_S3_SECRET_KEY:-demo-worker-object-store-secret}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      object-storage-init:
+        condition: service_completed_successfully
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+
+  verify-export:
+    profiles: [operator]
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    image: claimbounty-api:local
+    entrypoint: [/api, verify-export]
+    command:
+      [
+        /exports/claimbounty-export.zip,
+        '${EXPORT_SHA256:-missing-required-export-sha256}',
+        /verified/claimbounty-export,
+      ]
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    volumes:
+      - ../exports:/exports:ro
+      - ../verified-exports:/verified
+    security_opt:
+      - no-new-privileges:true
+
+  web:
+    profiles: [claimbounty]
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+      args:
+        VITE_API_BASE_URL: /api/v1
+        VITE_APP_NAME: ClaimBounty
+    image: claimbounty-web:local
+    environment:
+      API_UPSTREAM: http://api:8080
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - '127.0.0.1:${CLAIMBOUNTY_WEB_PORT:-8081}:8080'
+    read_only: true
+    tmpfs:
+      - /config:size=16777216,mode=0700,uid=1000,gid=1000
+      - /data:size=16777216,mode=0700,uid=1000,gid=1000
+      - /tmp:size=16777216,mode=0700,uid=1000,gid=1000
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    stop_grace_period: 20s
+
 volumes:
+  mailpit-data:
+  object-storage-data:
   postgres-data:
+  scanner-data:
