@@ -1,13 +1,13 @@
 <p align="center">
-  <img src="docs/assets/peer2paper-hero.svg" width="960" alt="Peer2Paper — independent, reproducible audits of scientific claims" />
+  <img src="docs/assets/peer2paper-hero.svg" width="960" alt="Peer2Paper — find the weakness in your paper before reviewers do" />
 </p>
 
 <p align="center">
-  <strong>Turn a published claim into an evidence trail that another researcher can inspect and replay.</strong>
+  <strong>Find the weakness in your paper before reviewers do.</strong>
 </p>
 
 <p align="center">
-  <strong>peer2paper.com — production deployment pending</strong> ·
+  <a href="https://peer2paper.com"><strong>peer2paper.com</strong></a> ·
   <a href="peer2paper/web/README.md">Web setup</a> ·
   <a href="peer2paper/examples/elite-party-cues/README.md">Case study</a> ·
   <a href="peer2paper/PUBLIC_RELEASE.md">Release policy</a> ·
@@ -16,23 +16,23 @@
 
 ---
 
-Peer2Paper is an open monorepo for independent audits of consequential scientific claims. It combines a multilingual public product, authenticated audit intake, a controlled execution boundary, evidence-aware grading contracts, and reusable scientific workflows.
+Peer2Paper is an open monorepo for independent, pre-submission scientific audits. Researchers provide a manuscript and its supporting data, code, and supplementary material; Peer2Paper frames the central claim, reproduces the original analysis, stress-tests defensible alternatives, independently verifies the findings, and delivers a private verdict package before peer review.
 
-The project keeps one boundary deliberately sharp: reusable software, schemas, tests, and reviewed aggregate examples are public; papers, participant-level data, hidden answers, request-specific runs, and reviewer packets are not.
+The project keeps one boundary deliberately sharp: reusable software, schemas, tests, and reviewed aggregate examples are public; submitted manuscripts, participant-level data, hidden answers, request-specific runs, and private verdict packages are not.
 
 ## What is included
 
 | Area | Purpose |
 |---|---|
-| Public web app | Eight localized landing, documentation, result, authentication, and workspace experiences |
-| Audit intake | Email/password and Google OAuth through Supabase SSR, with user-owned requests protected by Row Level Security |
-| Scientific execution | A constrained Python runner with explicit manifests, runtime checks, timeouts, hashes, and attempt records |
-| Validation boundary | A local score-only grader that keeps expected values outside routine-visible inputs and outputs |
-| Workflow definitions | Versioned organization routines for intake, reproduction, robustness, verification, and delivery |
+| Public web app | Eight localized pre-submission, documentation, sample-result, authentication, and workspace experiences |
+| Secure intake | Manuscript and research-material selection followed by authenticated, user-owned audit requests protected by Row Level Security |
+| Scientific execution | A constrained runner with explicit manifests, runtime checks, timeouts, hashes, and attempt records |
+| Validation boundary | A private score-only grader that keeps expected values outside routine-visible inputs and outputs |
+| Audit workflow | Versioned routines for claim framing, reproduction, robustness testing, verification, adjudication, and delivery |
 | Public examples | Authored aggregate case studies with explicit attribution, limitations, and publication boundaries |
 
 <p align="center">
-  <img src="docs/assets/peer2paper-workflow.svg" width="960" alt="Peer2Paper workflow from a submitted claim through source verification, reproduction, robustness analysis, adjudication, and a reviewable result package" />
+  <img src="docs/assets/peer2paper-workflow.svg" width="960" alt="Peer2Paper pre-submission workflow from paper, data and code through claim framing, reproduction, robustness testing, verification and a private verdict package" />
 </p>
 
 ## Repository map
@@ -68,6 +68,16 @@ The public site builds without Supabase credentials. Authentication and the work
 
 Supported locales are English, Portuguese, Spanish, French, German, Italian, Dutch, and Russian.
 
+## Deploy the public site
+
+From the repository root, use the guarded release command:
+
+```bash
+./scripts/deploy-web-production
+```
+
+Do not invoke `vercel deploy` from `peer2paper/web`; the hosted project already uses that path as its Root Directory. The wrapper runs the complete web gate and deploys an isolated bundle with the directory layout Vercel expects.
+
 ## Verify the monorepo
 
 Run the same checks used by CI from the repository root:
@@ -84,7 +94,7 @@ These commands cover type checking, linting, unit tests, locale contracts, the p
 
 ## Read a result
 
-The [elite party cues case study](peer2paper/examples/elite-party-cues/README.md) demonstrates the public result contract: source verification, reproduction status, a bounded robustness comparison, material limitations, and links to authoritative sources. It intentionally contains no paper copy, participant rows, third-party analysis code, hidden benchmark key, or complete internal audit record.
+The [elite party cues case study](peer2paper/examples/elite-party-cues/README.md) demonstrates the public result contract: source verification, reproduction status, a bounded robustness comparison, material limitations, and links to authoritative sources. It shows the evidence structure behind a verdict without publishing the submitted paper, participant rows, third-party analysis code, hidden benchmark key, or complete private audit record.
 
 ## Contributing and security
 
