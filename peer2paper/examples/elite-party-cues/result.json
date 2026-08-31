@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "peer2paper_public_case_study",
+  "case_id": "elite-party-cues",
+  "publication_status": "public_aggregate_case_study",
+  "title": "Elite party cues increase vaccination intentions among Republicans",
+  "claim": "Among unvaccinated Republican or Republican-leaning participants, a Republican elite endorsement increases vaccination intentions relative to a Democratic elite endorsement.",
+  "verdict": "source_report_verified_with_limits_and_material_analysis_sensitivity",
+  "confidence": "high",
+  "source_report": {
+    "status": "verified_with_limits",
+    "estimate": 0.028,
+    "reported_interval": [0.006, 0.041],
+    "interval_confidence_level": null,
+    "test_statistic": 3.06,
+    "p_value": 0.002,
+    "model_specific_n": null,
+    "independent_statistical_replication": false
+  },
+  "reproduction": {
+    "status": "not_assessable",
+    "reason": "The canonical audit did not execute the frozen author-directed reproduction targets."
+  },
+  "robustness_comparison": {
+    "status": "verified_with_limits",
+    "scope": "frozen_seven_candidate_registry",
+    "adjusted_hc2": {
+      "estimate": 0.026631,
+      "confidence_interval_95": [0.008497, 0.044765],
+      "p_value": 0.004053,
+      "analytic_n": 761,
+      "classification": "statistical_support"
+    },
+    "unadjusted_hc2": {
+      "estimate": 0.036955,
+      "confidence_interval_95": [-0.016438, 0.090348],
+      "p_value": 0.174639,
+      "analytic_n": 764,
+      "classification": "positive_without_statistical_support"
+    },
+    "directional_reversal": false,
+    "scope_limit": "The paths differ as a scientifically indivisible adjustment, covariate-definition and listwise-sample bundle. Minimality is bounded to the frozen registry."
+  },
+  "material_limitations": [
+    "The source interval confidence level and model-specific analytic sample size were not established.",
+    "The displayed percentage interpretation has no established denominator or transformation.",
+    "The paper and analysis code describe an unvaccinated population, while supplementary wording describes a vaccinated population.",
+    "No comparable independent replication was established by the targeted evidence search."
+  ],
+  "sources": {
+    "article": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8364165/",
+    "doi": "https://doi.org/10.1073/pnas.2106559118",
+    "materials": "https://osf.io/rb3cn/",
+    "article_license": "CC BY-NC-ND 4.0",
+    "materials_license_note": "No project-level reuse licence was recorded during the audit; linked materials are not redistributed here."
+  },
+  "publication_boundary": "Peer2Paper-authored aggregate facts and interpretation only. No participant rows, copied source text, third-party code, hidden answers or internal run artifacts are included.",
+  "license_note": "The repository MIT licence covers this Peer2Paper-authored record only and does not relicense linked research materials."
+}

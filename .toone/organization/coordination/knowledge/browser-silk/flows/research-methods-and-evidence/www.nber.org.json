@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "id": "research-methods-and-evidence/www.nber.org",
+  "routine_id": "research-methods-and-evidence",
+  "site": "www.nber.org",
+  "status": "draft",
+  "last_updated": "2026-08-29T16:25:29.324Z",
+  "created_by": "research-and-insights/source-extractor",
+  "run_count": 0,
+  "params": {
+    "document_path": {
+      "type": "string",
+      "required": true,
+      "description": "Path to the authorized NBER working-paper PDF"
+    }
+  },
+  "funnels": [
+    {
+      "id": "open_working_paper_pdf",
+      "name": "Open NBER working paper PDF",
+      "description": "Open an authorized NBER working-paper PDF in the persistent browser for access verification before local text parsing.",
+      "repeatable": true,
+      "steps": [
+        {
+          "id": "open_document",
+          "action": "navigate",
+          "url": "https://www.nber.org/{{document_path}}"
+        },
+        {
+          "id": "read_pdf_container",
+          "action": "extract",
+          "selector": "body",
+          "extractType": "text",
+          "output": "pdf_viewer_text"
+        }
+      ]
+    }
+  ]
+}

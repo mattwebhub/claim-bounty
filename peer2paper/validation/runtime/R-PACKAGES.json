@@ -1,0 +1,31 @@
+{
+  "manifest_version": "1.0.0",
+  "prepared_on": "2026-08-31",
+  "platform": "arm64-apple-darwin",
+  "r_version": "4.6.1",
+  "library_path": "peer2paper/validation/runtime/r-library/4.6",
+  "repository": "https://cloud.r-project.org",
+  "local_package_count": 103,
+  "load_test": "passed",
+  "required_packages": {
+    "tidyverse": "2.0.0",
+    "dotwhisker": "0.8.6",
+    "mediation": "4.5.1",
+    "psych": "2.6.5",
+    "broom": "1.0.13",
+    "dplyr": "1.2.1",
+    "ggplot2": "4.0.3",
+    "Rmisc": "1.5.1",
+    "haven": "2.5.5",
+    "lme4": "2.0-6",
+    "car": "3.1-5"
+  },
+  "build_prerequisites": {
+    "cmake": "4.4.3"
+  },
+  "run_instructions": {
+    "library_precedence": "Resolve library_path from the monorepo root and place it first in .libPaths() before loading packages.",
+    "network_during_analysis": "host-policy",
+    "provenance_record": "Capture sessionInfo() in the reproduction package."
+  }
+}

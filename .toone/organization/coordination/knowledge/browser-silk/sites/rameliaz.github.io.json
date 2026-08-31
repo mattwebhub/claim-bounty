@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "domain": "rameliaz.github.io",
+  "display_name": "Rameliaz Author Copy Archive",
+  "logo_url": "https://rameliaz.github.io/favicon.ico",
+  "last_updated": "2026-08-29T16:03:01.678Z",
+  "rate_limits": {
+    "min_delay_ms": 1500,
+    "max_delay_ms": 4000,
+    "max_requests_per_minute": 20,
+    "cooldown_after_error_ms": 10000
+  },
+  "pages": {
+    "pdf_document": {
+      "selectors": {
+        "pdf_viewer": "body"
+      },
+      "description": "Browser-rendered open author-copy PDF container"
+    }
+  },
+  "selector_history": []
+}

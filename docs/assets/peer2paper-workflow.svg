@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330" role="img" aria-labelledby="title description">
+  <title id="title">Peer2Paper audit workflow</title>
+  <desc id="description">Six connected stages: scope a claim, verify sources, reproduce the result, test robustness, adjudicate evidence, and deliver a replayable package.</desc>
+  <defs>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f1e8"/>
+      <stop offset="1" stop-color="#fbfaf6"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-30%" width="140%" height="170%">
+      <feDropShadow dx="0" dy="10" stdDeviation="11" flood-color="#173e31" flood-opacity=".09"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="330" rx="24" fill="url(#panel)"/>
+  <text x="64" y="52" fill="#173e31" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="2.3">ONE CLAIM · SIX CHECKPOINTS · ONE EVIDENCE TRAIL</text>
+  <path d="M110 169H1090" fill="none" stroke="#6f917d" stroke-opacity=".34" stroke-width="3" stroke-dasharray="7 9"/>
+
+  <g font-family="Inter,Arial,sans-serif" filter="url(#shadow)">
+    <g transform="translate(40 104)">
+      <rect width="170" height="150" rx="14" fill="#fff" stroke="#173e31" stroke-opacity=".12"/>
+      <circle cx="85" cy="39" r="21" fill="#173e31"/>
+      <text x="85" y="45" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">01</text>
+      <text x="85" y="87" text-anchor="middle" fill="#173e31" font-size="14" font-weight="700">Scope</text>
+      <text x="85" y="111" text-anchor="middle" fill="#4d5c55" font-size="11">Freeze the exact claim</text>
+      <text x="85" y="129" text-anchor="middle" fill="#4d5c55" font-size="11">and decision boundary</text>
+    </g>
+    <g transform="translate(230 104)">
+      <rect width="170" height="150" rx="14" fill="#fff" stroke="#173e31" stroke-opacity=".12"/>
+      <circle cx="85" cy="39" r="21" fill="#173e31"/>
+      <text x="85" y="45" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">02</text>
+      <text x="85" y="87" text-anchor="middle" fill="#173e31" font-size="14" font-weight="700">Verify</text>
+      <text x="85" y="111" text-anchor="middle" fill="#4d5c55" font-size="11">Map reported values</text>
+      <text x="85" y="129" text-anchor="middle" fill="#4d5c55" font-size="11">to primary evidence</text>
+    </g>
+    <g transform="translate(420 104)">
+      <rect width="170" height="150" rx="14" fill="#173e31"/>
+      <circle cx="85" cy="39" r="21" fill="#c7e4d4"/>
+      <text x="85" y="45" text-anchor="middle" fill="#173e31" font-size="15" font-weight="700">03</text>
+      <text x="85" y="87" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">Reproduce</text>
+      <text x="85" y="111" text-anchor="middle" fill="#c7e4d4" font-size="11">Run the frozen target</text>
+      <text x="85" y="129" text-anchor="middle" fill="#c7e4d4" font-size="11">in a controlled boundary</text>
+    </g>
+    <g transform="translate(610 104)">
+      <rect width="170" height="150" rx="14" fill="#fff" stroke="#173e31" stroke-opacity=".12"/>
+      <circle cx="85" cy="39" r="21" fill="#173e31"/>
+      <text x="85" y="45" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">04</text>
+      <text x="85" y="87" text-anchor="middle" fill="#173e31" font-size="14" font-weight="700">Stress-test</text>
+      <text x="85" y="111" text-anchor="middle" fill="#4d5c55" font-size="11">Probe bounded, valid</text>
+      <text x="85" y="129" text-anchor="middle" fill="#4d5c55" font-size="11">analysis alternatives</text>
+    </g>
+    <g transform="translate(800 104)">
+      <rect width="170" height="150" rx="14" fill="#fff" stroke="#173e31" stroke-opacity=".12"/>
+      <circle cx="85" cy="39" r="21" fill="#173e31"/>
+      <text x="85" y="45" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">05</text>
+      <text x="85" y="87" text-anchor="middle" fill="#173e31" font-size="14" font-weight="700">Adjudicate</text>
+      <text x="85" y="111" text-anchor="middle" fill="#4d5c55" font-size="11">Separate verified facts</text>
+      <text x="85" y="129" text-anchor="middle" fill="#4d5c55" font-size="11">from interpretation</text>
+    </g>
+    <g transform="translate(990 104)">
+      <rect width="170" height="150" rx="14" fill="#d7653b"/>
+      <circle cx="85" cy="39" r="21" fill="#f4f1e8"/>
+      <text x="85" y="45" text-anchor="middle" fill="#d7653b" font-size="15" font-weight="700">06</text>
+      <text x="85" y="87" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">Deliver</text>
+      <text x="85" y="111" text-anchor="middle" fill="#fff" font-size="11">Publish a reviewable,</text>
+      <text x="85" y="129" text-anchor="middle" fill="#fff" font-size="11">replayable result package</text>
+    </g>
+  </g>
+
+  <g fill="#d7653b">
+    <path d="m218 169-9-6v12z"/><path d="m408 169-9-6v12z"/><path d="m598 169-9-6v12z"/>
+    <path d="m788 169-9-6v12z"/><path d="m978 169-9-6v12z"/>
+  </g>
+  <text x="600" y="295" text-anchor="middle" fill="#6f917d" font-family="Inter,Arial,sans-serif" font-size="11">Every stage preserves provenance, status, limitations, and the evidence needed for review.</text>
+</svg>

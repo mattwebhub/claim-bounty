@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "domain": "journals.sagepub.com",
+  "display_name": "SAGE Journals",
+  "logo_url": "https://journals.sagepub.com/favicon.ico",
+  "last_updated": "2026-08-29T16:01:35.425Z",
+  "rate_limits": {
+    "min_delay_ms": 1500,
+    "max_delay_ms": 4000,
+    "max_requests_per_minute": 20,
+    "cooldown_after_error_ms": 10000
+  },
+  "pages": {
+    "journal_article_full_text": {
+      "selectors": {
+        "article_content": "body"
+      },
+      "description": "Open journal article HTML with headings, tables, figures, supplementary materials, references, licence, and DOI"
+    }
+  },
+  "selector_history": []
+}

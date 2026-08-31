@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title description">
+  <title id="title">Peer2Paper</title>
+  <desc id="description">A forest green Peer2Paper banner showing a research paper transformed into a verified evidence package.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f3026"/>
+      <stop offset="1" stop-color="#173e31"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#c7e4d4" stop-opacity=".3"/>
+      <stop offset="1" stop-color="#c7e4d4" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#071d16" flood-opacity=".28"/>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#c7e4d4" stroke-opacity=".055"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="560" rx="28" fill="url(#background)"/>
+  <rect width="1200" height="560" rx="28" fill="url(#grid)"/>
+  <circle cx="1030" cy="60" r="300" fill="url(#glow)"/>
+  <circle cx="52" cy="530" r="220" fill="url(#glow)" opacity=".45"/>
+
+  <g transform="translate(70 68)">
+    <g transform="translate(0 3) rotate(45 24 24)">
+      <rect x="5" y="5" width="38" height="38" rx="10" fill="none" stroke="#f4f1e8" stroke-width="3"/>
+      <circle cx="24" cy="24" r="7" fill="#d7653b"/>
+    </g>
+    <text x="66" y="38" fill="#f4f1e8" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" letter-spacing="-1.2">Peer2Paper</text>
+  </g>
+
+  <g transform="translate(70 180)">
+    <text fill="#c7e4d4" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700" letter-spacing="2.5">INDEPENDENT SCIENTIFIC AUDITS</text>
+    <text y="62" fill="#fbfaf6" font-family="Georgia,serif" font-size="54" font-weight="400">From published claim</text>
+    <text y="120" fill="#fbfaf6" font-family="Georgia,serif" font-size="54" font-weight="400">to reviewable evidence.</text>
+    <text y="174" fill="#c7e4d4" font-family="Inter,Arial,sans-serif" font-size="18">Verify the source. Reproduce the result. Test what changes it.</text>
+    <g transform="translate(0 214)">
+      <rect width="176" height="48" rx="8" fill="#f4f1e8"/>
+      <text x="88" y="30" text-anchor="middle" fill="#173e31" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700">peer2paper.com</text>
+    </g>
+  </g>
+
+  <g transform="translate(770 112)" filter="url(#shadow)">
+    <g transform="rotate(-5 110 155)">
+      <rect width="220" height="310" rx="14" fill="#f4f1e8"/>
+      <rect x="24" y="27" width="82" height="10" rx="5" fill="#d7653b"/>
+      <rect x="24" y="56" width="170" height="8" rx="4" fill="#173e31" opacity=".85"/>
+      <rect x="24" y="77" width="149" height="7" rx="3.5" fill="#6f917d" opacity=".62"/>
+      <rect x="24" y="98" width="164" height="7" rx="3.5" fill="#6f917d" opacity=".42"/>
+      <rect x="24" y="132" width="172" height="94" rx="8" fill="#c7e4d4" opacity=".68"/>
+      <path d="M43 204 78 171l32 17 32-42 35 24" fill="none" stroke="#173e31" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="142" cy="146" r="6" fill="#d7653b"/>
+      <rect x="24" y="250" width="125" height="7" rx="3.5" fill="#6f917d" opacity=".52"/>
+      <rect x="24" y="270" width="160" height="7" rx="3.5" fill="#6f917d" opacity=".35"/>
+    </g>
+
+    <g transform="translate(154 116) rotate(4 110 155)">
+      <rect width="236" height="318" rx="14" fill="#fbfaf6"/>
+      <rect x="22" y="22" width="192" height="46" rx="9" fill="#173e31"/>
+      <circle cx="48" cy="45" r="12" fill="#c7e4d4"/>
+      <path d="m42 45 5 5 9-11" fill="none" stroke="#173e31" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="69" y="41" fill="#c7e4d4" font-family="Inter,Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1.2">VERDICT</text>
+      <text x="69" y="56" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="12" font-weight="700">Verified with limits</text>
+      <text x="22" y="98" fill="#6f917d" font-family="Inter,Arial,sans-serif" font-size="9" font-weight="700" letter-spacing="1">REPORTED / AUDITED</text>
+      <g transform="translate(22 112)">
+        <rect width="192" height="58" rx="8" fill="#f4f1e8"/>
+        <text x="14" y="22" fill="#4d5c55" font-family="Inter,Arial,sans-serif" font-size="10">Estimate</text>
+        <text x="14" y="43" fill="#173e31" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700">0.028</text>
+        <path d="M87 10v38" stroke="#173e31" stroke-opacity=".12"/>
+        <text x="101" y="22" fill="#4d5c55" font-family="Inter,Arial,sans-serif" font-size="10">Audited path</text>
+        <text x="101" y="43" fill="#173e31" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700">0.0266</text>
+      </g>
+      <g transform="translate(22 190)">
+        <rect width="192" height="74" rx="8" fill="#c7e4d4" opacity=".62"/>
+        <text x="14" y="22" fill="#173e31" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700">EVIDENCE PACKAGE</text>
+        <rect x="14" y="35" width="77" height="20" rx="5" fill="#fbfaf6"/>
+        <rect x="101" y="35" width="77" height="20" rx="5" fill="#fbfaf6"/>
+        <text x="52" y="49" text-anchor="middle" fill="#4d5c55" font-family="Inter,Arial,sans-serif" font-size="8">AUDIT JSON</text>
+        <text x="139" y="49" text-anchor="middle" fill="#4d5c55" font-family="Inter,Arial,sans-serif" font-size="8">REPLAY</text>
+      </g>
+      <rect x="22" y="284" width="104" height="7" rx="3.5" fill="#6f917d" opacity=".45"/>
+    </g>
+  </g>
+
+  <path d="M697 274h48" fill="none" stroke="#d7653b" stroke-width="4" stroke-linecap="round"/>
+  <path d="m734 263 12 11-12 11" fill="none" stroke="#d7653b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

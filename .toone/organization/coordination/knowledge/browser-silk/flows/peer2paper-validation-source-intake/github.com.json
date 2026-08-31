@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "id": "peer2paper-validation-source-intake/github.com",
+  "routine_id": "peer2paper-validation-source-intake",
+  "site": "github.com",
+  "status": "draft",
+  "last_updated": "2026-08-29T12:49:18.194Z",
+  "created_by": "peer2paper-operations/peer2paper-orchestrator",
+  "run_count": 0,
+  "params": {
+    "owner": {
+      "type": "string",
+      "required": true,
+      "description": "GitHub repository owner"
+    },
+    "repository": {
+      "type": "string",
+      "required": true,
+      "description": "GitHub repository name"
+    }
+  },
+  "funnels": [
+    {
+      "id": "inspect_public_repository",
+      "name": "Inspect public repository",
+      "description": "Open a public GitHub repository and extract its file list, README, licence, and source links before a reproducible clone.",
+      "repeatable": true,
+      "steps": [
+        {
+          "id": "open_repository",
+          "action": "navigate",
+          "url": "https://github.com/{{owner}}/{{repository}}"
+        },
+        {
+          "id": "extract_repository",
+          "action": "extract",
+          "page": "repository",
+          "selectorKey": "repository_main",
+          "extractType": "text",
+          "output": "repository_overview"
+        }
+      ]
+    }
+  ]
+}

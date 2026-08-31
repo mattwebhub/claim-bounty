@@ -1,0 +1,30 @@
+.DS_Store
+*.pyc
+__pycache__/
+
+# Local workflow state and exchanges are never part of the public monorepo.
+/.tmp/
+/exchange
+/PLAN.md
+/peer2paper-routine-export/
+
+# Toone runtime identities and diagnostics are local operational state.
+/.toone/config.json
+/.toone/active/
+/.toone/organization/.org-id
+/.toone/organization/.toone/
+
+# Request-specific scientific inputs and outputs stay outside public Git.
+/peer2paper/audits/
+/peer2paper/assessment-bundles/
+/peer2paper/state/
+/peer2paper/validation/cases/
+
+# The product monorepo is maintained independently.
+/micro1-template/
+
+# Prepared third-party dependencies are represented by R-PACKAGES.json.
+/peer2paper/validation/runtime/r-library/
+
+# The upstream benchmark checkout is represented by the frozen case bundle.
+/peer2paper/validation/sources/

@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "domain": "osf.io",
+  "display_name": "Open Science Framework",
+  "logo_url": "https://osf.io/static/img/favicon.ico",
+  "last_updated": "2026-08-29T16:02:14.810Z",
+  "rate_limits": {
+    "min_delay_ms": 1500,
+    "max_delay_ms": 4000,
+    "max_requests_per_minute": 20,
+    "cooldown_after_error_ms": 10000
+  },
+  "pages": {
+    "project_overview": {
+      "selectors": {
+        "project_main": "body",
+        "files_link": "a[href*=\"/download\"]"
+      },
+      "description": "OSF project overview and navigation"
+    },
+    "project_files": {
+      "selectors": {
+        "file_action_buttons": "main button"
+      },
+      "description": "OSF file actions including Download As Zip and file entries"
+    }
+  },
+  "selector_history": [
+    {
+      "old_selector": "main",
+      "new_selector": "body",
+      "reason": "OSF overview no longer exposes a main element during flow replay; body is the stable content root.",
+      "healed_at": "2026-08-29T15:33:33.677Z"
+    },
+    {
+      "old_selector": "a[href$=\"/files\"]",
+      "new_selector": "a[href*=\"/download\"]",
+      "reason": "The source is an OSF preprint record rather than a project overview; the reusable navigation target is its authorized download link.",
+      "healed_at": "2026-08-29T16:02:14.810Z"
+    }
+  ]
+}

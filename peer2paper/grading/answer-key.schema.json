@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://peer2paper.com/schemas/answer-key.schema.json",
+  "title": "Peer2Paper grader-only answer key",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "key_id",
+    "case_id",
+    "visibility",
+    "targets"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "key_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "case_id": { "$ref": "#/$defs/identifier" },
+    "visibility": { "const": "grader_only" },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 512,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "expected", "comparison"],
+        "properties": {
+          "id": { "$ref": "#/$defs/identifier" },
+          "expected": {},
+          "points": { "type": "number", "exclusiveMinimum": 0 },
+          "comparison": {
+            "oneOf": [
+              {
+                "enum": [
+                  "exact",
+                  "case_insensitive_exact",
+                  "three_decimal_places"
+                ]
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["type"],
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "exact",
+                      "case_insensitive_exact",
+                      "three_decimal_places"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["type", "tolerance"],
+                "properties": {
+                  "type": { "const": "absolute_tolerance" },
+                  "tolerance": { "type": "number", "minimum": 0 }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    }
+  }
+}

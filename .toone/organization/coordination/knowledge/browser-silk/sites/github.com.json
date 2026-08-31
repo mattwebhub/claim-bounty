@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "domain": "github.com",
+  "display_name": "GitHub",
+  "logo_url": "https://github.githubassets.com/favicons/favicon.svg",
+  "last_updated": "2026-08-29T12:43:28.960Z",
+  "rate_limits": {
+    "min_delay_ms": 1500,
+    "max_delay_ms": 4000,
+    "max_requests_per_minute": 20,
+    "cooldown_after_error_ms": 10000
+  },
+  "pages": {
+    "repository": {
+      "selectors": {
+        "repository_main": "main"
+      },
+      "description": "Repository file list and README content"
+    }
+  },
+  "selector_history": []
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "domain": "www.nber.org",
+  "display_name": "National Bureau of Economic Research",
+  "logo_url": "https://www.nber.org/favicon.ico",
+  "last_updated": "2026-08-29T16:25:23.446Z",
+  "rate_limits": {
+    "min_delay_ms": 1500,
+    "max_delay_ms": 4000,
+    "max_requests_per_minute": 20,
+    "cooldown_after_error_ms": 10000
+  },
+  "pages": {
+    "working_paper_pdf": {
+      "selectors": {
+        "pdf_container": "body"
+      },
+      "description": "Browser-rendered NBER working-paper PDF container"
+    }
+  },
+  "selector_history": []
+}

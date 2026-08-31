@@ -1,0 +1,13 @@
+# Ignore Toone runtime state by default. Only reviewed organization definitions
+# are eligible for version control; identities, diagnostics, active work,
+# browser captures, object storage, and generated templates remain local.
+/*
+!/.gitignore
+!/organization/
+!/organization/**
+
+/organization/.org-id
+/organization/.toone/
+/organization/**/active/
+/organization/**/knowledge/browser-silk/flows/
+/organization/**/knowledge/browser-silk/sites/

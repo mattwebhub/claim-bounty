@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://peer2paper.com/schemas/grading-receipt.schema.json",
+  "title": "Peer2Paper public grading receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "service",
+    "service_version",
+    "receipt_id",
+    "submission_id",
+    "case_id",
+    "run_id",
+    "phase",
+    "graded_at",
+    "status",
+    "score",
+    "targets",
+    "expected_values_disclosed",
+    "idempotent"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "service": { "const": "peer2paper-local-grader" },
+    "service_version": { "type": "string", "minLength": 1 },
+    "receipt_id": { "$ref": "#/$defs/identifier" },
+    "submission_id": { "$ref": "#/$defs/identifier" },
+    "case_id": { "$ref": "#/$defs/identifier" },
+    "run_id": { "$ref": "#/$defs/identifier" },
+    "phase": { "const": "final" },
+    "graded_at": { "type": "string", "format": "date-time" },
+    "status": { "enum": ["passed", "failed"] },
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["points_awarded", "points_possible", "fraction"],
+      "properties": {
+        "points_awarded": { "type": "number", "minimum": 0 },
+        "points_possible": { "type": "number", "exclusiveMinimum": 0 },
+        "fraction": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "target_id",
+          "status",
+          "comparison",
+          "points_awarded",
+          "points_possible"
+        ],
+        "properties": {
+          "target_id": { "$ref": "#/$defs/identifier" },
+          "status": { "enum": ["passed", "failed", "missing"] },
+          "comparison": {
+            "enum": [
+              "exact",
+              "case_insensitive_exact",
+              "three_decimal_places",
+              "absolute_tolerance"
+            ]
+          },
+          "points_awarded": { "type": "number", "minimum": 0 },
+          "points_possible": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      }
+    },
+    "expected_values_disclosed": { "const": false },
+    "idempotent": { "const": true }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    }
+  }
+}

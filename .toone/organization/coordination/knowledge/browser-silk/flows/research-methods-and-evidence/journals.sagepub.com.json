@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "id": "research-methods-and-evidence/journals.sagepub.com",
+  "routine_id": "research-methods-and-evidence",
+  "site": "journals.sagepub.com",
+  "status": "draft",
+  "last_updated": "2026-08-29T16:01:35.429Z",
+  "created_by": "research-and-insights/source-extractor",
+  "run_count": 0,
+  "params": {
+    "doi": {
+      "type": "string",
+      "required": true,
+      "description": "SAGE article DOI"
+    }
+  },
+  "funnels": [
+    {
+      "id": "open_and_extract_article",
+      "name": "Open and extract SAGE article",
+      "description": "Open an authorized SAGE HTML article and extract its visible full text and structure.",
+      "repeatable": true,
+      "steps": [
+        {
+          "id": "open_article",
+          "action": "navigate",
+          "url": "https://journals.sagepub.com/doi/{{doi}}"
+        },
+        {
+          "id": "extract_article",
+          "action": "extract",
+          "selector": "body",
+          "extractType": "text",
+          "output": "article_full_text"
+        }
+      ]
+    }
+  ]
+}
