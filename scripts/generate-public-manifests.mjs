@@ -6,6 +6,8 @@ import path from 'node:path';
 import process from 'node:process';
 
 const packageRoots = [
+  'examples/moura-2023-heliconius-exp1',
+  'submission/recordings',
   'submission/reviewer',
   'submission/evidence',
   'workflow/claimbounty-scientific-audit',
@@ -17,6 +19,12 @@ function excludedPythonCache(relativePath, isDirectory) {
   return isDirectory
     ? normalized.split('/').includes('__pycache__')
     : /\.(?:pyc|pyo|pyd)$/i.test(normalized);
+}
+
+function excludedOperatingSystemMetadata(relativePath) {
+  return relativePath
+    .split(path.sep)
+    .some((segment) => segment === '.DS_Store' || segment === 'Thumbs.db');
 }
 
 for (const [candidate, isDirectory] of [
@@ -37,6 +45,7 @@ async function filesBelow(root, current = root) {
   for (const entry of entries) {
     const absolute = path.join(current, entry.name);
     const relative = path.relative(root, absolute);
+    if (excludedOperatingSystemMetadata(relative)) continue;
     if (excludedPythonCache(relative, entry.isDirectory())) continue;
     if (entry.isDirectory()) files.push(...(await filesBelow(root, absolute)));
     if (entry.isFile()) files.push(relative.split(path.sep).join('/'));

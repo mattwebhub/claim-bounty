@@ -15,13 +15,13 @@
     },
     {
       "path": "guide/guide.css",
-      "bytes": 8343,
-      "sha256": "91d3d4ff2a8ae42f2622a23d07f3b114e92b09c340179c478754454f5706e502"
+      "bytes": 8345,
+      "sha256": "8e8fe2b2f2d864da238955a899307f9c64f0821e9188660b4ca3322b4d458554"
     },
     {
       "path": "guide/index.html",
-      "bytes": 49325,
-      "sha256": "4034c5efa9384e509349301d58334511d34ddd0886efedd1d53c89198784a553"
+      "bytes": 45692,
+      "sha256": "6b96ea352430f65f7d0810ef9da0c19fa03c1b7b67a1ef20f4d6506c13913573"
     },
     {
       "path": "guide/render.mjs",
@@ -30,8 +30,8 @@
     },
     {
       "path": "reviewer-guide.pdf",
-      "bytes": 798075,
-      "sha256": "16d68dee7ad398b08ec398ac5a16d0956de88646aee30f8c6aef326457483492"
+      "bytes": 725707,
+      "sha256": "392d8fa26f67a70f15cf1a53ce2563c3f6ae2eefd544f1abcbb93bff27bbeb54"
     }
   ]
 }

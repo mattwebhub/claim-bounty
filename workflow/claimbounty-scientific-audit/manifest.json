@@ -15,8 +15,8 @@
     },
     {
       "path": "project-template/claimbounty/config/audit-template.html",
-      "bytes": 7994,
-      "sha256": "de22175e08ac00b05cbc1d5e55f00463b0d0201ed54b37e5a394be828bfd775f"
+      "bytes": 9295,
+      "sha256": "6ce687f789acbdc7c27a6f236e8e4ed5914ecacca07995a1b0be1bcb5a8cbb9f"
     },
     {
       "path": "project-template/claimbounty/config/canonical-schemas.json",

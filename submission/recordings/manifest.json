@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "packageRoot": "submission/recordings",
+  "pathPolicy": "repository-relative",
+  "entries": [
+    {
+      "path": "README.md",
+      "bytes": 1575,
+      "sha256": "869043fe4e71ad004746194691990fb5a8c7d400ade5284124f106cd6b05cceb"
+    },
+    {
+      "path": "claimbounty-submission-video.mp4",
+      "bytes": 9324884,
+      "sha256": "27314c659d8d0ad0f74b65eb7e684ccbadb7a13e53a0121f354f962a7c61df5e"
+    },
+    {
+      "path": "workflow-source-2026-08-31.mp4",
+      "bytes": 779432,
+      "sha256": "470a596d804a78d0e97a2b18e2e76c570e812ae87589280a7067c10f408087eb"
+    }
+  ]
+}

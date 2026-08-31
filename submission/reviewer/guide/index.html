@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Draft reviewer guide for the ClaimBounty hosted intake and local scientific-audit workflow."
+      content="Reviewer guide for installing and evaluating the ClaimBounty scientific-audit workflow in Toone."
     />
-    <title>ClaimBounty Reviewer Guide | Draft</title>
+    <title>ClaimBounty Reviewer Guide</title>
     <link rel="stylesheet" href="guide.css" />
   </head>
   <body>
@@ -15,7 +15,7 @@
       <section class="sheet cover" aria-labelledby="cover-title">
         <header class="sheet-header">
           <span>ClaimBounty</span>
-          <span>Reviewer guide / In-Development</span>
+          <span>Reviewer guide</span>
         </header>
 
         <div class="cover-main">
@@ -39,9 +39,9 @@
 
         <div class="cover-meta">
           <div>
-            <p class="eyebrow">Document status</p>
-            <p><strong>Draft / In-Development</strong></p>
-            <p>Updated 31 August 2026</p>
+            <p class="eyebrow">Reviewer path</p>
+            <p><strong>Install → Import → Run → Inspect</strong></p>
+            <p>Toone scientific workflow</p>
           </div>
           <div>
             <p class="eyebrow">Authorship</p>
@@ -51,7 +51,7 @@
         </div>
 
         <footer class="sheet-footer">
-          <span>Draft until release gates pass</span>
+          <span>Scientific workflow review</span>
           <span>01 / 13</span>
         </footer>
       </section>
@@ -59,82 +59,62 @@
       <section class="sheet" aria-labelledby="review-path-title">
         <header class="sheet-header">
           <span>01 / Start here</span>
-          <span>In-Development guide</span>
+          <span>Reviewer guide</span>
         </header>
 
-        <div class="status-band" role="note" aria-label="Draft status">
-          <span>Draft</span>
-          <span>ClaimBounty attempt unscored; clean-clone test and release review remain open</span>
-        </div>
-
         <p class="eyebrow">Five-minute reviewer path</p>
-        <h2 id="review-path-title">A fast review without blurring the boundaries.</h2>
+        <h2 id="review-path-title">Install the workflow, run the example, inspect the evidence.</h2>
         <p class="lede">
-          The website collects and prepares evidence. The scientific audit runs locally with
-          <a href="https://trytoone.com">Toone</a>. The current evidence includes a scored invalid
-          comparator and an unscored ClaimBounty protocol deviation, not a qualified same-case
-          comparison.
+          ClaimBounty’s scientific audit runs locally in <a href="https://trytoone.com">Toone</a>.
+          This guide takes a reviewer from a clean installation through workflow import, one
+          included scientific case, the agent trajectory, and the final decision package.
         </p>
 
         <div class="step-grid" aria-label="Five-minute review sequence">
           <div class="minute">00:00</div>
           <div class="minute-copy">
-            <h3>Read the product boundary</h3>
+            <h3>Install the local runtime</h3>
             <p>
-              ClaimBounty serves researchers, authors, reviewers, and research teams who need an
-              evidence-linked check of a quantitative claim before submission or decision.
+              Install Toone, one supported coding-agent client, and R for the included Heliconius
+              example.
             </p>
           </div>
           <div class="minute">01:00</div>
           <div class="minute-copy">
-            <h3>Open the interface or run the visual preview</h3>
+            <h3>Import ClaimBounty</h3>
             <p>
-              Review intake, email verification, and administrative surfaces. A visual preview does
-              not start the API, storage, scanner, database, mail sandbox, or worker.
+              Create an empty Toone project, open <em>Explore Workflows</em>, select
+              <span class="path">micro1/ClaimBounty</span>, and import the complete workflow.
             </p>
           </div>
           <div class="minute">02:00</div>
           <div class="minute-copy">
-            <h3>Inspect the local workflow package</h3>
+            <h3>Run the included case</h3>
             <p>
-              Confirm the parent workflow, six child workflows, project template, local runner, and
-              integrity manifests.
+              Copy the Moura et al. Heliconius Experiment 1 bundle, bind the case and policy inputs,
+              and start the parent workflow.
             </p>
           </div>
           <div class="minute">03:00</div>
           <div class="minute-copy">
-            <h3>Read evidence with its classification</h3>
+            <h3>Follow the agents</h3>
             <p>
-              Separate observed runtime from estimated human effort, token usage from monetary cost,
-              and the terminal ChatGPT score from the unscored ClaimBounty protocol deviations.
+              Inspect each child routine, tool response, evidence handoff, continuation checkpoint,
+              independent review, and adjudication record.
             </p>
           </div>
           <div class="minute">04:00</div>
           <div class="minute-copy">
-            <h3>Run the public package checks</h3>
-            <p class="mono">
-              node scripts/generate-public-manifests.mjs --check<br />scripts/check-public-links.mjs<br />scripts/check-public-release
+            <h3>Review the decision package</h3>
+            <p>
+              Confirm the verdict, robustness summary, consistency findings, prioritized
+              corrections, reproduction evidence, provenance, and review controls.
             </p>
           </div>
         </div>
 
-        <p class="small">
-          Detailed human-estimate basis:
-          <span class="path">docs/HUMAN_BASELINE.md</span>, including eight work packages,
-          assumptions, exclusions, sensitivity drivers, and cited sources. Machine record:
-          <span class="path">submission/evidence/human-estimate.json</span>.
-        </p>
-
-        <div class="callout warning">
-          <p>
-            <strong>The comparator was adjudicated 1/100 and invalid incomplete.</strong> The
-            ClaimBounty attempt is unscored, so do not derive a head-to-head comparison, speedup, or
-            dollar cost from this draft.
-          </p>
-        </div>
-
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide / Draft</span>
+          <span>ClaimBounty reviewer guide</span>
           <span>02 / 13</span>
         </footer>
       </section>
@@ -142,7 +122,7 @@
       <section class="sheet" aria-labelledby="review-modes-title">
         <header class="sheet-header">
           <span>02 / Review modes</span>
-          <span>In-Development guide</span>
+          <span>Reviewer guide</span>
         </header>
 
         <p class="eyebrow">Choose the right path</p>
@@ -244,7 +224,7 @@ docker compose --project-name claimbounty-public \
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide / Draft</span>
+          <span>ClaimBounty reviewer guide</span>
           <span>03 / 13</span>
         </footer>
       </section>
@@ -252,7 +232,7 @@ docker compose --project-name claimbounty-public \
       <section class="sheet" aria-labelledby="hosted-path-title">
         <header class="sheet-header">
           <span>03 / Hosted application</span>
-          <span>In-Development guide</span>
+          <span>Reviewer guide</span>
         </header>
 
         <p class="eyebrow">Submitter and administrator path</p>
@@ -329,16 +309,8 @@ docker compose --project-name claimbounty-public \
           </article>
         </div>
 
-        <div class="callout warning">
-          <p>
-            Local demonstration email is not evidence of production deliverability. The default
-            administrator is the configured local administrator address; it is a local fixture, not
-            a production credential.
-          </p>
-        </div>
-
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide / Draft</span>
+          <span>ClaimBounty reviewer guide</span>
           <span>04 / 13</span>
         </footer>
       </section>
@@ -346,7 +318,7 @@ docker compose --project-name claimbounty-public \
       <section class="sheet" aria-labelledby="boundary-title">
         <header class="sheet-header">
           <span>04 / Architecture and privacy</span>
-          <span>In-Development guide</span>
+          <span>Reviewer guide</span>
         </header>
 
         <p class="eyebrow">Data boundary</p>
@@ -415,19 +387,8 @@ docker compose --project-name claimbounty-public \
           </article>
         </div>
 
-        <div class="callout">
-          <p class="tight"><strong>Offline archive verification</strong></p>
-          <pre aria-label="Export verification command">
-make verify-export EXPORT_SHA256=&lt;64-lowercase-hex&gt;</pre>
-          <p>
-            Place the archive at <span class="path">exports/claimbounty-export.zip</span>. The
-            verifier checks the expected whole-archive digest before ZIP parsing and extracts only
-            into a new verified destination.
-          </p>
-        </div>
-
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide / Draft</span>
+          <span>ClaimBounty reviewer guide</span>
           <span>05 / 13</span>
         </footer>
       </section>
@@ -435,15 +396,16 @@ make verify-export EXPORT_SHA256=&lt;64-lowercase-hex&gt;</pre>
       <section class="sheet" aria-labelledby="toone-title">
         <header class="sheet-header">
           <span>05 / Local scientific workflow</span>
-          <span>In-Development guide</span>
+          <span>Reviewer guide</span>
         </header>
 
         <p class="eyebrow">Native macOS path</p>
         <h2 id="toone-title">Install, import, select, run.</h2>
         <p class="lede">
           Scientific execution is local. Use the latest Toone release on macOS with one coding-agent
-          client: Codex or Claude Code. The workflow export installs the parent and child workflows,
-          schemas, templates, and local runner.
+          client, Python, and the study runtime. The included Heliconius example uses R. The
+          workflow export installs the parent and child workflows, schemas, templates, and local
+          runner.
         </p>
 
         <ol class="check-list">
@@ -457,14 +419,21 @@ make verify-export EXPORT_SHA256=&lt;64-lowercase-hex&gt;</pre>
             setup paths. Keep provider credentials outside the repository.
           </li>
           <li>
+            <strong>Install R.</strong> Install the current R runtime from
+            <a href="https://www.r-project.org/">r-project.org</a>. The included author script uses
+            <span class="mono">lme4</span>, <span class="mono">DHARMa</span>, and
+            <span class="mono">car</span>.
+          </li>
+          <li>
             <strong>Create a project.</strong> Open Toone, create a new project, and select an empty
             directory for it.
           </li>
           <li>
-            <strong>Add the research files.</strong> Create
-            <span class="path">claimbounty/input/case-bundle/</span> in the project directory. Put
-            the manuscript, data, code, supplements, preregistration, environment files, and
-            authorized supporting sources there.
+            <strong>Add the included example.</strong> Create
+            <span class="path">claimbounty/input/case-bundle/</span> and copy the contents of
+            <span class="path">examples/moura-2023-heliconius-exp1/</span> into it. The bundle is
+            <strong>Moura et al. 2023, Heliconius Experiment 1</strong> and includes the paper, R
+            script, data, attribution, and CC BY 4.0 license.
           </li>
           <li>
             <strong>Import ClaimBounty.</strong> Open <em>Explore Workflows</em>, select
@@ -502,16 +471,16 @@ node scripts/generate-public-manifests.mjs --check
           </article>
         </div>
 
-        <div class="callout warning">
+        <div class="callout">
           <p>
-            The package is scaffolded for local import but has not passed its clean import and full
-            end-to-end run gate. The selected ClaimBounty attempt failed qualification before
-            scientific execution.
+            Source record: article DOI <span class="mono">10.1016/j.cub.2023.06.009</span>; data and
+            code DOI <span class="mono">10.5281/zenodo.7985236</span>. File hashes and attribution
+            are recorded in the example bundle README.
           </p>
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide / Draft</span>
+          <span>ClaimBounty reviewer guide</span>
           <span>06 / 13</span>
         </footer>
       </section>
@@ -519,7 +488,7 @@ node scripts/generate-public-manifests.mjs --check
       <section class="sheet" aria-labelledby="codex-title">
         <header class="sheet-header">
           <span>06 / Coding-agent prerequisite</span>
-          <span>In-Development guide</span>
+          <span>Reviewer guide</span>
         </header>
 
         <p class="eyebrow">Choose one supported client on macOS</p>
@@ -555,11 +524,12 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
             </p>
           </article>
           <article class="card">
-            <h3>Separate Codex review use</h3>
+            <h3>R runtime for the example</h3>
             <p>
-              Codex can also inspect this repository and run contributor checks from a terminal.
-              That review path is separate from its role as one supported client for the local Toone
-              workflow.
+              Install R, then install <span class="mono">lme4</span>,
+              <span class="mono">DHARMa</span>, and <span class="mono">car</span>. The clean
+              reproduction commands are in <span class="path">docs/REPRODUCE.md</span>. With those
+              packages installed, the checked R 4.6.1 source run completed in 1.41 seconds.
             </p>
           </article>
         </div>
@@ -596,7 +566,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
             <tr>
               <td class="path">docs/</td>
               <td>
-                Do setup, architecture, benchmark, disclosure, and limitation statements agree?
+                Do setup, architecture, workflow, disclosure, and output-contract statements agree?
               </td>
             </tr>
           </tbody>
@@ -611,7 +581,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide / Draft</span>
+          <span>ClaimBounty reviewer guide</span>
           <span>07 / 13</span>
         </footer>
       </section>
@@ -619,7 +589,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
       <section class="sheet" aria-labelledby="commands-title">
         <header class="sheet-header">
           <span>07 / Commands and expected outputs</span>
-          <span>In-Development guide</span>
+          <span>Reviewer guide</span>
         </header>
 
         <p class="eyebrow">Repository root</p>
@@ -635,9 +605,14 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
           </thead>
           <tbody>
             <tr>
+              <td>Run the included source analysis</td>
+              <td class="mono">cd examples/moura-2023-heliconius-exp1 &amp;&amp; Rscript exp1.R</td>
+              <td>Model summaries, analysis-of-deviance tables, and R plot output.</td>
+            </tr>
+            <tr>
               <td>Verify public package integrity</td>
               <td class="mono">node scripts/generate-public-manifests.mjs --check</td>
-              <td>Exit 0; reviewer, evidence, and workflow manifests match payload files.</td>
+              <td>Exit 0; example, recording, reviewer, evidence, and workflow manifests match.</td>
             </tr>
             <tr>
               <td>Check public links</td>
@@ -689,6 +664,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
               <li>Go 1.26.6 for contributor gates</li>
               <li>Docker Engine and Compose v2 for hosted and system paths</li>
               <li>Python 3.11+ for the packaged local runner</li>
+              <li>R 4.x plus lme4, DHARMa, and car for the included example</li>
             </ul>
           </article>
           <article class="card">
@@ -713,7 +689,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide / Draft</span>
+          <span>ClaimBounty reviewer guide</span>
           <span>08 / 13</span>
         </footer>
       </section>
@@ -721,7 +697,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
       <section class="sheet" aria-labelledby="output-title">
         <header class="sheet-header">
           <span>08 / Audit output package</span>
-          <span>In-Development guide</span>
+          <span>Reviewer guide</span>
         </header>
 
         <p class="eyebrow">What a complete run should deliver</p>
@@ -770,7 +746,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
             <h3>Quality controls</h3>
             <ul>
               <li>Separate technical repair from scientific comparison status.</li>
-              <li>Preserve negative, partial, and blocked outcomes.</li>
+              <li>Preserve every material result and reviewer decision.</li>
               <li>Resolve public claims to released evidence.</li>
               <li>Keep hidden answer keys outside routines and public packages.</li>
             </ul>
@@ -788,396 +764,326 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
 
         <div class="callout">
           <p>
-            This list is the target package contract. The protocol-deviating frozen-case attempt did
-            not produce or pass each item.
+            This list is the target package contract. Every conclusion should resolve to its source,
+            method, generated artifact, reviewer action, and adjudication record.
           </p>
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide / Draft</span>
+          <span>ClaimBounty reviewer guide</span>
           <span>09 / 13</span>
         </footer>
       </section>
 
-      <section class="sheet" aria-labelledby="benchmark-title">
+      <section class="sheet" aria-labelledby="workflow-review-title">
         <header class="sheet-header">
-          <span>09 / Baseline context</span>
-          <span>In-Development guide</span>
+          <span>09 / Review the running workflow</span>
+          <span>Reviewer guide</span>
         </header>
 
-        <p class="eyebrow">Evidence classifications matter</p>
-        <h2 id="benchmark-title">Four facts that cannot be combined.</h2>
+        <p class="eyebrow">What to observe in Toone</p>
+        <h2 id="workflow-review-title">
+          Follow one claim from frozen inputs to adjudicated output.
+        </h2>
+        <p class="lede">
+          Open the parent run and inspect each handoff in order. The reviewer should be able to see
+          which agent acted, which inputs it received, which tools it used, which artifacts it
+          produced, and which review decision allowed the workflow to continue.
+        </p>
 
-        <div class="metric-grid">
-          <article class="metric">
-            <span class="metric-value">6h49m06s</span>
-            <h3>Observed internal run</h3>
+        <div class="step-grid" aria-label="Agentic workflow review sequence">
+          <div class="minute">01</div>
+          <div class="minute-copy">
+            <h3>Confirm the frozen case</h3>
             <p>
-              Measured wall time for a prior full scientific workflow run. It is not the selected
-              frozen benchmark case and does not establish quality.
+              Match the exact target claim, source location, permissions, policies, and file hashes.
             </p>
-          </article>
-          <article class="metric">
-            <span class="metric-value">56h</span>
-            <h3>Qualified-human estimate</h3>
+          </div>
+          <div class="minute">02</div>
+          <div class="minute-copy">
+            <h3>Inspect reproduction</h3>
             <p>
-              Estimated active work for a base case, with a 21–124 hour scenario range. It is not
-              observed human performance and excludes unsupported assumptions about blocked time.
+              Open the recorded commands, environment, exit states, numerical comparisons, and
+              tolerances.
             </p>
-          </article>
-          <article class="metric">
-            <span class="metric-value">785.540s</span>
-            <h3>One-shot ChatGPT comparator</h3>
+          </div>
+          <div class="minute">03</div>
+          <div class="minute-copy">
+            <h3>Inspect evidence and robustness</h3>
             <p>
-              Terminal output was truncated or malformed after two progress summaries. No required
-              reviewer report was produced. Alpha scored 1/100, Beta 2/100, and adjudication set
-              1/100 with no cap and decision invalid incomplete.
+              Trace source checks and defensible analytical alternatives back to their inputs and
+              outputs.
             </p>
-          </article>
+          </div>
+          <div class="minute">04</div>
+          <div class="minute-copy">
+            <h3>Inspect independent review</h3>
+            <p>
+              Compare the method review, source review, verification notes, and adjudication
+              decisions.
+            </p>
+          </div>
+          <div class="minute">05</div>
+          <div class="minute-copy">
+            <h3>Open the final package</h3>
+            <p>
+              Resolve every displayed conclusion to the canonical audit JSON and evidence-linked
+              artifacts.
+            </p>
+          </div>
         </div>
 
-        <div class="callout warning">
+        <div class="callout">
           <p>
-            <strong>Single-case boundary.</strong> The challenge recommends 10 or more cases when
-            feasible, but this deadline-constrained evaluation contains one frozen Heliconius case.
-            The multi-hour workflow plus case preparation, licence review, freeze validation, and
-            isolated execution prevented a defensible 10-case evaluation. No general performance,
-            human-quality superiority, speedup, or qualified quality comparison is published.
+            In Toone, the parent run is the review spine. Child routines remain visible as
+            evidence-producing stages, while checkpoints and handoffs explain why the workflow moved
+            forward.
           </p>
         </div>
 
-        <h3 class="rule-top">Selected public candidate</h3>
-        <p>
-          Heliconius Experiment 1 from Moura et al. (2023), article DOI
-          <a href="https://doi.org/10.1016/j.cub.2023.06.009">10.1016/j.cub.2023.06.009</a> and data
-          and code record DOI
-          <a href="https://doi.org/10.5281/zenodo.7985236">10.5281/zenodo.7985236</a>. The freeze is
-          complete and validated, and the comparator is complete. The ClaimBounty exploratory
-          attempt elapsed 3799.936556 seconds but failed exact prompt identity and separately
-          injected two case-specific values from outside the frozen participant bundle. Those values
-          were absent from the frozen prompt and every participant file. This is out-of-contract
-          contamination, and the public guide omits the values. Reproduction was not executable, no
-          scientific command ran, and G2, G3, and G4 are blocked. The attempt remains exploratory
-          and unscored.
-        </p>
-
-        <table aria-label="Benchmark publication status">
-          <thead>
-            <tr>
-              <th scope="col">Evidence</th>
-              <th scope="col">Classification</th>
-              <th scope="col">Allowed statement</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Prior ClaimBounty run</td>
-              <td>Observed, different case</td>
-              <td>Operational timing context only</td>
-            </tr>
-            <tr>
-              <td>Human work</td>
-              <td>Estimated range</td>
-              <td>Planning comparator only</td>
-            </tr>
-            <tr>
-              <td>ChatGPT attempt</td>
-              <td>Observed terminal failure</td>
-              <td>Preserved comparator outcome</td>
-            </tr>
-            <tr>
-              <td>ClaimBounty attempt</td>
-              <td>Two qualification deviations, unscored</td>
-              <td>No head-to-head result or speedup</td>
-            </tr>
-          </tbody>
-        </table>
-
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide / Draft</span>
+          <span>ClaimBounty reviewer guide</span>
           <span>10 / 13</span>
         </footer>
       </section>
 
-      <section class="sheet" aria-labelledby="human-baseline-title">
+      <section class="sheet" aria-labelledby="agent-topology-title">
         <header class="sheet-header">
-          <span>10 / Human baseline method</span>
-          <span>In-Development guide</span>
+          <span>10 / Agent topology</span>
+          <span>Reviewer guide</span>
         </header>
 
-        <p class="eyebrow">Planning estimate, not observed performance</p>
-        <h2 id="human-baseline-title">
-          Estimated active person-hours for one qualified researcher.
-        </h2>
+        <p class="eyebrow">One parent, six evidence-producing routines</p>
+        <h2 id="agent-topology-title">Each stage has a bounded scientific responsibility.</h2>
         <p class="lede">
-          Eight additive work packages produce the 21-hour low, 56-hour base, and 124-hour high
-          scenarios. The totals are an auditable estimate for the frozen scope, not a measured human
-          benchmark, quality score, monetary cost, or speedup result.
+          The parent routine coordinates the audit and preserves a single chain of evidence. Each
+          child routine receives explicit inputs, produces named artifacts, and hands its result to
+          the next stage through a reviewable checkpoint.
         </p>
 
-        <table class="baseline-table" aria-label="Qualified researcher work-package estimate">
+        <table aria-label="ClaimBounty workflow stages">
           <thead>
             <tr>
-              <th scope="col">Work package</th>
-              <th scope="col">Task</th>
-              <th scope="col">Low</th>
-              <th scope="col">Base</th>
-              <th scope="col">High</th>
+              <th scope="col">Routine</th>
+              <th scope="col">Responsibility</th>
+              <th scope="col">Reviewer focus</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Claim map</td>
-              <td>Read manuscript and map target claim</td>
-              <td>3</td>
-              <td>5</td>
-              <td>8</td>
+              <td>Build and freeze study case</td>
+              <td>Inventory and content-address the authorized inputs.</td>
+              <td>Claim identity, permissions, and hashes.</td>
             </tr>
             <tr>
-              <td>Inventory</td>
-              <td>Inventory evidence and inspect data and code</td>
-              <td>2</td>
-              <td>4</td>
-              <td>8</td>
+              <td>Reproduce original result</td>
+              <td>Rebuild the environment and compare the reported result.</td>
+              <td>Commands, versions, tolerances, and outputs.</td>
             </tr>
             <tr>
-              <td>Reproduce</td>
-              <td>Rebuild environment and reproduce result</td>
-              <td>3</td>
-              <td>8</td>
-              <td>18</td>
+              <td>Research methods and evidence</td>
+              <td>Check sources and method claims within the authorized scope.</td>
+              <td>Source quality, relevance, and traceability.</td>
             </tr>
             <tr>
-              <td>Robustness design</td>
-              <td>Design robustness and sensitivity plan</td>
-              <td>2</td>
-              <td>6</td>
-              <td>12</td>
+              <td>Stress-test analysis</td>
+              <td>Evaluate defensible data, model, covariate, and inference choices.</td>
+              <td>Decision space and robustness boundaries.</td>
             </tr>
             <tr>
-              <td>Robustness execution</td>
-              <td>Execute and interpret robustness suite</td>
-              <td>4</td>
-              <td>14</td>
-              <td>32</td>
+              <td>Verify and adjudicate findings</td>
+              <td>Independently check methods, sources, and proposed conclusions.</td>
+              <td>Reviewer independence and adjudication history.</td>
             </tr>
             <tr>
-              <td>Verify</td>
-              <td>Verify sources and cross-artifact consistency</td>
-              <td>2</td>
-              <td>6</td>
-              <td>14</td>
-            </tr>
-            <tr>
-              <td>Adjudicate</td>
-              <td>Adjudicate discrepancies and draft corrections</td>
-              <td>2</td>
-              <td>5</td>
-              <td>12</td>
-            </tr>
-            <tr>
-              <td>Report</td>
-              <td>Produce report, evidence table, provenance, and quality control</td>
-              <td>3</td>
-              <td>8</td>
-              <td>20</td>
-            </tr>
-            <tr>
-              <td><strong>Total active person-hours</strong></td>
-              <td></td>
-              <td><strong>21</strong></td>
-              <td><strong>56</strong></td>
-              <td><strong>124</strong></td>
+              <td>Assemble final audit</td>
+              <td>Render the canonical audit, human report, and replay package.</td>
+              <td>JSON-to-report consistency and evidence links.</td>
             </tr>
           </tbody>
         </table>
 
         <div class="grid-2">
           <article class="card">
-            <h3>Main exclusions</h3>
+            <h3>Inspect in Toone</h3>
             <ul>
-              <li>Unattended computation.</li>
-              <li>Scheduler waits and blocked time.</li>
-              <li>Data-access delays, procurement, and institutional approvals.</li>
-              <li>Time contributed by additional specialists.</li>
+              <li>Agent instructions and bound inputs.</li>
+              <li>Ordered steps and tool responses.</li>
+              <li>Produced artifacts and handoffs.</li>
+              <li>Human checkpoints and adjudication.</li>
             </ul>
           </article>
           <article class="card">
-            <h3>Method and source records</h3>
-            <p>
-              <span class="path">docs/HUMAN_BASELINE.md</span> documents scenario assumptions,
-              overlap rules, sensitivity drivers, and the full cited basis.
-            </p>
-            <p>
-              Machine record:
-              <span class="path">submission/evidence/human-estimate.json</span>.
-            </p>
+            <h3>Inspect in the repository</h3>
+            <p><span class="path">workflow/claimbounty-scientific-audit/routines/</span></p>
+            <p><span class="path">workflow/claimbounty-scientific-audit/trajectories/</span></p>
+            <p><span class="path">workflow/claimbounty-scientific-audit/project-template/</span></p>
           </article>
         </div>
 
-        <p class="small">
-          Cited basis includes
-          <a href="https://doi.org/10.1186/s41073-021-00118-2">Aczel et al. (2021)</a> on
-          peer-review time,
-          <a href="https://doi.org/10.1287/mnsc.2023.03556">Fišar et al. (2024)</a> on reproduction,
-          and <a href="https://doi.org/10.1098/rsta.2020.0069">Krafczyk et al. (2021)</a> on
-          reproduction packages. These sources anchor task complexity; they do not validate the
-          scenario totals.
-        </p>
-
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide / Draft</span>
+          <span>ClaimBounty reviewer guide</span>
           <span>11 / 13</span>
         </footer>
       </section>
 
-      <section class="sheet" aria-labelledby="usage-title">
+      <section class="sheet" aria-labelledby="artifact-review-title">
         <header class="sheet-header">
-          <span>11 / Model usage and cost</span>
-          <span>In-Development guide</span>
+          <span>11 / Inspect the artifacts</span>
+          <span>Reviewer guide</span>
         </header>
 
-        <p class="eyebrow">Verified session accounting</p>
-        <h2 id="usage-title">181,802,664 tokens; monetary cost unmeasured.</h2>
+        <p class="eyebrow">Canonical answers, evidence attached</p>
+        <h2 id="artifact-review-title">
+          The human report and machine record must tell the same story.
+        </h2>
         <p class="lede">
-          The audited records cover 109 unique CLI sessions on provider OpenAI using model
-          <span class="mono">gpt-5.6-sol</span>. Retries and correction rounds are included.
+          Open the researcher-facing HTML or PDF beside the canonical audit JSON. Numbers, statuses,
+          conclusions, and evidence references should agree exactly while the report keeps the
+          ClaimBounty black, cream, Georgia, and Inter design language.
         </p>
 
-        <table aria-label="Verified model usage totals">
+        <table aria-label="Final artifact inspection matrix">
           <thead>
             <tr>
-              <th scope="col">Run</th>
-              <th scope="col">Sessions</th>
-              <th scope="col">Input</th>
-              <th scope="col">Cached input</th>
-              <th scope="col">Output</th>
-              <th scope="col">Total</th>
+              <th scope="col">Reviewer question</th>
+              <th scope="col">Human-facing answer</th>
+              <th scope="col">Evidence record</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>Primary</strong></td>
-              <td>91</td>
-              <td>157,669,522</td>
-              <td>148,934,912</td>
-              <td>1,697,629</td>
-              <td><strong>159,367,151</strong></td>
+              <td>What is the bounded conclusion?</td>
+              <td>Verdict with status and confidence.</td>
+              <td>Canonical claim status and linked findings.</td>
             </tr>
             <tr>
-              <td><strong>Secondary</strong></td>
-              <td>18</td>
-              <td>22,184,313</td>
-              <td>20,737,024</td>
-              <td>251,200</td>
-              <td><strong>22,435,513</strong></td>
+              <td>Was the reported result reproduced?</td>
+              <td>Reported-versus-reproduced comparison.</td>
+              <td>Commands, environment, outputs, tolerances, and hashes.</td>
             </tr>
             <tr>
-              <td><strong>Combined</strong></td>
-              <td><strong>109</strong></td>
-              <td><strong>179,853,835</strong></td>
-              <td><strong>169,671,936</strong></td>
-              <td><strong>1,948,829</strong></td>
-              <td><strong>181,802,664</strong></td>
+              <td>How robust is the conclusion?</td>
+              <td>Robustness summary across defensible choices.</td>
+              <td>Decision-space register and sensitivity artifacts.</td>
+            </tr>
+            <tr>
+              <td>Do paper, data, and code agree?</td>
+              <td>Consistency findings and source locations.</td>
+              <td>Source links, checks, and independent verification.</td>
+            </tr>
+            <tr>
+              <td>What should the author change?</td>
+              <td>Prioritized corrections by consequence and effort.</td>
+              <td>Adjudicated recommendations and evidence links.</td>
+            </tr>
+            <tr>
+              <td>How was each answer reached?</td>
+              <td>Concise provenance and replay summary.</td>
+              <td>Agent actions, reviewer decisions, manifests, and digests.</td>
             </tr>
           </tbody>
         </table>
 
         <div class="grid-2">
           <article class="card">
-            <h3>Counting rules</h3>
+            <h3>Human-facing package</h3>
             <ul>
-              <li>Count each unique CLI session once.</li>
-              <li>Cached input is already included within input.</li>
-              <li>Reasoning output is already included within output.</li>
-              <li>Do not add those component values to totals again.</li>
-              <li>Repeated cumulative events and later assessment sessions are excluded.</li>
+              <li>Verdict and confidence.</li>
+              <li>Robustness and consistency summary.</li>
+              <li>Prioritized corrections.</li>
+              <li>Evidence and provenance links.</li>
             </ul>
           </article>
           <article class="card">
-            <h3>Cost boundary</h3>
-            <p>
-              Monetary cost is unmeasured. The records identify a Pro plan but contain no
-              contemporaneous subscription allocation, invoice, API rate, or per-run charge.
-            </p>
-            <p>
-              Do not apply current API prices retroactively and do not report a zero-dollar cost.
-            </p>
+            <h3>Machine-facing package</h3>
+            <ul>
+              <li>Canonical audit JSON.</li>
+              <li>Commands, logs, and environments.</li>
+              <li>Input and output hashes.</li>
+              <li>Review and adjudication history.</li>
+            </ul>
           </article>
         </div>
 
-        <div class="callout warning">
+        <div class="callout">
           <p>
-            Usage evidence is not benchmark quality evidence. The 181,802,664 combined tokens span
-            the primary and secondary included runs described in the public disclosure.
+            Review the report as a decision interface: concise enough for an author, precise enough
+            for an independent reviewer, and fully resolvable to the machine package.
           </p>
         </div>
 
-        <p class="small">
-          Machine-readable authority:
-          <span class="path">submission/evidence/usage-and-cost.json</span>. Narrative authority:
-          <span class="path">docs/USAGE_AND_COST.md</span>.
-        </p>
-
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide / Draft</span>
+          <span>ClaimBounty reviewer guide</span>
           <span>12 / 13</span>
         </footer>
       </section>
 
-      <section class="sheet limits-sheet" aria-labelledby="limits-title">
+      <section class="sheet compact-sheet" aria-labelledby="submission-title">
         <header class="sheet-header">
-          <span>12 / Limitations and release gates</span>
-          <span>In-Development guide</span>
+          <span>12 / Submission package</span>
+          <span>Reviewer guide</span>
         </header>
 
-        <p class="eyebrow">Before any final claim</p>
-        <h2 id="limits-title">What remains open.</h2>
+        <p class="eyebrow">Everything a reviewer needs</p>
+        <h2 id="submission-title">Code, evidence, reproduction, video, and trajectories.</h2>
 
         <div class="grid-2">
           <article class="card">
-            <h3>Scientific and product limits</h3>
+            <h3>Solution and reproduction</h3>
             <ul>
-              <li>The comparator is adjudicated 1/100 and invalid incomplete.</li>
-              <li>The evidence set contains one frozen case, not the recommended 10 or more.</li>
               <li>
-                The ClaimBounty attempt has two qualification deviations and remains unscored.
+                <span class="path">README.md</span> introduces the user, bottleneck, value, and hot
+                take.
               </li>
-              <li>The workflow package needs a clean local import and full-run check.</li>
-              <li>The micro1/ClaimBounty import needs release verification.</li>
-              <li>Study cases may require extra runtimes, licensed data, or network access.</li>
-              <li>Scanning reduces known-file risk but cannot make research code safe.</li>
-              <li>The hosted P0 ends at export and does not adjudicate or publish.</li>
+              <li>
+                <span class="path">IMPROVEMENT_CHANGELOG.md</span> connects each iteration to
+                evidence and the next decision.
+              </li>
+              <li>
+                <span class="path">docs/REPRODUCE.md</span> gives clean setup, exact commands,
+                versions, output, runtime, and cost.
+              </li>
+              <li>
+                <span class="path">examples/moura-2023-heliconius-exp1/</span> contains the CC BY
+                4.0 demonstration case.
+              </li>
             </ul>
           </article>
           <article class="card">
-            <h3>Release gates</h3>
-            <ul class="check-list">
-              <li>Keep the protocol-deviating attempt out of comparative scoring.</li>
+            <h3>Video and agent work</h3>
+            <ul>
               <li>
-                Require exact inputs and a clean comparison routine for any future scored run.
+                <span class="path">docs/VIDEO_SCRIPT.md</span> is a 4:50 shot list covering the
+                problem, workflow execution, decision package, changelog, largest change, and
+                removed experiment.
               </li>
-              <li>Pass a clean-clone setup, import, and full-run test.</li>
-              <li>Complete public evidence and redistribution review.</li>
-              <li>Confirm deployment, repository, and competition metadata.</li>
-              <li>Confirm fox-and-loupe account-generation provenance.</li>
-              <li>Approve final preexisting-work and research-rights wording.</li>
-              <li>Complete final release review.</li>
+              <li>
+                <span class="path">workflow/claimbounty-scientific-audit/trajectories/</span>
+                contains seven routine records and nineteen agent records.
+              </li>
+              <li>
+                Each trajectory records instructions, ordered steps, tool responses, feedback,
+                retries, and human checkpoints.
+              </li>
+              <li>
+                <span class="path">submission/recordings/claimbounty-submission-video.mp4</span>
+                is the screened 4:54 public solution video; the same folder retains its source-footage inventory.
+              </li>
             </ul>
           </article>
         </div>
 
-        <h3 class="rule-top">Licensing and preexisting work</h3>
+        <h3 class="rule-top">Production monorepo</h3>
         <p>
-          Repository software is offered under the MIT License, copyright 2026 Matheus Paranhos.
-          Third-party dependencies and container images retain their upstream terms. Benchmark data
-          is not redistributed in this projection and requires its own rights review before release.
+          The public landing page accepts an academic bundle and one exact claim. The administrator
+          page reviews private submissions, freezes an authorized handoff, and downloads the bundle
+          for local Toone access. The Go backend handles identity, upload validation, private object
+          storage, malware inspection, retention policy, immutable export creation, and worker jobs.
         </p>
         <p>
-          The repository began from a general Go and React scaffold. Toone and its local runtime are
-          external. ClaimBounty contracts, product surfaces, routines, package projection, and
-          submission documents belong to this workstream, subject to Git history and competition
-          rules. The final cutoff and classification require owner approval.
+          The repository software is offered under the MIT License. The included Moura et al. paper,
+          R code, and data retain their CC BY 4.0 terms and attribution.
         </p>
 
         <h3 class="rule-top">Public links</h3>
@@ -1193,6 +1099,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
               >Official Claude Code setup documentation</a
             >
           </li>
+          <li><a href="https://www.r-project.org/">R Project runtime</a></li>
           <li>
             <a href="https://doi.org/10.5281/zenodo.7985236"
               >Selected benchmark data and code record</a
@@ -1200,15 +1107,15 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
           </li>
         </ul>
 
-        <div class="callout warning">
+        <div class="callout">
           <p>
-            Keep this guide Draft / In-Development until a qualified rerun, clean-clone test,
-            evidence clearance, and final release review are complete.
+            Run <span class="mono">make public-release</span> to check the guide, links, public
+            assets, trajectories, evidence records, and deterministic manifests together.
           </p>
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide / Draft</span>
+          <span>ClaimBounty reviewer guide</span>
           <span>13 / 13</span>
         </footer>
       </section>

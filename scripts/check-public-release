@@ -19,6 +19,17 @@ for required in README.md LICENSE SECURITY.md CONTRIBUTING.md AGENTS.md ARCHITEC
   submission/evidence/claimbounty-exploratory-attempt.json \
   submission/evidence/human-estimate.json submission/evidence/timing-observations.json \
   submission/evidence/usage-and-cost.json submission/evidence/expected-evidence.json \
+  submission/recordings/README.md submission/recordings/workflow-source-2026-08-31.mp4 \
+  submission/recordings/claimbounty-submission-video.mp4 \
+  submission/recordings/manifest.json submission/recordings/MANIFEST.sha256 \
+  examples/moura-2023-heliconius-exp1/README.md \
+  examples/moura-2023-heliconius-exp1/moura-2023-heliconius.pdf \
+  examples/moura-2023-heliconius-exp1/exp1.R \
+  examples/moura-2023-heliconius-exp1/exp1.csv \
+  examples/moura-2023-heliconius-exp1/Exp1byDay.csv \
+  examples/moura-2023-heliconius-exp1/LICENSE-CC-BY-4.0.txt \
+  examples/moura-2023-heliconius-exp1/manifest.json \
+  examples/moura-2023-heliconius-exp1/MANIFEST.sha256 \
   workflow/claimbounty-scientific-audit/README.md \
   workflow/claimbounty-scientific-audit/workflow.json \
   workflow/claimbounty-scientific-audit/project-template/claimbounty/execution/execution-manifest.schema.json \
@@ -82,7 +93,7 @@ toone_files=$(rg -l -i --hidden --glob '!.git/**' --glob '!**/node_modules/**' \
   --glob '!scripts/check-public-release' -- 'toone' . || true)
 for file in $toone_files; do
   case "$file" in
-    README.md|./README.md|infra/README.md|./infra/README.md|docs/SETUP.md|./docs/SETUP.md|docs/REPRODUCE.md|./docs/REPRODUCE.md|docs/ARCHITECTURE.md|./docs/ARCHITECTURE.md|docs/PREEXISTING_WORK.md|./docs/PREEXISTING_WORK.md|docs/VIDEO_SCRIPT.md|./docs/VIDEO_SCRIPT.md|submission/reviewer/guide/index.html|./submission/reviewer/guide/index.html|workflow/claimbounty-scientific-audit/*|./workflow/claimbounty-scientific-audit/*)
+    README.md|./README.md|infra/README.md|./infra/README.md|docs/SETUP.md|./docs/SETUP.md|docs/REPRODUCE.md|./docs/REPRODUCE.md|docs/ARCHITECTURE.md|./docs/ARCHITECTURE.md|docs/PREEXISTING_WORK.md|./docs/PREEXISTING_WORK.md|docs/VIDEO_SCRIPT.md|./docs/VIDEO_SCRIPT.md|examples/moura-2023-heliconius-exp1/README.md|./examples/moura-2023-heliconius-exp1/README.md|submission/recordings/README.md|./submission/recordings/README.md|submission/reviewer/guide/index.html|./submission/reviewer/guide/index.html|workflow/claimbounty-scientific-audit/*|./workflow/claimbounty-scientific-audit/*|contracts/openapi.yaml|./contracts/openapi.yaml|apps/api/internal/domain/claimbounty.go|./apps/api/internal/domain/claimbounty.go|apps/api/internal/transport/httpapi/claimbounty_admin.go|./apps/api/internal/transport/httpapi/claimbounty_admin.go|apps/api/internal/transport/httpapi/claimbounty_identity.go|./apps/api/internal/transport/httpapi/claimbounty_identity.go|apps/api/internal/transport/httpapi/claimbounty_test.go|./apps/api/internal/transport/httpapi/claimbounty_test.go|apps/web/src/shared/api/generated/schema.d.ts|./apps/web/src/shared/api/generated/schema.d.ts|apps/web/src/features/admin-orders/api/admin-order.queries.ts|./apps/web/src/features/admin-orders/api/admin-order.queries.ts|apps/web/src/features/admin-orders/api/admin-order.service.ts|./apps/web/src/features/admin-orders/api/admin-order.service.ts|apps/web/src/features/admin-orders/api/admin-order.service.test.ts|./apps/web/src/features/admin-orders/api/admin-order.service.test.ts|apps/web/src/features/admin-orders/components/admin-order-detail.tsx|./apps/web/src/features/admin-orders/components/admin-order-detail.tsx|apps/web/src/features/admin-orders/components/admin-order-detail.test.tsx|./apps/web/src/features/admin-orders/components/admin-order-detail.test.tsx|apps/web/tests/system/claimbounty-compose.system.spec.ts|./apps/web/tests/system/claimbounty-compose.system.spec.ts)
       ;;
     *)
       printf 'PUBLIC-004 Toone reference outside approved setup/workflow documentation: %s\n' "$file" >&2

@@ -30,10 +30,11 @@ Analysis that never becomes a traceable reviewer report is missing work, even wh
 
 ## Five-minute reviewer path
 
-1. Open the [reviewer guide](submission/reviewer/README.md).
-2. Read the [submission status](docs/SUBMISSION.md), [benchmark status](docs/BENCHMARK_RESULTS.md), [human baseline estimate](docs/HUMAN_BASELINE.md), [usage and cost disclosure](docs/USAGE_AND_COST.md), and [limitations](docs/LIMITATIONS.md).
-3. Inspect the [installable workflow package](workflow/claimbounty-scientific-audit/README.md) and its generated integrity manifest.
-4. For a visual-only web preview, run:
+1. Watch the [4:54 solution video](submission/recordings/claimbounty-submission-video.mp4).
+2. Open the [reviewer guide](submission/reviewer/README.md).
+3. Read the [submission status](docs/SUBMISSION.md), [benchmark status](docs/BENCHMARK_RESULTS.md), [human baseline estimate](docs/HUMAN_BASELINE.md), [usage and cost disclosure](docs/USAGE_AND_COST.md), and [limitations](docs/LIMITATIONS.md).
+4. Inspect the [installable workflow package](workflow/claimbounty-scientific-audit/README.md) and its generated integrity manifest.
+5. For a visual-only web preview, run:
 
    ```sh
    pnpm install --frozen-lockfile
@@ -51,7 +52,7 @@ The hosted application ends at an authorized, digest-bound export. It does not r
 
 ## Local Toone scientific-workflow setup
 
-This path is separate from the hosted application. The scientific workflow requires macOS, the latest [Toone release](https://trytoone.com), and one supported coding-agent client: Codex or Claude Code. It also requires Python 3.11 or later and the language runtimes required by the study.
+This path is separate from the hosted application. The scientific workflow requires macOS, the latest [Toone release](https://trytoone.com), and one supported coding-agent client: Codex or Claude Code. It also requires Python 3.11 or later and the language runtimes required by the study. The included **Moura et al. 2023, Heliconius Experiment 1** demonstration uses R and is stored under `examples/moura-2023-heliconius-exp1/`.
 
 In Toone, create a project by selecting an empty directory. Inside that project directory, place the manuscript, data, code, supplementary materials, preregistration, environment files, and authorized supporting sources under `claimbounty/input/case-bundle/`. Open **Explore Workflows**, select **micro1/ClaimBounty**, and import it. The workflow export installs the parent workflow, its child workflows, schemas, templates, and local runner. When prompted, bind `case-bundle` to `claimbounty/input/case-bundle/`, review the inputs, and run the parent workflow. Follow [docs/REPRODUCE.md](docs/REPRODUCE.md) for the full path and repository-package fallback.
 
@@ -78,8 +79,10 @@ make check-ci
 | `apps/api`                              | Hosted application API and worker processes                      |
 | `contracts`                             | Public HTTP and data contracts                                   |
 | `infra`                                 | Compose, Kubernetes, and object-storage configuration            |
+| `examples/moura-2023-heliconius-exp1`   | Included CC BY 4.0 paper, R code, and data for the demo          |
 | `workflow/claimbounty-scientific-audit` | Installable local scientific-workflow projection                 |
 | `submission/reviewer`                   | Short reviewer path and generated manifest                       |
+| `submission/recordings`                 | Final solution video and screened source footage                 |
 | `submission/evidence`                   | Public benchmark, timing, usage, cost, and evidence status       |
 | `docs`                                  | Setup, architecture, benchmark, disclosure, and submission notes |
 

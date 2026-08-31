@@ -123,7 +123,7 @@ for (const fact of [
   'Removed direction: overly detailed tactile loupe',
   'docs/REPRODUCE.md',
   '7-routine/19-current-agent trajectory index',
-  'docs/LIMITATIONS.md',
+  'submission/reviewer/reviewer-guide.pdf',
   '`make public-release` passing',
 ]) {
   check(video.includes(fact), `video requirement: ${fact}`);

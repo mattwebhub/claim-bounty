@@ -59,7 +59,6 @@ const linkedDocuments = [
   'docs/BENCHMARK_RESULTS.md',
   'submission/reviewer/README.md',
   'submission/evidence/README.md',
-  'submission/reviewer/guide/index.html',
 ];
 for (const document of linkedDocuments) {
   const contents = await readFile(document, 'utf8');

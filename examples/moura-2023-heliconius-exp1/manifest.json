@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0.0",
+  "packageRoot": "examples/moura-2023-heliconius-exp1",
+  "pathPolicy": "repository-relative",
+  "entries": [
+    {
+      "path": "Exp1byDay.csv",
+      "bytes": 21096,
+      "sha256": "6af21960673cd3953a47754fa43b33344847f5ddc9e64793f4e76ae6c61b946b"
+    },
+    {
+      "path": "LICENSE-CC-BY-4.0.txt",
+      "bytes": 18657,
+      "sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2732,
+      "sha256": "40a8d70c77ce34e7424c3d4c12814df5d194080c2a0e25d3c42cc9b59bb68ce9"
+    },
+    {
+      "path": "exp1.R",
+      "bytes": 3737,
+      "sha256": "92fc0cad2274cd013d9125807c2c43b27c1b45229e3d7c7cc8471e887c723841"
+    },
+    {
+      "path": "exp1.csv",
+      "bytes": 5658,
+      "sha256": "87d4145b5babf43d026e44bf044410fad9d22450463929b3cd8f30e87fc524b3"
+    },
+    {
+      "path": "moura-2023-heliconius.pdf",
+      "bytes": 127514,
+      "sha256": "2de6257494b23d7401e12082b1fcb9d79ac34669af04ac02d12a4ebc01f8da8b"
+    }
+  ]
+}

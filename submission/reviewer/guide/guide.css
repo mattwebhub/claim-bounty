@@ -526,11 +526,11 @@ tbody tr:last-child td {
   border-bottom: 0.25mm solid var(--ink);
 }
 
-.limits-sheet .link-list li {
+.compact-sheet .link-list li {
   padding-block: 1mm;
 }
 
-.limits-sheet .sheet-header {
+.compact-sheet .sheet-header {
   margin-bottom: 4mm;
 }
 

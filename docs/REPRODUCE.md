@@ -21,16 +21,17 @@ The command reads `exports/claimbounty-export.zip` and rejects a missing or malf
 
 ## Install the local workflow
 
-This path requires macOS, the latest [Toone release](https://trytoone.com), and one supported coding-agent client:
+This path requires macOS, the latest [Toone release](https://trytoone.com), one supported coding-agent client, and the R runtime used by the included example:
 
 - Codex: follow the [official Codex CLI guide](https://learn.chatgpt.com/docs/codex/cli). On macOS or Linux, install with `curl -fsSL https://chatgpt.com/codex/install.sh | sh`, run `codex`, and sign in with ChatGPT.
 - Claude Code: follow the [official Anthropic setup page](https://code.claude.com/docs/en/getting-started). No local command is copied here because upstream setup may change.
+- R: install the current R release from [The R Project](https://www.r-project.org/). The included author script loads `lme4`, `DHARMa`, and `car`.
 
 The intended Toone path is:
 
 1. Open Toone and create a project by selecting an empty directory.
 2. Create `claimbounty/input/case-bundle/` inside the selected project directory.
-3. Place the manuscript, data, code, supplementary materials, preregistration, environment files, and authorized supporting sources under `claimbounty/input/case-bundle/`.
+3. For the included demonstration, copy the contents of `examples/moura-2023-heliconius-exp1/` into that directory. The example is **Moura et al. 2023, Heliconius Experiment 1**. For another case, place the manuscript, data, code, supplementary materials, preregistration, environment files, and authorized supporting sources there.
 4. Open **Explore Workflows**, select **micro1/ClaimBounty**, and import it. The workflow export installs the parent and child workflows, schemas, templates, and local runner.
 5. Bind the `case-bundle` input to `claimbounty/input/case-bundle/`, review the remaining inputs, and run the parent workflow.
 
@@ -43,6 +44,22 @@ Verify the `micro1/ClaimBounty` listing and import against the release build bef
 5. Bind `case-bundle` to `claimbounty/input/case-bundle/` and supply the three dispatch documents required by the parent workflow.
 6. Confirm Python 3.11 or later and each study-specific runtime before dispatch.
 7. Run the parent workflow.
+
+## Run the included example from a clean checkout
+
+The included example bundle contains the CC BY 4.0 paper, author-supplied R code, and both data files read by the Experiment 1 script. From the repository root:
+
+```sh
+mkdir -p claimbounty/input/case-bundle
+cp examples/moura-2023-heliconius-exp1/* claimbounty/input/case-bundle/
+cd claimbounty/input/case-bundle
+Rscript -e 'install.packages(c("lme4", "DHARMa", "car"), repos="https://cloud.r-project.org")'
+Rscript exp1.R > exp1-output.txt 2>&1
+```
+
+Expected source-analysis output includes fitted binomial mixed-effects model summaries and analysis-of-deviance tables. R may also write its default plot file. The scientific workflow then adds frozen inputs, reproduction records, evidence research, stress tests, independent verification, adjudication, and the reviewer package around that source analysis.
+
+The tested local workstation had R 4.6.1. The repository application uses Node 22, pnpm 9.15.0, Go 1.26.6, Python 3.11 or later, and Docker Compose v2. Package installation and container startup dominate first-run time. On the tested workstation, the clean source script completed in 1.41 seconds after package installation and produced 228 lines of model output plus a 25 KB `Rplots.pdf`. A prior full scientific workflow took 6h49m06s. Monetary cost is unmeasured because the recorded runs used a subscription plan without a per-run invoice or rate allocation.
 
 The export is scaffolded for local installation. A clean `micro1/ClaimBounty` import and full run still require release-build verification.
 

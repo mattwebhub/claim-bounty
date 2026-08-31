@@ -14,10 +14,11 @@
 - Public-safe ClaimBounty exploratory-attempt record with elapsed time, stage outcomes, blocked gates, and two independent qualification deviations.
 - Setup, architecture, protocol, limitations, provenance, and demonstration documentation.
 - Public-release checks for private paths, risky package contents, link drift, and manifest drift.
+- Included CC BY 4.0 Moura et al. 2023 Heliconius Experiment 1 paper, R script, and data bundle.
+- Screened 4:54 H.264 solution video at `submission/recordings/claimbounty-submission-video.mp4`.
 
 ## Pending before submission
 
-- Keep the validated frozen Heliconius Experiment 1 inputs and restricted manifest details outside the public projection unless redistribution is approved.
 - Treat the protocol-deviating ClaimBounty attempt as unscored; do not promote it into a benchmark result.
 - If a qualified comparison is pursued, remove the routine contamination, rerun from the byte-identical frozen prompt contract, complete executable reproduction and all required stages, then seal, independently review, adjudicate, and clear the public evidence subset.
 - Verify a clean local workflow import and full run.

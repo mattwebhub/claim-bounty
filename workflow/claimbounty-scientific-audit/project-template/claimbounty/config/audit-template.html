@@ -6,27 +6,46 @@
   <meta name="generator" content="ClaimBounty deterministic audit renderer 1.0.0">
   <title>{{audit_title}}</title>
   <style>
-    :root { color-scheme: light; font-family: Arial, Helvetica, sans-serif; line-height: 1.45; }
-    body { color: #172033; background: #ffffff; margin: 0 auto; max-width: 1120px; padding: 32px; }
-    header, section, footer { margin-bottom: 28px; }
-    h1, h2, h3 { color: #102044; page-break-after: avoid; }
-    h1 { font-size: 2rem; margin-bottom: 8px; }
-    h2 { border-bottom: 2px solid #d9e1f2; font-size: 1.35rem; padding-bottom: 6px; }
-    table { border-collapse: collapse; margin: 12px 0; width: 100%; }
-    th, td { border: 1px solid #bcc7db; padding: 8px; text-align: left; vertical-align: top; }
-    th { background: #edf2fa; }
+    :root {
+      color-scheme: light;
+      --ink: #1d1d19;
+      --paper: #f0ede6;
+      --panel: #faf8f2;
+      --muted: #6d695f;
+      --line: #cbc5b7;
+      --accent: #9b7b36;
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    * { box-sizing: border-box; }
+    body { color: var(--ink); background: var(--paper); margin: 0 auto; max-width: 1120px; padding: 40px; }
+    body > header { border-top: 7px solid var(--ink); padding-top: 22px; }
+    body > header::before { content: "CLAIMBOUNTY / SCIENTIFIC AUDIT"; display: block; font-size: .72rem; font-weight: 800; letter-spacing: .16em; margin-bottom: 28px; text-transform: uppercase; }
+    header, section, footer { margin-bottom: 30px; }
+    section { background: var(--panel); border: 1px solid var(--line); padding: 24px; }
+    h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; color: var(--ink); page-break-after: avoid; }
+    h1 { font-size: clamp(2.35rem, 6vw, 4.6rem); letter-spacing: -.04em; line-height: .98; margin: 0 0 16px; max-width: 16ch; }
+    h2 { border-top: 2px solid var(--ink); font-size: 1.55rem; margin-top: 0; padding-top: 12px; }
+    h3 { font-size: 1.1rem; }
+    p { max-width: 78ch; }
+    table { border-collapse: collapse; margin: 16px 0 4px; width: 100%; }
+    th, td { border-bottom: 1px solid var(--line); padding: 10px 8px; text-align: left; vertical-align: top; }
+    th { background: var(--ink); color: var(--paper); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
     code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
-    pre { background: #f5f7fb; border: 1px solid #d9e1f2; overflow-wrap: anywhere; padding: 12px; white-space: pre-wrap; }
-    .meta { display: grid; gap: 8px 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .label { color: #4c5a73; font-weight: 700; }
-    .status { border: 1px solid #7e8aa1; border-radius: 4px; display: inline-block; font-weight: 700; padding: 2px 8px; }
-    .blocking { background: #fde8e8; border-color: #b42318; color: #7a271a; }
-    .limited { background: #fff4d6; border-color: #b54708; color: #7a2e0e; }
-    .pass { background: #e6f4ea; border-color: #18794e; color: #0f5132; }
+    code { overflow-wrap: anywhere; }
+    pre { background: #e7e2d7; border-left: 4px solid var(--ink); overflow-wrap: anywhere; padding: 14px; white-space: pre-wrap; }
+    .meta { display: grid; gap: 10px 24px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 28px; }
+    .label { color: var(--muted); font-size: .76rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .status { border: 1px solid currentColor; border-radius: 999px; display: inline-block; font-size: .75rem; font-weight: 800; padding: 3px 9px; }
+    .blocking { background: #ead9d4; color: #77392e; }
+    .limited { background: #eadfbe; color: #664d19; }
+    .pass { background: #dce5d9; color: #2f5737; }
     .page-break { break-before: page; page-break-before: always; }
-    a { color: #174ea6; overflow-wrap: anywhere; }
+    a { color: var(--ink); text-decoration-color: var(--accent); text-decoration-thickness: 2px; overflow-wrap: anywhere; }
+    body > footer { border-top: 1px solid var(--line); color: var(--muted); font-size: .78rem; padding-top: 12px; }
     @media print {
-      body { max-width: none; padding: 16mm; }
+      body { background: #fff; max-width: none; padding: 14mm; }
+      section { background: #fff; }
       a { color: inherit; text-decoration: none; }
       thead { display: table-header-group; }
       tr, figure, pre { break-inside: avoid; page-break-inside: avoid; }
@@ -43,13 +62,13 @@
       <div><span class="label">Audit version:</span> {{audit_version}}</div>
       <div><span class="label">Generated:</span> {{generated_at}}</div>
       <div><span class="label">Workflow run:</span> <code>{{workflow_run_id}}</code></div>
-      <div><span class="label">Terminal status:</span> <span class="status {{terminal_status_class}}">{{terminal_status}}</span></div>
+      <div><span class="label">Audit status:</span> <span class="status {{terminal_status_class}}">{{terminal_status}}</span></div>
     </div>
   </header>
 
   <main>
     <section id="executive-summary" aria-labelledby="executive-summary-heading">
-      <h2 id="executive-summary-heading">Executive summary</h2>
+      <h2 id="executive-summary-heading">Verdict</h2>
       <p>{{executive_summary}}</p>
     </section>
 
@@ -61,7 +80,7 @@
     </section>
 
     <section id="claim-statuses" aria-labelledby="claim-statuses-heading">
-      <h2 id="claim-statuses-heading">Claim status</h2>
+      <h2 id="claim-statuses-heading">Reported, reproduced, and robustness result</h2>
       <table>
         <thead><tr><th>Claim</th><th>Reproduction</th><th>Robustness</th><th>Evidence alignment</th><th>Summary</th></tr></thead>
         <tbody>
@@ -74,7 +93,7 @@
     </section>
 
     <section id="findings" aria-labelledby="findings-heading">
-      <h2 id="findings-heading">Verified findings</h2>
+      <h2 id="findings-heading">Consistency findings</h2>
       {{#findings}}
       <article id="finding-{{finding_id}}">
         <h3>{{statement}}</h3>
@@ -87,7 +106,7 @@
     </section>
 
     <section id="recommendations" aria-labelledby="recommendations-heading">
-      <h2 id="recommendations-heading">Recommendations</h2>
+      <h2 id="recommendations-heading">Prioritized corrections</h2>
       <table>
         <thead><tr><th>Priority</th><th>Action</th><th>Owner</th><th>Expected effect</th><th>Verification</th></tr></thead>
         <tbody>
@@ -98,21 +117,21 @@
     </section>
 
     <section id="limitations" aria-labelledby="limitations-heading">
-      <h2 id="limitations-heading">Limitations and untested areas</h2>
+      <h2 id="limitations-heading">Scope and unresolved questions</h2>
       <ul>
         {{#limitations}}<li id="limitation-{{id}}"><strong>{{area}}:</strong> {{description}} Consequence: {{consequence}}</li>{{/limitations}}
-        {{^limitations}}<li>No residual limitation was recorded.</li>{{/limitations}}
+        {{^limitations}}<li>No unresolved question was recorded.</li>{{/limitations}}
       </ul>
     </section>
 
     <section id="methods" class="page-break" aria-labelledby="methods-heading">
-      <h2 id="methods-heading">Methods and tested decision space</h2>
+      <h2 id="methods-heading">Reproduction evidence and tested decision space</h2>
       <p>{{methods_summary}}</p>
       <pre>{{decision_space_summary}}</pre>
     </section>
 
     <section id="sources" aria-labelledby="sources-heading">
-      <h2 id="sources-heading">Source evidence</h2>
+      <h2 id="sources-heading">Evidence map</h2>
       <table>
         <thead><tr><th>Artifact</th><th>Location</th><th>Relationship</th><th>Content hash</th></tr></thead>
         <tbody>
@@ -131,7 +150,7 @@
     </section>
 
     <section id="release-gates" aria-labelledby="release-gates-heading">
-      <h2 id="release-gates-heading">Release gates</h2>
+      <h2 id="release-gates-heading">Quality controls</h2>
       <table>
         <thead><tr><th>Gate</th><th>Status</th><th>Details</th></tr></thead>
         <tbody>
@@ -141,7 +160,7 @@
     </section>
 
     <section id="manifest" aria-labelledby="manifest-heading">
-      <h2 id="manifest-heading">Package manifest and access</h2>
+      <h2 id="manifest-heading">Package manifest</h2>
       <table>
         <thead><tr><th>File</th><th>Path</th><th>Media type</th><th>SHA-256</th><th>Access</th></tr></thead>
         <tbody>
