@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
-  title: Micro1 Template API
+  title: ClaimBounty API
   version: 1.0.0
-  description: A deliberately small project and versioned-workspace reference contract.
+  description: Public research-order intake, private file upload, administrative review, and local audit-export API.
   license:
     name: MIT
     identifier: MIT
@@ -10,11 +10,516 @@ security: []
 servers:
   - url: /
     description: Same origin as the deployed API
+tags:
+  - name: Identity
+    description: Email verification and session establishment.
+  - name: Orders
+    description: Submitter-scoped research orders and file intake.
+  - name: Administration
+    description: Administrator review, download, and export operations. Every request revalidates the session email against the current allowlist and authorization-policy version.
+  - name: Projects
+    description: Reference project endpoints retained during the coordinated product migration.
+  - name: Workspaces
+    description: Reference workspace endpoints retained during the coordinated product migration.
 paths:
+  /api/v1/email-challenges:
+    post:
+      operationId: requestEmailChallenge
+      summary: Request a six-digit email challenge
+      description: Always returns the same accepted response so callers cannot discover registered or administrative addresses.
+      tags: [Identity]
+      parameters:
+        - $ref: '#/components/parameters/Origin'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RequestEmailChallengeRequest' }
+      responses:
+        '202':
+          description: The request was accepted regardless of whether mail will be sent.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EmailVerificationAcceptedEnvelope' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '413': { $ref: '#/components/responses/BodyTooLarge' }
+        '415': { $ref: '#/components/responses/UnsupportedMediaType' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /api/v1/email-challenges/verify:
+    post:
+      operationId: verifyEmailChallenge
+      summary: Verify a six-digit email challenge
+      description: Verifies a single-use code with a ten-minute expiry and five-attempt limit, then rotates to a server-managed session cookie.
+      tags: [Identity]
+      parameters:
+        - $ref: '#/components/parameters/Origin'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/VerifyEmailChallengeRequest' }
+      responses:
+        '200':
+          description: The email is verified and a session was established.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+            Set-Cookie:
+              description: __Host-claimbounty-session with Secure, HttpOnly, SameSite=Strict, and Path=/.
+              schema: { type: string }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SessionEnvelope' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '413': { $ref: '#/components/responses/BodyTooLarge' }
+        '415': { $ref: '#/components/responses/UnsupportedMediaType' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /api/v1/session:
+    get:
+      operationId: getSession
+      summary: Get the current server session
+      description: Returns the session role and a fresh session-bound CSRF token after browser refresh without exposing the cookie secret.
+      tags: [Identity]
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: The current unexpired session.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SessionEnvelope' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/InternalError' }
+    delete:
+      operationId: revokeSession
+      summary: Revoke the current server session
+      description: Revokes the presented server-side session before expiring the browser cookie. Repeating the request after revocation is safe and does not restore or rotate the session.
+      tags: [Identity]
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/Origin'
+        - $ref: '#/components/parameters/CsrfToken'
+      responses:
+        '204':
+          description: The authenticated session was revoked and its cookie expired.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+            Clear-Site-Data:
+              description: Clears browser cookies for this origin without clearing unrelated local files.
+              schema: { type: string, const: '"cookies"' }
+            Set-Cookie:
+              description: Expires __Host-claimbounty-session with Secure, HttpOnly, SameSite=Strict, Path=/, and Max-Age=0.
+              schema: { type: string }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /api/v1/orders:
+    post:
+      operationId: createOrder
+      summary: Create a research order
+      description: Creates a draft owned by the verified submitter session.
+      tags: [Orders]
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/Origin'
+        - $ref: '#/components/parameters/CsrfToken'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateOrderRequest' }
+      responses:
+        '201':
+          description: The draft order was created.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+            Location: { schema: { type: string } }
+            ETag: { $ref: '#/components/headers/OrderETag' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderEnvelope' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '413': { $ref: '#/components/responses/BodyTooLarge' }
+        '415': { $ref: '#/components/responses/UnsupportedMediaType' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /api/v1/orders/{orderId}:
+    parameters:
+      - $ref: '#/components/parameters/OrderId'
+    get:
+      operationId: getOrder
+      summary: Get a submitter-owned order
+      description: Returns an order only when it belongs to the current verified session.
+      tags: [Orders]
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: The order was found.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+            ETag: { $ref: '#/components/headers/OrderETag' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderEnvelope' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /api/v1/orders/{orderId}/files:
+    parameters:
+      - $ref: '#/components/parameters/OrderId'
+    post:
+      operationId: uploadOrderFile
+      summary: Upload a private order file
+      description: Streams one bounded multipart file through the same-origin API into a server-generated write-once quarantine key. The API computes SHA-256 while streaming, records the immutable object version or generation, and rejects size or digest mismatches before inspection is queued.
+      tags: [Orders]
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/Origin'
+        - $ref: '#/components/parameters/CsrfToken'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema: { $ref: '#/components/schemas/UploadOrderFileRequest' }
+      responses:
+        '201':
+          description: The bounded stream was stored under an immutable version and accepted for inspection.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+            Location: { schema: { type: string } }
+            ETag: { $ref: '#/components/headers/OrderETag' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderFileEnvelope' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '413': { $ref: '#/components/responses/BodyTooLarge' }
+        '415': { $ref: '#/components/responses/UnsupportedMediaType' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+        '428': { $ref: '#/components/responses/PreconditionRequired' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /api/v1/orders/{orderId}/files/{fileId}:
+    parameters:
+      - $ref: '#/components/parameters/OrderId'
+      - $ref: '#/components/parameters/FileId'
+    delete:
+      operationId: deleteOrderFile
+      summary: Remove an unsubmitted file
+      description: Deletes draft metadata and schedules private object cleanup. Files become immutable when the order is submitted.
+      tags: [Orders]
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/Origin'
+        - $ref: '#/components/parameters/CsrfToken'
+        - $ref: '#/components/parameters/IfMatch'
+      responses:
+        '204':
+          description: The file was removed and cleanup was scheduled.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '428': { $ref: '#/components/responses/PreconditionRequired' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /api/v1/orders/{orderId}/submit:
+    parameters:
+      - $ref: '#/components/parameters/OrderId'
+    post:
+      operationId: submitOrder
+      summary: Submit a research order
+      description: Freezes submitter inputs only after the customer explicitly authorizes upload processing and internal analysis under the named terms. At acceptance, the server freezes its configured retention policy version and source/PII deletion deadlines; clients do not supply them. Each deadline is no later than the submission time plus its configured duration ceiling. P0 always records external redistribution as prohibited and requires exactly one uploaded primary paper before inspection can finish.
+      tags: [Orders]
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/Origin'
+        - $ref: '#/components/parameters/CsrfToken'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SubmitOrderRequest' }
+      responses:
+        '202':
+          description: The order was frozen and accepted for inspection.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+            ETag: { $ref: '#/components/headers/OrderETag' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderEnvelope' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '413': { $ref: '#/components/responses/BodyTooLarge' }
+        '415': { $ref: '#/components/responses/UnsupportedMediaType' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+        '428': { $ref: '#/components/responses/PreconditionRequired' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /api/v1/admin/orders:
+    get:
+      operationId: listAdminOrders
+      summary: List research orders for administration
+      description: Returns a stable newest-first cursor page after revalidating the session email against the current admin allowlist and authorization-policy version.
+      tags: [Administration]
+      security:
+        - sessionCookie: []
+      parameters:
+        - in: query
+          name: status
+          schema: { $ref: '#/components/schemas/OrderStatus' }
+        - in: query
+          name: createdAfter
+          schema: { type: string, format: date-time }
+        - in: query
+          name: createdBefore
+          schema: { type: string, format: date-time }
+        - in: query
+          name: publicReference
+          schema: { type: string, pattern: '^CB-[A-Z0-9]{12}$' }
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+        - in: query
+          name: cursor
+          schema: { type: string, maxLength: 1024 }
+      responses:
+        '200':
+          description: A stable order page.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OrderListEnvelope' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /api/v1/admin/orders/{orderId}:
+    parameters:
+      - $ref: '#/components/parameters/OrderId'
+    get:
+      operationId: getAdminOrder
+      summary: Get a research order for administration
+      description: Revalidates the current admin allowlist and policy version, then returns full metadata without exposing storage credentials or object keys.
+      tags: [Administration]
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: The order was found.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+            ETag: { $ref: '#/components/headers/OrderETag' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdminOrderEnvelope' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /api/v1/admin/orders/{orderId}/intake:
+    parameters:
+      - $ref: '#/components/parameters/OrderId'
+    patch:
+      operationId: updateAdminOrderIntake
+      summary: Freeze the admin-owned local handoff intake
+      description: Replaces the complete versioned intake under optimistic concurrency, appends an event, and never changes the original customer text. The audit request retention policy version and disposition must preserve the server-frozen submission values. Its source and PII deletion deadlines may preserve or shorten the frozen deadlines but may never extend them. The supplied routine contract is an assertion only and must exactly match the server's trusted configured registry entry for revision, validation timestamp, and evidence hash. The API does not infer scientific models, variables, estimands, commands, host paths, or dependencies.
+      tags: [Administration]
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/Origin'
+        - $ref: '#/components/parameters/CsrfToken'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateAdminIntakeRequest' }
+      responses:
+        '200':
+          description: Intake stored and readiness recalculated.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+            ETag: { $ref: '#/components/headers/OrderETag' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdminOrderEnvelope' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '413': { $ref: '#/components/responses/BodyTooLarge' }
+        '415': { $ref: '#/components/responses/UnsupportedMediaType' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+        '428': { $ref: '#/components/responses/PreconditionRequired' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /api/v1/admin/orders/{orderId}/files/{fileId}/content:
+    parameters:
+      - $ref: '#/components/parameters/OrderId'
+      - $ref: '#/components/parameters/FileId'
+    get:
+      operationId: downloadAdminOrderFile
+      summary: Download an inspected order file
+      description: Streams an authorized file as an attachment; rejected and uninspected objects are unavailable.
+      tags: [Administration]
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Attachment bytes.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+            Content-Digest: { $ref: '#/components/headers/SHA256ContentDigest' }
+            Content-Disposition:
+              description: Attachment disposition with a sanitized display filename.
+              schema: { type: string }
+            X-Content-Type-Options:
+              schema: { type: string, const: nosniff }
+          content:
+            application/octet-stream:
+              schema: { type: string, format: binary }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /api/v1/admin/orders/{orderId}/exports:
+    parameters:
+      - $ref: '#/components/parameters/OrderId'
+    post:
+      operationId: createOrderExport
+      summary: Create a local audit handoff export
+      description: Queues an immutable internal export only after every included file has passed inspection and the configured routine revision has a current successful compatibility validation. Missing, stale, mismatched, or unvalidated pins fail closed.
+      tags: [Administration]
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/Origin'
+        - $ref: '#/components/parameters/CsrfToken'
+        - $ref: '#/components/parameters/IfMatch'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateExportRequest' }
+      responses:
+        '202':
+          description: Export creation was accepted.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+            Location: { schema: { type: string } }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ExportEnvelope' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '413': { $ref: '#/components/responses/BodyTooLarge' }
+        '415': { $ref: '#/components/responses/UnsupportedMediaType' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+        '428': { $ref: '#/components/responses/PreconditionRequired' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /api/v1/admin/orders/{orderId}/exports/{exportId}:
+    parameters:
+      - $ref: '#/components/parameters/OrderId'
+      - $ref: '#/components/parameters/ExportId'
+    get:
+      operationId: getOrderExport
+      summary: Get a local audit handoff export
+      description: Returns export status, integrity metadata, and the authorized content path once ready.
+      tags: [Administration]
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: The export was found.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ExportEnvelope' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+  /api/v1/admin/exports/{exportId}/download:
+    parameters:
+      - $ref: '#/components/parameters/ExportId'
+    get:
+      operationId: downloadOrderExport
+      summary: Download a local audit handoff export
+      description: Streams the immutable export archive after integrity metadata has been finalized. Content-Digest covers the complete ZIP representation and matches the export sha256 value after base64/hex decoding.
+      tags: [Administration]
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: Export archive bytes.
+          headers:
+            Cache-Control: { $ref: '#/components/headers/PrivateNoStore' }
+            Content-Digest: { $ref: '#/components/headers/SHA256ContentDigest' }
+            Content-Disposition:
+              description: Attachment disposition for the export archive.
+              schema: { type: string }
+            X-Content-Type-Options:
+              schema: { type: string, const: nosniff }
+          content:
+            application/zip:
+              schema: { type: string, format: binary }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '500': { $ref: '#/components/responses/InternalError' }
   /api/v1/projects:
     post:
-      summary: Create a project and its initial workspace
       operationId: createProject
+      summary: Create a project and its initial workspace
       tags: [Projects]
       requestBody:
         required: true
@@ -36,8 +541,8 @@ paths:
         '422': { $ref: '#/components/responses/ValidationFailed' }
         '500': { $ref: '#/components/responses/InternalError' }
     get:
-      summary: List projects using stable cursor pagination
       operationId: listProjects
+      summary: List projects using stable cursor pagination
       tags: [Projects]
       parameters:
         - in: query
@@ -59,8 +564,8 @@ paths:
     parameters:
       - $ref: '#/components/parameters/ProjectId'
     get:
-      summary: Get a project by identifier
       operationId: getProject
+      summary: Get a project by identifier
       tags: [Projects]
       responses:
         '200':
@@ -75,8 +580,8 @@ paths:
     parameters:
       - $ref: '#/components/parameters/ProjectId'
     get:
-      summary: Get a project's versioned workspace
       operationId: getWorkspace
+      summary: Get a project's versioned workspace
       tags: [Workspaces]
       responses:
         '200':
@@ -90,8 +595,8 @@ paths:
         '404': { $ref: '#/components/responses/NotFound' }
         '500': { $ref: '#/components/responses/InternalError' }
     put:
-      summary: Save a workspace using optimistic concurrency
       operationId: saveWorkspace
+      summary: Save a workspace using optimistic concurrency
       tags: [Workspaces]
       parameters:
         - in: header
@@ -118,46 +623,610 @@ paths:
         '413': { $ref: '#/components/responses/BodyTooLarge' }
         '415': { $ref: '#/components/responses/UnsupportedMediaType' }
         '422': { $ref: '#/components/responses/ValidationFailed' }
-        '428':
-          description: If-Match is missing or malformed.
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+        '428': { $ref: '#/components/responses/PreconditionRequired' }
         '500': { $ref: '#/components/responses/InternalError' }
 components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: __Host-claimbounty-session
+      description: Opaque, revocable server-managed session established after email verification. Administrative authorization is never cached for the session lifetime; every admin request rechecks the normalized email against the current allowlist and requires the session authorization-policy version to match the active version.
   parameters:
+    OrderId:
+      in: path
+      name: orderId
+      required: true
+      schema: { type: string, format: uuid }
+    FileId:
+      in: path
+      name: fileId
+      required: true
+      schema: { type: string, format: uuid }
+    ExportId:
+      in: path
+      name: exportId
+      required: true
+      schema: { type: string, format: uuid }
     ProjectId:
       in: path
       name: projectId
       required: true
       schema: { type: string, format: uuid }
+    CsrfToken:
+      in: header
+      name: X-CSRF-Token
+      required: true
+      description: Session-bound CSRF token required for cookie-authenticated mutations.
+      schema: { type: string, minLength: 32, maxLength: 256 }
+    Origin:
+      in: header
+      name: Origin
+      required: true
+      description: Must exactly match the configured canonical browser origin on every unsafe request.
+      schema: { type: string, format: uri, maxLength: 2048 }
+    IfMatch:
+      in: header
+      name: If-Match
+      required: true
+      description: Strong order ETag returned by the most recent order response.
+      schema: { type: string, pattern: '^"[1-9][0-9]*"$' }
+    IdempotencyKey:
+      in: header
+      name: Idempotency-Key
+      required: true
+      description: Opaque key scoped to the authenticated actor and operation.
+      schema:
+        type: string
+        minLength: 16
+        maxLength: 128
+        pattern: '^[A-Za-z0-9._:-]+$'
   headers:
+    PrivateNoStore:
+      description: Marks authenticated content private and prevents storage by browsers and intermediary caches.
+      schema: { type: string, const: 'private, no-store' }
+    OrderETag:
+      description: Strong quoted decimal order version.
+      schema: { type: string, pattern: '^"[1-9][0-9]*"$' }
+    SHA256ContentDigest:
+      description: RFC 9530 Content-Digest for the complete response representation. The exact format is sha-256=:BASE64:, where BASE64 is the padded standard-base64 encoding of the 32 SHA-256 digest bytes. It is the same digest represented as lowercase hexadecimal by JSON sha256 fields.
+      schema:
+        type: string
+        pattern: '^sha-256=:[A-Za-z0-9+/]{43}=:$'
+        example: 'sha-256=:N8q5b5JBNh98Vty8hR1XQIM2FTnO9K2Yd8sC2Yw5m4M=:'
     WorkspaceETag:
       description: Strong quoted decimal workspace version.
       schema: { type: string, pattern: '^"[1-9][0-9]*"$' }
   responses:
     BadRequest:
-      description: Malformed path, query, or JSON.
+      description: Malformed path, query, header, or JSON.
+      content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } }
+    Unauthorized:
+      description: Authentication is missing, expired, or invalid.
+      content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } }
+    Forbidden:
+      description: The authenticated actor is not authorized for the operation.
       content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } }
     NotFound:
-      description: Resource not found.
+      description: Resource not found or not visible to the authenticated actor.
       content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } }
     Conflict:
-      description: Unique or optimistic-concurrency conflict.
+      description: Resource state, uniqueness, idempotency, or optimistic-concurrency conflict.
       content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } }
     BodyTooLarge:
       description: Request body exceeds the configured maximum.
       content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } }
     UnsupportedMediaType:
-      description: Content-Type is not application/json.
+      description: Request Content-Type is unsupported.
       content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } }
     ValidationFailed:
       description: Domain or application validation failed.
+      content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } }
+    PreconditionRequired:
+      description: If-Match or another required request precondition is missing.
+      content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } }
+    RateLimited:
+      description: The caller exceeded an identity, address, or order quota.
+      headers:
+        Retry-After: { schema: { type: integer, minimum: 1 } }
       content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } }
     InternalError:
       description: Unexpected server error with no internal details exposed.
       content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } }
   schemas:
+    RequestEmailChallengeRequest:
+      type: object
+      additionalProperties: false
+      required: [email, audience]
+      properties:
+        email: { type: string, format: email, maxLength: 254 }
+        audience: { enum: [submitter, administrator] }
+    VerifyEmailChallengeRequest:
+      type: object
+      additionalProperties: false
+      required: [email, audience, code]
+      properties:
+        email: { type: string, format: email, maxLength: 254 }
+        audience: { enum: [submitter, administrator] }
+        code: { type: string, pattern: '^[0-9]{6}$' }
+    EmailVerificationAccepted:
+      type: object
+      additionalProperties: false
+      required: [accepted]
+      properties:
+        accepted: { type: boolean, const: true }
+    EmailVerificationAcceptedEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data]
+      properties:
+        data: { $ref: '#/components/schemas/EmailVerificationAccepted' }
+    Session:
+      type: object
+      additionalProperties: false
+      required: [audience, csrfToken, authorizationPolicyVersion, expiresAt]
+      properties:
+        audience: { enum: [submitter, administrator] }
+        csrfToken: { type: string, minLength: 32, maxLength: 256 }
+        authorizationPolicyVersion:
+          type: string
+          pattern: '^[a-z0-9][a-z0-9._-]{0,99}$'
+          description: Must equal the active policy version on every administrative request.
+        expiresAt: { type: string, format: date-time }
+    SessionEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data]
+      properties:
+        data: { $ref: '#/components/schemas/Session' }
+    CreateOrderRequest:
+      type: object
+      additionalProperties: false
+      required: [title, purpose, targetClaim, permissions, privacy]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 300 }
+        purpose: { type: string, minLength: 1, maxLength: 1000 }
+        targetClaim:
+          type: object
+          additionalProperties: false
+          required: [text]
+          properties:
+            text: { type: string, minLength: 1, maxLength: 5000 }
+            sourceLocation: { type: string, minLength: 1, maxLength: 1000 }
+        permissions:
+          type: object
+          additionalProperties: false
+          required: [executeSuppliedCode, externalSearch]
+          properties:
+            executeSuppliedCode: { type: boolean }
+            externalSearch: { type: boolean }
+        privacy:
+          type: object
+          additionalProperties: false
+          required: [containsParticipantLevelData, containsDirectIdentifiers]
+          properties:
+            containsParticipantLevelData: { type: boolean }
+            containsDirectIdentifiers: { type: boolean }
+    OrderStatus:
+      description: draft -> awaiting_email_verification -> uploading -> submitted -> scanning -> needs_information or ready_for_export -> exported. rejected, cancelled, and expired are terminal.
+      enum:
+        [
+          draft,
+          awaiting_email_verification,
+          uploading,
+          submitted,
+          scanning,
+          needs_information,
+          ready_for_export,
+          exported,
+          rejected,
+          cancelled,
+          expired,
+        ]
+    Order:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          id,
+          publicReference,
+          status,
+          version,
+          title,
+          purpose,
+          targetClaim,
+          files,
+          piiRetention,
+          createdAt,
+          updatedAt,
+        ]
+      properties:
+        id: { type: string, format: uuid }
+        publicReference: { type: string, pattern: '^CB-[A-Z0-9]{12}$' }
+        status: { $ref: '#/components/schemas/OrderStatus' }
+        version: { type: integer, minimum: 1, maximum: 9007199254740991 }
+        title: { type: string }
+        purpose: { type: string }
+        targetClaim: { $ref: '#/components/schemas/FrozenTargetClaim' }
+        files:
+          type: array
+          maxItems: 20
+          items: { $ref: '#/components/schemas/OrderFile' }
+        piiRetention: { $ref: '#/components/schemas/PiiRetention' }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+        submittedAt: { type: [string, 'null'], format: date-time }
+    PiiRetention:
+      type: object
+      additionalProperties: false
+      description: Server-owned retention snapshot. Values are provisional while an order is a draft and become frozen at submission. Later administrative intake may only preserve or shorten either deadline.
+      required: [policyVersion, disposition, sourceDeleteAfter, piiDeleteAfter]
+      properties:
+        policyVersion:
+          type: string
+          pattern: '^[a-z0-9][a-z0-9._-]{0,99}$'
+          description: Exact server-configured PII_RETENTION_POLICY_VERSION frozen at submission.
+        disposition:
+          type: string
+          const: hard_delete
+          description: Hard deletion removes contact identifiers, authentication traces, and reversible lookup or mapping data.
+        sourceDeleteAfter:
+          type: string
+          format: date-time
+          description: Source-object deletion deadline, no later than submittedAt plus SOURCE_RETENTION_MAX_DURATION and never later than piiDeleteAfter.
+        piiDeleteAfter:
+          type: string
+          format: date-time
+          description: PII hard-deletion deadline, no later than submittedAt plus PII_RETENTION_MAX_DURATION.
+    FrozenTargetClaim:
+      type: object
+      additionalProperties: false
+      required: [text]
+      properties:
+        text: { type: string, minLength: 1, maxLength: 5000 }
+        sourceLocation: { type: [string, 'null'], minLength: 1, maxLength: 1000 }
+    OrderEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data]
+      properties:
+        data: { $ref: '#/components/schemas/Order' }
+    AdminOrder:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          id,
+          publicReference,
+          status,
+          version,
+          title,
+          purpose,
+          targetClaim,
+          files,
+          piiRetention,
+          createdAt,
+          updatedAt,
+          submitterEmail,
+          permissions,
+          privacy,
+          readinessIssues,
+          events,
+          exports,
+        ]
+      properties:
+        id: { type: string, format: uuid }
+        publicReference: { type: string, pattern: '^CB-[A-Z0-9]{12}$' }
+        status: { $ref: '#/components/schemas/OrderStatus' }
+        version: { type: integer, minimum: 1, maximum: 9007199254740991 }
+        title: { type: string }
+        purpose: { type: string }
+        targetClaim: { $ref: '#/components/schemas/FrozenTargetClaim' }
+        files:
+          type: array
+          maxItems: 20
+          items: { $ref: '#/components/schemas/OrderFile' }
+        piiRetention: { $ref: '#/components/schemas/PiiRetention' }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+        submittedAt: { type: [string, 'null'], format: date-time }
+        submitterEmail:
+          type: [string, 'null']
+          format: email
+          description: Null after the frozen hard-deletion or irreversible-anonymization policy has run.
+        permissions:
+          type: object
+          additionalProperties: false
+          required: [executeSuppliedCode, externalSearch]
+          properties:
+            executeSuppliedCode: { type: boolean }
+            externalSearch: { type: boolean }
+        privacy:
+          type: object
+          additionalProperties: false
+          required: [containsParticipantLevelData, containsDirectIdentifiers]
+          properties:
+            containsParticipantLevelData: { type: boolean }
+            containsDirectIdentifiers: { type: boolean }
+        frozenIntake:
+          oneOf:
+            - $ref: '#/components/schemas/UpdateAdminIntakeRequest'
+            - type: 'null'
+        readinessIssues:
+          type: array
+          maxItems: 100
+          items: { $ref: '#/components/schemas/ReadinessIssue' }
+        events:
+          type: array
+          maxItems: 500
+          items: { $ref: '#/components/schemas/OrderEvent' }
+        exports:
+          type: array
+          maxItems: 100
+          items: { $ref: '#/components/schemas/Export' }
+    AdminOrderEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data]
+      properties:
+        data: { $ref: '#/components/schemas/AdminOrder' }
+    OrderList:
+      type: object
+      additionalProperties: false
+      required: [items]
+      properties:
+        items:
+          type: array
+          maxItems: 100
+          items: { $ref: '#/components/schemas/Order' }
+        nextCursor: { type: string, maxLength: 1024 }
+    OrderListEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data]
+      properties:
+        data: { $ref: '#/components/schemas/OrderList' }
+    FileRole:
+      enum:
+        [
+          primary_paper,
+          supplement,
+          preregistration,
+          data,
+          code,
+          environment,
+          data_dictionary,
+          other_evidence,
+        ]
+    FileStatus:
+      enum: [upload_pending, uploaded, scanning, clean, rejected, expired]
+    OrderFile:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          id,
+          role,
+          originalDisplayName,
+          sizeBytes,
+          sha256,
+          storage,
+          declaredMediaType,
+          status,
+          createdAt,
+          updatedAt,
+        ]
+      properties:
+        id: { type: string, format: uuid }
+        role: { $ref: '#/components/schemas/FileRole' }
+        originalDisplayName:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: '^[^/\\\u0000]+$'
+        sizeBytes: { type: integer, minimum: 1, maximum: 262144000 }
+        sha256: { type: string, pattern: '^[a-f0-9]{64}$' }
+        storage: { $ref: '#/components/schemas/ImmutableStorageObject' }
+        declaredMediaType: { type: string, minLength: 1, maxLength: 255 }
+        detectedMediaType: { type: [string, 'null'], maxLength: 255 }
+        status: { $ref: '#/components/schemas/FileStatus' }
+        rejectionCode: { type: [string, 'null'], maxLength: 100 }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+      allOf:
+        - if:
+            required: [role]
+            properties:
+              role: { const: primary_paper }
+          then:
+            properties:
+              sizeBytes: { type: integer, maximum: 52428800 }
+              declaredMediaType: { type: string, const: application/pdf }
+    OrderFileEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data]
+      properties:
+        data: { $ref: '#/components/schemas/OrderFile' }
+    ImmutableStorageObject:
+      type: object
+      additionalProperties: false
+      required: [objectVersion, sha256, immutability]
+      properties:
+        objectVersion:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Opaque provider version or generation used for every scan, promotion, export, and download read.
+        sha256: { type: string, pattern: '^[a-f0-9]{64}$' }
+        immutability: { type: string, const: write_once }
+    UploadOrderFileRequest:
+      type: object
+      additionalProperties: false
+      required: [role, originalDisplayName, sizeBytes, expectedSha256, declaredMediaType, file]
+      properties:
+        role: { $ref: '#/components/schemas/FileRole' }
+        originalDisplayName:
+          type: string
+          minLength: 1
+          maxLength: 255
+          pattern: '^[^/\\\\\u0000]+$'
+        sizeBytes:
+          type: integer
+          minimum: 1
+          maximum: 262144000
+          description: Primary PDFs are additionally limited to 52428800 bytes; the full order to 1073741824 bytes.
+        expectedSha256: { type: string, pattern: '^[a-f0-9]{64}$' }
+        declaredMediaType: { type: string, minLength: 1, maxLength: 255 }
+        file:
+          type: string
+          format: binary
+          description: One streamed file part; the display filename never becomes an object key or filesystem path.
+      allOf:
+        - if:
+            required: [role]
+            properties:
+              role: { const: primary_paper }
+          then:
+            properties:
+              sizeBytes: { type: integer, maximum: 52428800 }
+              declaredMediaType: { type: string, const: application/pdf }
+    SubmitOrderRequest:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          termsAccepted,
+          termsVersion,
+          uploadsAuthorized,
+          analysisUseAuthorized,
+          externalRedistributionAuthorized,
+        ]
+      properties:
+        termsAccepted:
+          type: boolean
+          const: true
+          description: Explicit customer acceptance of the identified terms version.
+        termsVersion: { type: string, pattern: '^[a-z0-9][a-z0-9._-]{0,99}$' }
+        uploadsAuthorized:
+          type: boolean
+          const: true
+          description: Explicit customer authorization to retain and inspect the submitted files for this order.
+        analysisUseAuthorized:
+          type: boolean
+          const: true
+          description: Explicit customer authorization to include the files in the internal local scientific audit handoff.
+        externalRedistributionAuthorized:
+          type: boolean
+          const: false
+          description: P0 never authorizes external redistribution; a true value is rejected.
+    UpdateAdminIntakeRequest:
+      type: object
+      additionalProperties: false
+      description: The retention fields inside auditRequest are bounded assertions. policyVersion and disposition must equal the submission snapshot, and both deadlines must be no later than their server-frozen values.
+      required: [auditRequest, scientificPolicy, executionPolicy, routineContract]
+      properties:
+        auditRequest: { $ref: './schemas/v1/audit-request.schema.json' }
+        scientificPolicy: { $ref: './schemas/v1/scientific-policy.schema.json' }
+        executionPolicy: { $ref: './schemas/v1/execution-policy.schema.json' }
+        routineContract:
+          allOf:
+            - $ref: '#/components/schemas/ValidatedRoutineContract'
+          description: Must exactly match the trusted server-configured routine registry entry; administrators cannot select or attest a different revision.
+          x-claimbounty-trust-source: server-configured-registry
+    ValidatedRoutineContract:
+      type: object
+      additionalProperties: false
+      required: [routineId, revision, validation]
+      properties:
+        routineId:
+          type: string
+          const: claim-bounty-operations/run-claimbounty-scientific-audit
+        revision: { type: string, pattern: '^sha256:[a-f0-9]{64}$' }
+        validation:
+          type: object
+          additionalProperties: false
+          required: [status, validatedAt, evidenceSha256]
+          properties:
+            status: { type: string, const: validated }
+            validatedAt: { type: string, format: date-time }
+            evidenceSha256: { type: string, pattern: '^[a-f0-9]{64}$' }
+    ReadinessIssue:
+      type: object
+      additionalProperties: false
+      required: [code, path, message]
+      properties:
+        code: { type: string, maxLength: 100 }
+        path: { type: string, maxLength: 500 }
+        message: { type: string, maxLength: 1000 }
+    OrderEvent:
+      type: object
+      additionalProperties: false
+      required: [id, actorKind, actorId, type, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        actorKind: { type: string, enum: [submitter, administrator, system] }
+        actorId: { type: string, maxLength: 255 }
+        type: { type: string, maxLength: 100 }
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Safe metadata only; no email, filename, claim text, token, object key, or signed URL.
+        createdAt: { type: string, format: date-time }
+    CreateExportRequest:
+      type: object
+      additionalProperties: false
+      required: [retentionPolicyVersion, preserveRunOutputs]
+      properties:
+        retentionPolicyVersion:
+          type: string
+          pattern: '^[a-z0-9][a-z0-9._-]{0,99}$'
+          description: Assertion that must exactly match the policy version frozen in the order and audit request; administrators cannot select another version.
+        preserveRunOutputs: { type: boolean }
+    ExportStatus:
+      enum: [queued, building, ready, failed, expired]
+    Export:
+      type: object
+      additionalProperties: false
+      required: [id, orderId, status, routineContract, inputs, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        orderId: { type: string, format: uuid }
+        status: { $ref: '#/components/schemas/ExportStatus' }
+        routineContract: { $ref: '#/components/schemas/ValidatedRoutineContract' }
+        inputs:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items: { $ref: '#/components/schemas/ExportInput' }
+        sha256:
+          type: [string, 'null']
+          pattern: '^[a-f0-9]{64}$'
+          description: Lowercase hexadecimal SHA-256 of the complete ZIP. The download Content-Digest header carries the same 32 digest bytes as padded standard base64.
+        sizeBytes: { type: [integer, 'null'], minimum: 1 }
+        contentPath:
+          { type: [string, 'null'], pattern: '^/api/v1/admin/exports/[0-9a-f-]+/download$' }
+        createdAt: { type: string, format: date-time }
+        completedAt: { type: [string, 'null'], format: date-time }
+        failureCode: { type: [string, 'null'], maxLength: 100 }
+    ExportInput:
+      type: object
+      additionalProperties: false
+      required: [fileId, objectVersion, sha256]
+      properties:
+        fileId: { type: string, format: uuid }
+        objectVersion:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Exact immutable version or generation read into the export.
+        sha256: { type: string, pattern: '^[a-f0-9]{64}$' }
+    ExportEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data]
+      properties:
+        data: { $ref: '#/components/schemas/Export' }
     CreateProjectRequest:
       type: object
       additionalProperties: false
@@ -248,18 +1317,22 @@ components:
         code:
           type: string
           enum:
-            - required
-            - invalid
-            - invalid_format
-            - invalid_encoding
-            - invalid_characters
-            - out_of_range
-            - too_long
-            - too_many
-            - unsupported
-            - invalid_object
-            - duplicate_id
-            - before_created_at
+            [
+              required,
+              invalid,
+              invalid_format,
+              invalid_encoding,
+              invalid_characters,
+              out_of_range,
+              too_long,
+              too_many,
+              unsupported,
+              invalid_object,
+              duplicate_id,
+              before_created_at,
+              snapshot_mismatch,
+              exceeds_server_ceiling,
+            ]
         message: { type: string }
     Error:
       type: object
@@ -270,8 +1343,19 @@ components:
           type: string
           enum:
             - body_too_large
+            - conflict
             - cors_origin_denied
+            - csrf_invalid
+            - email_verification_invalid
             - empty_body
+            - export_not_ready
+            - file_not_clean
+            - forbidden
+            - digest_mismatch
+            - storage_version_mismatch
+            - routine_revision_unvalidated
+            - admin_policy_stale
+            - idempotency_conflict
             - if_match_required
             - internal_error
             - invalid_json
@@ -279,8 +1363,11 @@ components:
             - invalid_query
             - not_found
             - not_ready
+            - order_not_found
             - project_exists
             - project_not_found
+            - rate_limited
+            - unauthorized
             - unsupported_media_type
             - validation_failed
             - version_conflict

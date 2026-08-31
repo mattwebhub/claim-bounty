@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:claimbounty:schema:audit-request:1.0.0",
+  "title": "ClaimBounty audit request",
+  "description": "Frozen authority and target supplied to the local scientific-audit routine.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "caseId",
+    "purpose",
+    "targetClaim",
+    "permissions",
+    "privacy",
+    "retention",
+    "authority",
+    "releaseScope"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "caseId": { "type": "string", "format": "uuid" },
+    "purpose": { "type": "string", "minLength": 1, "maxLength": 1000 },
+    "targetClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claimId", "text", "source", "status"],
+      "properties": {
+        "claimId": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+          "maxLength": 100
+        },
+        "text": { "type": "string", "minLength": 1, "maxLength": 5000 },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["artifact", "location"],
+          "properties": {
+            "artifact": {
+              "type": "string",
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*\\\\)(paper|supplements|preregistration|data|code|environment|dictionaries|sources)/[^\\u0000]+$",
+              "maxLength": 1024,
+              "description": "Safe path relative to the extracted case-bundle routine working directory."
+            },
+            "location": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000
+            }
+          }
+        },
+        "status": { "const": "frozen" }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "readUploadedFiles",
+        "executeSuppliedCode",
+        "createDerivedFiles",
+        "externalSearch",
+        "openAccessSourcesOnly",
+        "externalRedistributionAuthorized"
+      ],
+      "properties": {
+        "readUploadedFiles": { "const": true },
+        "executeSuppliedCode": { "type": "boolean" },
+        "createDerivedFiles": { "type": "boolean" },
+        "externalSearch": { "type": "boolean" },
+        "openAccessSourcesOnly": { "type": "boolean" },
+        "externalRedistributionAuthorized": { "const": false }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "containsParticipantLevelData",
+        "containsDirectIdentifiers",
+        "redactRowLevelDataFromReports"
+      ],
+      "properties": {
+        "classification": {
+          "enum": ["public", "restricted_research", "confidential"]
+        },
+        "containsParticipantLevelData": { "type": "boolean" },
+        "containsDirectIdentifiers": { "type": "boolean" },
+        "redactRowLevelDataFromReports": { "type": "boolean" }
+      }
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Bounded retention assertion. The policy version and disposition must match the server-frozen submission snapshot. An administrator may preserve or shorten the source and PII deadlines, never extend them.",
+      "required": [
+        "policyVersion",
+        "sourceDeleteAfter",
+        "piiDeleteAfter",
+        "piiDisposition",
+        "preserveRunOutputs"
+      ],
+      "properties": {
+        "policyVersion": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,99}$",
+          "description": "Must equal the PII_RETENTION_POLICY_VERSION frozen by the server at customer submission."
+        },
+        "sourceDeleteAfter": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Must be no later than the server-frozen source deadline or piiDeleteAfter."
+        },
+        "piiDeleteAfter": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Must be no later than the server-frozen PII deadline."
+        },
+        "piiDisposition": {
+          "const": "hard_delete",
+          "description": "Must preserve the P0 hard-delete disposition frozen by the server at customer submission."
+        },
+        "preserveRunOutputs": { "type": "boolean" }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "uploadsAuthorized",
+        "analysisUseAuthorized",
+        "externalRedistributionAuthorized",
+        "termsVersion",
+        "customerConfirmedAt",
+        "frozenBy",
+        "frozenAt",
+        "authorizationPolicyVersion",
+        "adminAllowlistVersion"
+      ],
+      "properties": {
+        "uploadsAuthorized": { "const": true },
+        "analysisUseAuthorized": { "const": true },
+        "externalRedistributionAuthorized": { "const": false },
+        "termsVersion": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,99}$"
+        },
+        "customerConfirmedAt": { "type": "string", "format": "date-time" },
+        "frozenBy": { "type": "string", "format": "uuid" },
+        "frozenAt": { "type": "string", "format": "date-time" },
+        "authorizationPolicyVersion": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,99}$"
+        },
+        "adminAllowlistVersion": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,99}$"
+        }
+      }
+    },
+    "releaseScope": { "const": "internal" }
+  }
+}

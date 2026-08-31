@@ -4,6 +4,333 @@
  */
 
 export interface paths {
+    "/api/v1/email-challenges": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request a six-digit email challenge
+         * @description Always returns the same accepted response so callers cannot discover registered or administrative addresses.
+         */
+        post: operations["requestEmailChallenge"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/email-challenges/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Verify a six-digit email challenge
+         * @description Verifies a single-use code with a ten-minute expiry and five-attempt limit, then rotates to a server-managed session cookie.
+         */
+        post: operations["verifyEmailChallenge"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get the current server session
+         * @description Returns the session role and a fresh session-bound CSRF token after browser refresh without exposing the cookie secret.
+         */
+        get: operations["getSession"];
+        put?: never;
+        post?: never;
+        /**
+         * Revoke the current server session
+         * @description Revokes the presented server-side session before expiring the browser cookie. Repeating the request after revocation is safe and does not restore or rotate the session.
+         */
+        delete: operations["revokeSession"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a research order
+         * @description Creates a draft owned by the verified submitter session.
+         */
+        post: operations["createOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/orders/{orderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: components["parameters"]["OrderId"];
+            };
+            cookie?: never;
+        };
+        /**
+         * Get a submitter-owned order
+         * @description Returns an order only when it belongs to the current verified session.
+         */
+        get: operations["getOrder"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/orders/{orderId}/files": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: components["parameters"]["OrderId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload a private order file
+         * @description Streams one bounded multipart file through the same-origin API into a server-generated write-once quarantine key. The API computes SHA-256 while streaming, records the immutable object version or generation, and rejects size or digest mismatches before inspection is queued.
+         */
+        post: operations["uploadOrderFile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/orders/{orderId}/files/{fileId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: components["parameters"]["OrderId"];
+                fileId: components["parameters"]["FileId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Remove an unsubmitted file
+         * @description Deletes draft metadata and schedules private object cleanup. Files become immutable when the order is submitted.
+         */
+        delete: operations["deleteOrderFile"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/orders/{orderId}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: components["parameters"]["OrderId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Submit a research order
+         * @description Freezes submitter inputs only after the customer explicitly authorizes upload processing and internal analysis under the named terms. At acceptance, the server freezes its configured retention policy version and source/PII deletion deadlines; clients do not supply them. Each deadline is no later than the submission time plus its configured duration ceiling. P0 always records external redistribution as prohibited and requires exactly one uploaded primary paper before inspection can finish.
+         */
+        post: operations["submitOrder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List research orders for administration
+         * @description Returns a stable newest-first cursor page after revalidating the session email against the current admin allowlist and authorization-policy version.
+         */
+        get: operations["listAdminOrders"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/orders/{orderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: components["parameters"]["OrderId"];
+            };
+            cookie?: never;
+        };
+        /**
+         * Get a research order for administration
+         * @description Revalidates the current admin allowlist and policy version, then returns full metadata without exposing storage credentials or object keys.
+         */
+        get: operations["getAdminOrder"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/orders/{orderId}/intake": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: components["parameters"]["OrderId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Freeze the admin-owned local handoff intake
+         * @description Replaces the complete versioned intake under optimistic concurrency, appends an event, and never changes the original customer text. The audit request retention policy version and disposition must preserve the server-frozen submission values. Its source and PII deletion deadlines may preserve or shorten the frozen deadlines but may never extend them. The supplied routine contract is an assertion only and must exactly match the server's trusted configured registry entry for revision, validation timestamp, and evidence hash. The API does not infer scientific models, variables, estimands, commands, host paths, or dependencies.
+         */
+        patch: operations["updateAdminOrderIntake"];
+        trace?: never;
+    };
+    "/api/v1/admin/orders/{orderId}/files/{fileId}/content": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: components["parameters"]["OrderId"];
+                fileId: components["parameters"]["FileId"];
+            };
+            cookie?: never;
+        };
+        /**
+         * Download an inspected order file
+         * @description Streams an authorized file as an attachment; rejected and uninspected objects are unavailable.
+         */
+        get: operations["downloadAdminOrderFile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/orders/{orderId}/exports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: components["parameters"]["OrderId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a local audit handoff export
+         * @description Queues an immutable internal export only after every included file has passed inspection and the configured routine revision has a current successful compatibility validation. Missing, stale, mismatched, or unvalidated pins fail closed.
+         */
+        post: operations["createOrderExport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/orders/{orderId}/exports/{exportId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: components["parameters"]["OrderId"];
+                exportId: components["parameters"]["ExportId"];
+            };
+            cookie?: never;
+        };
+        /**
+         * Get a local audit handoff export
+         * @description Returns export status, integrity metadata, and the authorized content path once ready.
+         */
+        get: operations["getOrderExport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/exports/{exportId}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                exportId: components["parameters"]["ExportId"];
+            };
+            cookie?: never;
+        };
+        /**
+         * Download a local audit handoff export
+         * @description Streams the immutable export archive after integrity metadata has been finalized. Content-Digest covers the complete ZIP representation and matches the export sha256 value after base64/hex decoding.
+         */
+        get: operations["downloadOrderExport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/projects": {
         parameters: {
             query?: never;
@@ -65,6 +392,290 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        RequestEmailChallengeRequest: {
+            /** Format: email */
+            email: string;
+            /** @enum {unknown} */
+            audience: "submitter" | "administrator";
+        };
+        VerifyEmailChallengeRequest: {
+            /** Format: email */
+            email: string;
+            /** @enum {unknown} */
+            audience: "submitter" | "administrator";
+            code: string;
+        };
+        EmailVerificationAccepted: {
+            /** @constant */
+            accepted: true;
+        };
+        EmailVerificationAcceptedEnvelope: {
+            data: components["schemas"]["EmailVerificationAccepted"];
+        };
+        Session: {
+            /** @enum {unknown} */
+            audience: "submitter" | "administrator";
+            csrfToken: string;
+            /** @description Must equal the active policy version on every administrative request. */
+            authorizationPolicyVersion: string;
+            /** Format: date-time */
+            expiresAt: string;
+        };
+        SessionEnvelope: {
+            data: components["schemas"]["Session"];
+        };
+        CreateOrderRequest: {
+            title: string;
+            purpose: string;
+            targetClaim: {
+                text: string;
+                sourceLocation?: string;
+            };
+            permissions: {
+                executeSuppliedCode: boolean;
+                externalSearch: boolean;
+            };
+            privacy: {
+                containsParticipantLevelData: boolean;
+                containsDirectIdentifiers: boolean;
+            };
+        };
+        /**
+         * @description draft -> awaiting_email_verification -> uploading -> submitted -> scanning -> needs_information or ready_for_export -> exported. rejected, cancelled, and expired are terminal.
+         * @enum {unknown}
+         */
+        OrderStatus: "draft" | "awaiting_email_verification" | "uploading" | "submitted" | "scanning" | "needs_information" | "ready_for_export" | "exported" | "rejected" | "cancelled" | "expired";
+        Order: {
+            /** Format: uuid */
+            id: string;
+            publicReference: string;
+            status: components["schemas"]["OrderStatus"];
+            version: number;
+            title: string;
+            purpose: string;
+            targetClaim: components["schemas"]["FrozenTargetClaim"];
+            files: components["schemas"]["OrderFile"][];
+            piiRetention: components["schemas"]["PiiRetention"];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            /** Format: date-time */
+            submittedAt?: string | null;
+        };
+        /** @description Server-owned retention snapshot. Values are provisional while an order is a draft and become frozen at submission. Later administrative intake may only preserve or shorten either deadline. */
+        PiiRetention: {
+            /** @description Exact server-configured PII_RETENTION_POLICY_VERSION frozen at submission. */
+            policyVersion: string;
+            /**
+             * @description Hard deletion removes contact identifiers, authentication traces, and reversible lookup or mapping data.
+             * @constant
+             */
+            disposition: "hard_delete";
+            /**
+             * Format: date-time
+             * @description Source-object deletion deadline, no later than submittedAt plus SOURCE_RETENTION_MAX_DURATION and never later than piiDeleteAfter.
+             */
+            sourceDeleteAfter: string;
+            /**
+             * Format: date-time
+             * @description PII hard-deletion deadline, no later than submittedAt plus PII_RETENTION_MAX_DURATION.
+             */
+            piiDeleteAfter: string;
+        };
+        FrozenTargetClaim: {
+            text: string;
+            sourceLocation?: string | null;
+        };
+        OrderEnvelope: {
+            data: components["schemas"]["Order"];
+        };
+        AdminOrder: {
+            /** Format: uuid */
+            id: string;
+            publicReference: string;
+            status: components["schemas"]["OrderStatus"];
+            version: number;
+            title: string;
+            purpose: string;
+            targetClaim: components["schemas"]["FrozenTargetClaim"];
+            files: components["schemas"]["OrderFile"][];
+            piiRetention: components["schemas"]["PiiRetention"];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            /** Format: date-time */
+            submittedAt?: string | null;
+            /**
+             * Format: email
+             * @description Null after the frozen hard-deletion or irreversible-anonymization policy has run.
+             */
+            submitterEmail: string | null;
+            permissions: {
+                executeSuppliedCode: boolean;
+                externalSearch: boolean;
+            };
+            privacy: {
+                containsParticipantLevelData: boolean;
+                containsDirectIdentifiers: boolean;
+            };
+            frozenIntake?: components["schemas"]["UpdateAdminIntakeRequest"] | null;
+            readinessIssues: components["schemas"]["ReadinessIssue"][];
+            events: components["schemas"]["OrderEvent"][];
+            exports: components["schemas"]["Export"][];
+        };
+        AdminOrderEnvelope: {
+            data: components["schemas"]["AdminOrder"];
+        };
+        OrderList: {
+            items: components["schemas"]["Order"][];
+            nextCursor?: string;
+        };
+        OrderListEnvelope: {
+            data: components["schemas"]["OrderList"];
+        };
+        /** @enum {unknown} */
+        FileRole: "primary_paper" | "supplement" | "preregistration" | "data" | "code" | "environment" | "data_dictionary" | "other_evidence";
+        /** @enum {unknown} */
+        FileStatus: "upload_pending" | "uploaded" | "scanning" | "clean" | "rejected" | "expired";
+        OrderFile: {
+            /** Format: uuid */
+            id: string;
+            role: components["schemas"]["FileRole"];
+            originalDisplayName: string;
+            sizeBytes: number;
+            sha256: string;
+            storage: components["schemas"]["ImmutableStorageObject"];
+            declaredMediaType: string;
+            detectedMediaType?: string | null;
+            status: components["schemas"]["FileStatus"];
+            rejectionCode?: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        } & unknown;
+        OrderFileEnvelope: {
+            data: components["schemas"]["OrderFile"];
+        };
+        ImmutableStorageObject: {
+            /** @description Opaque provider version or generation used for every scan, promotion, export, and download read. */
+            objectVersion: string;
+            sha256: string;
+            /** @constant */
+            immutability: "write_once";
+        };
+        UploadOrderFileRequest: {
+            role: components["schemas"]["FileRole"];
+            originalDisplayName: string;
+            /** @description Primary PDFs are additionally limited to 52428800 bytes; the full order to 1073741824 bytes. */
+            sizeBytes: number;
+            expectedSha256: string;
+            declaredMediaType: string;
+            /**
+             * Format: binary
+             * @description One streamed file part; the display filename never becomes an object key or filesystem path.
+             */
+            file: string;
+        } & unknown;
+        SubmitOrderRequest: {
+            /**
+             * @description Explicit customer acceptance of the identified terms version.
+             * @constant
+             */
+            termsAccepted: true;
+            termsVersion: string;
+            /**
+             * @description Explicit customer authorization to retain and inspect the submitted files for this order.
+             * @constant
+             */
+            uploadsAuthorized: true;
+            /**
+             * @description Explicit customer authorization to include the files in the internal local scientific audit handoff.
+             * @constant
+             */
+            analysisUseAuthorized: true;
+            /**
+             * @description P0 never authorizes external redistribution; a true value is rejected.
+             * @constant
+             */
+            externalRedistributionAuthorized: false;
+        };
+        /** @description The retention fields inside auditRequest are bounded assertions. policyVersion and disposition must equal the submission snapshot, and both deadlines must be no later than their server-frozen values. */
+        UpdateAdminIntakeRequest: {
+            auditRequest: components["schemas"]["audit-request.schema"];
+            scientificPolicy: components["schemas"]["scientific-policy.schema"];
+            executionPolicy: components["schemas"]["execution-policy.schema"];
+            /** @description Must exactly match the trusted server-configured routine registry entry; administrators cannot select or attest a different revision. */
+            routineContract: components["schemas"]["ValidatedRoutineContract"];
+        };
+        ValidatedRoutineContract: {
+            /** @constant */
+            routineId: "claim-bounty-operations/run-claimbounty-scientific-audit";
+            revision: string;
+            validation: {
+                /** @constant */
+                status: "validated";
+                /** Format: date-time */
+                validatedAt: string;
+                evidenceSha256: string;
+            };
+        };
+        ReadinessIssue: {
+            code: string;
+            path: string;
+            message: string;
+        };
+        OrderEvent: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            actorKind: "submitter" | "administrator" | "system";
+            actorId: string;
+            type: string;
+            /** @description Safe metadata only; no email, filename, claim text, token, object key, or signed URL. */
+            metadata?: {
+                [key: string]: unknown;
+            };
+            /** Format: date-time */
+            createdAt: string;
+        };
+        CreateExportRequest: {
+            /** @description Assertion that must exactly match the policy version frozen in the order and audit request; administrators cannot select another version. */
+            retentionPolicyVersion: string;
+            preserveRunOutputs: boolean;
+        };
+        /** @enum {unknown} */
+        ExportStatus: "queued" | "building" | "ready" | "failed" | "expired";
+        Export: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            orderId: string;
+            status: components["schemas"]["ExportStatus"];
+            routineContract: components["schemas"]["ValidatedRoutineContract"];
+            inputs: components["schemas"]["ExportInput"][];
+            /** @description Lowercase hexadecimal SHA-256 of the complete ZIP. The download Content-Digest header carries the same 32 digest bytes as padded standard base64. */
+            sha256?: string | null;
+            sizeBytes?: number | null;
+            contentPath?: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            completedAt?: string | null;
+            failureCode?: string | null;
+        };
+        ExportInput: {
+            /** Format: uuid */
+            fileId: string;
+            /** @description Exact immutable version or generation read into the export. */
+            objectVersion: string;
+            sha256: string;
+        };
+        ExportEnvelope: {
+            data: components["schemas"]["Export"];
+        };
         CreateProjectRequest: {
             name: string;
         };
@@ -120,12 +731,12 @@ export interface components {
         FieldIssue: {
             path: string;
             /** @enum {string} */
-            code: "required" | "invalid" | "invalid_format" | "invalid_encoding" | "invalid_characters" | "out_of_range" | "too_long" | "too_many" | "unsupported" | "invalid_object" | "duplicate_id" | "before_created_at";
+            code: "required" | "invalid" | "invalid_format" | "invalid_encoding" | "invalid_characters" | "out_of_range" | "too_long" | "too_many" | "unsupported" | "invalid_object" | "duplicate_id" | "before_created_at" | "snapshot_mismatch" | "exceeds_server_ceiling";
             message: string;
         };
         Error: {
             /** @enum {string} */
-            code: "body_too_large" | "cors_origin_denied" | "empty_body" | "if_match_required" | "internal_error" | "invalid_json" | "invalid_path_parameter" | "invalid_query" | "not_found" | "not_ready" | "project_exists" | "project_not_found" | "unsupported_media_type" | "validation_failed" | "version_conflict" | "workspace_not_found";
+            code: "body_too_large" | "conflict" | "cors_origin_denied" | "csrf_invalid" | "email_verification_invalid" | "empty_body" | "export_not_ready" | "file_not_clean" | "forbidden" | "digest_mismatch" | "storage_version_mismatch" | "routine_revision_unvalidated" | "admin_policy_stale" | "idempotency_conflict" | "if_match_required" | "internal_error" | "invalid_json" | "invalid_path_parameter" | "invalid_query" | "not_found" | "not_ready" | "order_not_found" | "project_exists" | "project_not_found" | "rate_limited" | "unauthorized" | "unsupported_media_type" | "validation_failed" | "version_conflict" | "workspace_not_found";
             message: string;
             requestId?: string;
             details?: components["schemas"]["FieldIssue"][];
@@ -133,9 +744,173 @@ export interface components {
         ErrorEnvelope: {
             error: components["schemas"]["Error"];
         };
+        /**
+         * ClaimBounty audit request
+         * @description Frozen authority and target supplied to the local scientific-audit routine.
+         */
+        "audit-request.schema": {
+            /** @constant */
+            schemaVersion: "1.0.0";
+            /** Format: uuid */
+            caseId: string;
+            purpose: string;
+            targetClaim: {
+                claimId: string;
+                text: string;
+                source: {
+                    /** @description Safe path relative to the extracted case-bundle routine working directory. */
+                    artifact: string;
+                    location: string;
+                };
+                /** @constant */
+                status: "frozen";
+            };
+            permissions: {
+                /** @constant */
+                readUploadedFiles: true;
+                executeSuppliedCode: boolean;
+                createDerivedFiles: boolean;
+                externalSearch: boolean;
+                openAccessSourcesOnly: boolean;
+                /** @constant */
+                externalRedistributionAuthorized: false;
+            };
+            privacy: {
+                /** @enum {unknown} */
+                classification: "public" | "restricted_research" | "confidential";
+                containsParticipantLevelData: boolean;
+                containsDirectIdentifiers: boolean;
+                redactRowLevelDataFromReports: boolean;
+            };
+            /** @description Bounded retention assertion. The policy version and disposition must match the server-frozen submission snapshot. An administrator may preserve or shorten the source and PII deadlines, never extend them. */
+            retention: {
+                /** @description Must equal the PII_RETENTION_POLICY_VERSION frozen by the server at customer submission. */
+                policyVersion: string;
+                /**
+                 * Format: date-time
+                 * @description Must be no later than the server-frozen source deadline or piiDeleteAfter.
+                 */
+                sourceDeleteAfter: string;
+                /**
+                 * Format: date-time
+                 * @description Must be no later than the server-frozen PII deadline.
+                 */
+                piiDeleteAfter: string;
+                /**
+                 * @description Must preserve the P0 hard-delete disposition frozen by the server at customer submission.
+                 * @constant
+                 */
+                piiDisposition: "hard_delete";
+                preserveRunOutputs: boolean;
+            };
+            authority: {
+                /** @constant */
+                uploadsAuthorized: true;
+                /** @constant */
+                analysisUseAuthorized: true;
+                /** @constant */
+                externalRedistributionAuthorized: false;
+                termsVersion: string;
+                /** Format: date-time */
+                customerConfirmedAt: string;
+                /** Format: uuid */
+                frozenBy: string;
+                /** Format: date-time */
+                frozenAt: string;
+                authorizationPolicyVersion: string;
+                adminAllowlistVersion: string;
+            };
+            /** @constant */
+            releaseScope: "internal";
+        };
+        /**
+         * ClaimBounty scientific policy
+         * @description Version-pinned scientific defaults and bounded review rules; it never selects a study-specific model or estimand.
+         */
+        "scientific-policy.schema": {
+            /** @constant */
+            schemaVersion: "1.0.0";
+            policyVersion: string;
+            defaultsVersion: string;
+            targetFreeze: {
+                /** @constant */
+                inferMissingScientificChoices: false;
+                /** @enum {unknown} */
+                ambiguity: "block" | "preserve_conflict_and_continue_with_limits";
+            };
+            reproduction: {
+                comparisonProfile: string;
+                /** @constant */
+                scientificChangesCountAsExact: false;
+            };
+            sensitivity: {
+                maximumCandidates: number;
+                /** @constant */
+                resultsBlindReview: true;
+                reviewerCount: number;
+            };
+            evidence: {
+                maximumQuestions: number;
+                maximumDeepSources: number;
+            };
+            verification: {
+                /** @constant */
+                independentRerun: true;
+                maximumCorrectionRounds: number;
+            };
+        };
+        /**
+         * ClaimBounty execution policy
+         * @description Server-selected ceilings for later local execution; no host paths, commands, entrypoints, or customer-selected runtimes are accepted.
+         */
+        "execution-policy.schema": {
+            /** @constant */
+            schemaVersion: "1.0.0";
+            policyVersion: string;
+            /** @constant */
+            runClass: "manual_local_operator";
+            /** @constant */
+            releaseScope: "internal";
+            resources: {
+                maximumCpuCores: number;
+                maximumMemoryMiB: number;
+                maximumWorkingStorageMiB: number;
+            };
+            sandbox: {
+                /** @constant */
+                isolationRequired: true;
+                /** @constant */
+                networkDuringAnalysis: "disabled";
+                /** @enum {unknown} */
+                dependencyAcquisition: "disabled" | "operator_approved";
+                /** @constant */
+                expandArchivesAutomatically: false;
+            };
+            sourceAccess: {
+                externalSearch: boolean;
+                openAccessOnly: boolean;
+                /** @constant */
+                paywallBypass: false;
+            };
+            privacy: {
+                /** @constant */
+                publishParticipantRows: false;
+                /** @constant */
+                publishDirectIdentifiers: false;
+                reportsMayIncludeAggregateResults: boolean;
+            };
+            replay: {
+                /** @constant */
+                requireCleanEnvironment: true;
+                /** @constant */
+                requireInputAndOutputHashes: true;
+                /** @constant */
+                requireDependencyVersions: true;
+            };
+        };
     };
     responses: {
-        /** @description Malformed path, query, or JSON. */
+        /** @description Malformed path, query, header, or JSON. */
         BadRequest: {
             headers: {
                 [name: string]: unknown;
@@ -144,7 +919,25 @@ export interface components {
                 "application/json": components["schemas"]["ErrorEnvelope"];
             };
         };
-        /** @description Resource not found. */
+        /** @description Authentication is missing, expired, or invalid. */
+        Unauthorized: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["ErrorEnvelope"];
+            };
+        };
+        /** @description The authenticated actor is not authorized for the operation. */
+        Forbidden: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["ErrorEnvelope"];
+            };
+        };
+        /** @description Resource not found or not visible to the authenticated actor. */
         NotFound: {
             headers: {
                 [name: string]: unknown;
@@ -153,7 +946,7 @@ export interface components {
                 "application/json": components["schemas"]["ErrorEnvelope"];
             };
         };
-        /** @description Unique or optimistic-concurrency conflict. */
+        /** @description Resource state, uniqueness, idempotency, or optimistic-concurrency conflict. */
         Conflict: {
             headers: {
                 [name: string]: unknown;
@@ -171,7 +964,7 @@ export interface components {
                 "application/json": components["schemas"]["ErrorEnvelope"];
             };
         };
-        /** @description Content-Type is not application/json. */
+        /** @description Request Content-Type is unsupported. */
         UnsupportedMediaType: {
             headers: {
                 [name: string]: unknown;
@@ -189,6 +982,25 @@ export interface components {
                 "application/json": components["schemas"]["ErrorEnvelope"];
             };
         };
+        /** @description If-Match or another required request precondition is missing. */
+        PreconditionRequired: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["ErrorEnvelope"];
+            };
+        };
+        /** @description The caller exceeded an identity, address, or order quota. */
+        RateLimited: {
+            headers: {
+                "Retry-After"?: number;
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["ErrorEnvelope"];
+            };
+        };
         /** @description Unexpected server error with no internal details exposed. */
         InternalError: {
             headers: {
@@ -200,10 +1012,27 @@ export interface components {
         };
     };
     parameters: {
+        OrderId: string;
+        FileId: string;
+        ExportId: string;
         ProjectId: string;
+        /** @description Session-bound CSRF token required for cookie-authenticated mutations. */
+        CsrfToken: string;
+        /** @description Must exactly match the configured canonical browser origin on every unsafe request. */
+        Origin: string;
+        /** @description Strong order ETag returned by the most recent order response. */
+        IfMatch: string;
+        /** @description Opaque key scoped to the authenticated actor and operation. */
+        IdempotencyKey: string;
     };
     requestBodies: never;
     headers: {
+        /** @description Marks authenticated content private and prevents storage by browsers and intermediary caches. */
+        PrivateNoStore: "private, no-store";
+        /** @description Strong quoted decimal order version. */
+        OrderETag: string;
+        /** @description RFC 9530 Content-Digest for the complete response representation. The exact format is sha-256=:BASE64:, where BASE64 is the padded standard-base64 encoding of the 32 SHA-256 digest bytes. It is the same digest represented as lowercase hexadecimal by JSON sha256 fields. */
+        SHA256ContentDigest: string;
         /** @description Strong quoted decimal workspace version. */
         WorkspaceETag: string;
     };
@@ -211,6 +1040,586 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    requestEmailChallenge: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Must exactly match the configured canonical browser origin on every unsafe request. */
+                Origin: components["parameters"]["Origin"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestEmailChallengeRequest"];
+            };
+        };
+        responses: {
+            /** @description The request was accepted regardless of whether mail will be sent. */
+            202: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmailVerificationAcceptedEnvelope"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            413: components["responses"]["BodyTooLarge"];
+            415: components["responses"]["UnsupportedMediaType"];
+            422: components["responses"]["ValidationFailed"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    verifyEmailChallenge: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Must exactly match the configured canonical browser origin on every unsafe request. */
+                Origin: components["parameters"]["Origin"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyEmailChallengeRequest"];
+            };
+        };
+        responses: {
+            /** @description The email is verified and a session was established. */
+            200: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    /** @description __Host-claimbounty-session with Secure, HttpOnly, SameSite=Strict, and Path=/. */
+                    "Set-Cookie"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionEnvelope"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            413: components["responses"]["BodyTooLarge"];
+            415: components["responses"]["UnsupportedMediaType"];
+            422: components["responses"]["ValidationFailed"];
+            429: components["responses"]["RateLimited"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    getSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The current unexpired session. */
+            200: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SessionEnvelope"];
+                };
+            };
+            401: components["responses"]["Unauthorized"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    revokeSession: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Must exactly match the configured canonical browser origin on every unsafe request. */
+                Origin: components["parameters"]["Origin"];
+                /** @description Session-bound CSRF token required for cookie-authenticated mutations. */
+                "X-CSRF-Token": components["parameters"]["CsrfToken"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The authenticated session was revoked and its cookie expired. */
+            204: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    /** @description Clears browser cookies for this origin without clearing unrelated local files. */
+                    "Clear-Site-Data"?: "\"cookies\"";
+                    /** @description Expires __Host-claimbounty-session with Secure, HttpOnly, SameSite=Strict, Path=/, and Max-Age=0. */
+                    "Set-Cookie"?: string;
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    createOrder: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Must exactly match the configured canonical browser origin on every unsafe request. */
+                Origin: components["parameters"]["Origin"];
+                /** @description Session-bound CSRF token required for cookie-authenticated mutations. */
+                "X-CSRF-Token": components["parameters"]["CsrfToken"];
+                /** @description Opaque key scoped to the authenticated actor and operation. */
+                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateOrderRequest"];
+            };
+        };
+        responses: {
+            /** @description The draft order was created. */
+            201: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    Location?: string;
+                    ETag: components["headers"]["OrderETag"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderEnvelope"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            409: components["responses"]["Conflict"];
+            413: components["responses"]["BodyTooLarge"];
+            415: components["responses"]["UnsupportedMediaType"];
+            422: components["responses"]["ValidationFailed"];
+            429: components["responses"]["RateLimited"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    getOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: components["parameters"]["OrderId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The order was found. */
+            200: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    ETag: components["headers"]["OrderETag"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderEnvelope"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            404: components["responses"]["NotFound"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    uploadOrderFile: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Must exactly match the configured canonical browser origin on every unsafe request. */
+                Origin: components["parameters"]["Origin"];
+                /** @description Session-bound CSRF token required for cookie-authenticated mutations. */
+                "X-CSRF-Token": components["parameters"]["CsrfToken"];
+                /** @description Strong order ETag returned by the most recent order response. */
+                "If-Match": components["parameters"]["IfMatch"];
+                /** @description Opaque key scoped to the authenticated actor and operation. */
+                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
+            };
+            path: {
+                orderId: components["parameters"]["OrderId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["UploadOrderFileRequest"];
+            };
+        };
+        responses: {
+            /** @description The bounded stream was stored under an immutable version and accepted for inspection. */
+            201: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    Location?: string;
+                    ETag: components["headers"]["OrderETag"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderFileEnvelope"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            413: components["responses"]["BodyTooLarge"];
+            415: components["responses"]["UnsupportedMediaType"];
+            422: components["responses"]["ValidationFailed"];
+            428: components["responses"]["PreconditionRequired"];
+            429: components["responses"]["RateLimited"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    deleteOrderFile: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Must exactly match the configured canonical browser origin on every unsafe request. */
+                Origin: components["parameters"]["Origin"];
+                /** @description Session-bound CSRF token required for cookie-authenticated mutations. */
+                "X-CSRF-Token": components["parameters"]["CsrfToken"];
+                /** @description Strong order ETag returned by the most recent order response. */
+                "If-Match": components["parameters"]["IfMatch"];
+            };
+            path: {
+                orderId: components["parameters"]["OrderId"];
+                fileId: components["parameters"]["FileId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The file was removed and cleanup was scheduled. */
+            204: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            428: components["responses"]["PreconditionRequired"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    submitOrder: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Must exactly match the configured canonical browser origin on every unsafe request. */
+                Origin: components["parameters"]["Origin"];
+                /** @description Session-bound CSRF token required for cookie-authenticated mutations. */
+                "X-CSRF-Token": components["parameters"]["CsrfToken"];
+                /** @description Strong order ETag returned by the most recent order response. */
+                "If-Match": components["parameters"]["IfMatch"];
+                /** @description Opaque key scoped to the authenticated actor and operation. */
+                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
+            };
+            path: {
+                orderId: components["parameters"]["OrderId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmitOrderRequest"];
+            };
+        };
+        responses: {
+            /** @description The order was frozen and accepted for inspection. */
+            202: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    ETag: components["headers"]["OrderETag"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderEnvelope"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            413: components["responses"]["BodyTooLarge"];
+            415: components["responses"]["UnsupportedMediaType"];
+            422: components["responses"]["ValidationFailed"];
+            428: components["responses"]["PreconditionRequired"];
+            429: components["responses"]["RateLimited"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    listAdminOrders: {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["OrderStatus"];
+                createdAfter?: string;
+                createdBefore?: string;
+                publicReference?: string;
+                limit?: number;
+                cursor?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A stable order page. */
+            200: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderListEnvelope"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            422: components["responses"]["ValidationFailed"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    getAdminOrder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: components["parameters"]["OrderId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The order was found. */
+            200: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    ETag: components["headers"]["OrderETag"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminOrderEnvelope"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    updateAdminOrderIntake: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Must exactly match the configured canonical browser origin on every unsafe request. */
+                Origin: components["parameters"]["Origin"];
+                /** @description Session-bound CSRF token required for cookie-authenticated mutations. */
+                "X-CSRF-Token": components["parameters"]["CsrfToken"];
+                /** @description Strong order ETag returned by the most recent order response. */
+                "If-Match": components["parameters"]["IfMatch"];
+            };
+            path: {
+                orderId: components["parameters"]["OrderId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAdminIntakeRequest"];
+            };
+        };
+        responses: {
+            /** @description Intake stored and readiness recalculated. */
+            200: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    ETag: components["headers"]["OrderETag"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminOrderEnvelope"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            413: components["responses"]["BodyTooLarge"];
+            415: components["responses"]["UnsupportedMediaType"];
+            422: components["responses"]["ValidationFailed"];
+            428: components["responses"]["PreconditionRequired"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    downloadAdminOrderFile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: components["parameters"]["OrderId"];
+                fileId: components["parameters"]["FileId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Attachment bytes. */
+            200: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    "Content-Digest": components["headers"]["SHA256ContentDigest"];
+                    /** @description Attachment disposition with a sanitized display filename. */
+                    "Content-Disposition"?: string;
+                    "X-Content-Type-Options"?: "nosniff";
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/octet-stream": string;
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    createOrderExport: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Must exactly match the configured canonical browser origin on every unsafe request. */
+                Origin: components["parameters"]["Origin"];
+                /** @description Session-bound CSRF token required for cookie-authenticated mutations. */
+                "X-CSRF-Token": components["parameters"]["CsrfToken"];
+                /** @description Strong order ETag returned by the most recent order response. */
+                "If-Match": components["parameters"]["IfMatch"];
+                /** @description Opaque key scoped to the authenticated actor and operation. */
+                "Idempotency-Key": components["parameters"]["IdempotencyKey"];
+            };
+            path: {
+                orderId: components["parameters"]["OrderId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateExportRequest"];
+            };
+        };
+        responses: {
+            /** @description Export creation was accepted. */
+            202: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    Location?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExportEnvelope"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            413: components["responses"]["BodyTooLarge"];
+            415: components["responses"]["UnsupportedMediaType"];
+            422: components["responses"]["ValidationFailed"];
+            428: components["responses"]["PreconditionRequired"];
+            429: components["responses"]["RateLimited"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    getOrderExport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: components["parameters"]["OrderId"];
+                exportId: components["parameters"]["ExportId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The export was found. */
+            200: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExportEnvelope"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            500: components["responses"]["InternalError"];
+        };
+    };
+    downloadOrderExport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                exportId: components["parameters"]["ExportId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Export archive bytes. */
+            200: {
+                headers: {
+                    "Cache-Control": components["headers"]["PrivateNoStore"];
+                    "Content-Digest": components["headers"]["SHA256ContentDigest"];
+                    /** @description Attachment disposition for the export archive. */
+                    "Content-Disposition"?: string;
+                    "X-Content-Type-Options"?: "nosniff";
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/zip": string;
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            409: components["responses"]["Conflict"];
+            500: components["responses"]["InternalError"];
+        };
+    };
     listProjects: {
         parameters: {
             query?: {
@@ -353,15 +1762,7 @@ export interface operations {
             413: components["responses"]["BodyTooLarge"];
             415: components["responses"]["UnsupportedMediaType"];
             422: components["responses"]["ValidationFailed"];
-            /** @description If-Match is missing or malformed. */
-            428: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorEnvelope"];
-                };
-            };
+            428: components["responses"]["PreconditionRequired"];
             500: components["responses"]["InternalError"];
         };
     };

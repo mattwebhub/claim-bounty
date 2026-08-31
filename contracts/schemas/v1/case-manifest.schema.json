@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:claimbounty:schema:case-manifest:1.0.0",
+  "title": "ClaimBounty CASE-MANIFEST",
+  "description": "Immutable index for a verified ClaimBounty local handoff export.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "orderId",
+    "exportId",
+    "publicReference",
+    "createdAt",
+    "manifestPath",
+    "manifestSha256",
+    "routineContract",
+    "policyVersions",
+    "authority",
+    "dispatch",
+    "files"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "orderId": { "type": "string", "format": "uuid" },
+    "exportId": { "type": "string", "format": "uuid" },
+    "publicReference": {
+      "type": "string",
+      "pattern": "^CB-[A-Z0-9]{12}$"
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "manifestPath": {
+      "const": "case-bundle/CASE-MANIFEST.json",
+      "description": "Required archive-root-relative location. A manifest at the archive root is invalid."
+    },
+    "manifestSha256": {
+      "$ref": "#/$defs/sha256",
+      "description": "SHA-256 of the RFC 8785 canonical manifest with this property omitted."
+    },
+    "routineContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["routineId", "revision", "validation"],
+      "properties": {
+        "routineId": {
+          "const": "claim-bounty-operations/run-claimbounty-scientific-audit"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "validation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "validatedAt", "evidenceSha256"],
+          "properties": {
+            "status": { "const": "validated" },
+            "validatedAt": { "type": "string", "format": "date-time" },
+            "evidenceSha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      }
+    },
+    "policyVersions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["auditRequest", "scientificPolicy", "executionPolicy"],
+      "properties": {
+        "auditRequest": { "const": "1.0.0" },
+        "scientificPolicy": { "const": "1.0.0" },
+        "executionPolicy": { "const": "1.0.0" }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "uploadsAuthorized",
+        "analysisUseAuthorized",
+        "externalRedistributionAuthorized",
+        "authorizationPolicyVersion",
+        "adminAllowlistVersion"
+      ],
+      "properties": {
+        "uploadsAuthorized": { "const": true },
+        "analysisUseAuthorized": { "const": true },
+        "externalRedistributionAuthorized": { "const": false },
+        "authorizationPolicyVersion": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,99}$"
+        },
+        "adminAllowlistVersion": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,99}$"
+        }
+      }
+    },
+    "dispatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["auditRequest", "scientificPolicy", "executionPolicy"],
+      "properties": {
+        "auditRequest": {
+          "allOf": [
+            { "$ref": "#/$defs/dispatchFile" },
+            {
+              "type": "object",
+              "properties": { "path": { "const": "dispatch/audit-request.json" } }
+            }
+          ]
+        },
+        "scientificPolicy": {
+          "allOf": [
+            { "$ref": "#/$defs/dispatchFile" },
+            {
+              "type": "object",
+              "properties": { "path": { "const": "dispatch/scientific-policy.json" } }
+            }
+          ]
+        },
+        "executionPolicy": {
+          "allOf": [
+            { "$ref": "#/$defs/dispatchFile" },
+            {
+              "type": "object",
+              "properties": { "path": { "const": "dispatch/execution-policy.json" } }
+            }
+          ]
+        }
+      }
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/file" },
+      "contains": {
+        "type": "object",
+        "required": ["role"],
+        "properties": { "role": { "const": "primary_paper" } }
+      },
+      "minContains": 1,
+      "maxContains": 1
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "safeRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*\\\\)[^\\u0000]+$"
+    },
+    "caseBundlePath": {
+      "allOf": [
+        { "$ref": "#/$defs/safeRelativePath" },
+        {
+          "type": "string",
+          "pattern": "^(paper|supplements|preregistration|data|code|environment|dictionaries|sources)/.+"
+        }
+      ]
+    },
+    "dispatchFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "schemaVersion", "sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/safeRelativePath" },
+        "schemaVersion": { "const": "1.0.0" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fileId",
+        "role",
+        "path",
+        "originalDisplayName",
+        "sizeBytes",
+        "sha256",
+        "objectVersion",
+        "storageImmutability",
+        "detectedMediaType",
+        "scanResult",
+        "scannedAt"
+      ],
+      "properties": {
+        "fileId": { "type": "string", "format": "uuid" },
+        "role": {
+          "enum": [
+            "primary_paper",
+            "supplement",
+            "preregistration",
+            "data",
+            "code",
+            "environment",
+            "data_dictionary",
+            "other_evidence"
+          ]
+        },
+        "path": { "$ref": "#/$defs/caseBundlePath" },
+        "originalDisplayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[^/\\\\\\u0000]+$"
+        },
+        "sizeBytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 262144000
+        },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "objectVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "description": "Exact write-once object version or generation used for scan, promotion, and export reads."
+        },
+        "storageImmutability": { "const": "write_once" },
+        "detectedMediaType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "scanResult": { "const": "clean" },
+        "scannedAt": { "type": "string", "format": "date-time" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "role": { "const": "primary_paper" } } },
+          "then": {
+            "properties": {
+              "sizeBytes": { "type": "integer", "maximum": 52428800 },
+              "detectedMediaType": { "type": "string", "const": "application/pdf" }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

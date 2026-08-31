@@ -38,7 +38,7 @@ Duplicating the same authoritative value across owners is an architecture defect
 
 `contracts/openapi.yaml` is canonical. The web application generates compile-time DTOs from it and validates untrusted responses with Zod. Go handlers remain explicit and are verified with transport tests plus the real full-stack system test.
 
-The default browser client uses `credentials: same-origin`. Local cross-origin development therefore sends no ambient credentials and relies on the API's explicit origin allowlist. Deployments should route `/api` to the API behind the same origin. A future cross-origin cookie session requires a separate threat model plus coordinated credentialed-CORS policy; it is not an implicit template default.
+The default browser client uses `credentials: same-origin`. Vite and the production web server proxy `/api` to the API, so local development and deployments share the same browser origin without exposing an API credential policy to the bundle. A future cross-origin cookie session requires a separate threat model plus coordinated credentialed-CORS policy; it is not an implicit template default.
 
 Architecture exceptions require a dated ADR with scope, owner, expiry condition, and an executable regression check whenever practical.
 

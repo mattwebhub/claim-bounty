@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:claimbounty:schema:scientific-policy:1.0.0",
+  "title": "ClaimBounty scientific policy",
+  "description": "Version-pinned scientific defaults and bounded review rules; it never selects a study-specific model or estimand.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "policyVersion",
+    "defaultsVersion",
+    "targetFreeze",
+    "reproduction",
+    "sensitivity",
+    "evidence",
+    "verification"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "policyVersion": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,99}$"
+    },
+    "defaultsVersion": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,99}$"
+    },
+    "targetFreeze": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inferMissingScientificChoices", "ambiguity"],
+      "properties": {
+        "inferMissingScientificChoices": { "const": false },
+        "ambiguity": {
+          "enum": ["block", "preserve_conflict_and_continue_with_limits"]
+        }
+      }
+    },
+    "reproduction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["comparisonProfile", "scientificChangesCountAsExact"],
+      "properties": {
+        "comparisonProfile": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,99}$"
+        },
+        "scientificChangesCountAsExact": { "const": false }
+      }
+    },
+    "sensitivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maximumCandidates", "resultsBlindReview", "reviewerCount"],
+      "properties": {
+        "maximumCandidates": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "resultsBlindReview": { "const": true },
+        "reviewerCount": { "type": "integer", "minimum": 1, "maximum": 2 }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maximumQuestions", "maximumDeepSources"],
+      "properties": {
+        "maximumQuestions": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "maximumDeepSources": { "type": "integer", "minimum": 0, "maximum": 3 }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["independentRerun", "maximumCorrectionRounds"],
+      "properties": {
+        "independentRerun": { "const": true },
+        "maximumCorrectionRounds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        }
+      }
+    }
+  }
+}

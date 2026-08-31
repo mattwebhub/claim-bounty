@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:claimbounty:schema:execution-policy:1.0.0",
+  "title": "ClaimBounty execution policy",
+  "description": "Server-selected ceilings for later local execution; no host paths, commands, entrypoints, or customer-selected runtimes are accepted.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "policyVersion",
+    "runClass",
+    "releaseScope",
+    "resources",
+    "sandbox",
+    "sourceAccess",
+    "privacy",
+    "replay"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "policyVersion": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,99}$"
+    },
+    "runClass": { "const": "manual_local_operator" },
+    "releaseScope": { "const": "internal" },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maximumCpuCores", "maximumMemoryMiB", "maximumWorkingStorageMiB"],
+      "properties": {
+        "maximumCpuCores": { "type": "integer", "minimum": 1, "maximum": 16 },
+        "maximumMemoryMiB": { "type": "integer", "minimum": 512, "maximum": 65536 },
+        "maximumWorkingStorageMiB": {
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 262144
+        }
+      }
+    },
+    "sandbox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "isolationRequired",
+        "networkDuringAnalysis",
+        "dependencyAcquisition",
+        "expandArchivesAutomatically"
+      ],
+      "properties": {
+        "isolationRequired": { "const": true },
+        "networkDuringAnalysis": { "const": "disabled" },
+        "dependencyAcquisition": { "enum": ["disabled", "operator_approved"] },
+        "expandArchivesAutomatically": { "const": false }
+      }
+    },
+    "sourceAccess": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["externalSearch", "openAccessOnly", "paywallBypass"],
+      "properties": {
+        "externalSearch": { "type": "boolean" },
+        "openAccessOnly": { "type": "boolean" },
+        "paywallBypass": { "const": false }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "publishParticipantRows",
+        "publishDirectIdentifiers",
+        "reportsMayIncludeAggregateResults"
+      ],
+      "properties": {
+        "publishParticipantRows": { "const": false },
+        "publishDirectIdentifiers": { "const": false },
+        "reportsMayIncludeAggregateResults": { "type": "boolean" }
+      }
+    },
+    "replay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requireCleanEnvironment",
+        "requireInputAndOutputHashes",
+        "requireDependencyVersions"
+      ],
+      "properties": {
+        "requireCleanEnvironment": { "const": true },
+        "requireInputAndOutputHashes": { "const": true },
+        "requireDependencyVersions": { "const": true }
+      }
+    }
+  }
+}

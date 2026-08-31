@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "policyVersion": "scientific-intake-v1",
+  "defaultsVersion": "claimbounty-defaults-v1",
+  "targetFreeze": {
+    "inferMissingScientificChoices": false,
+    "ambiguity": "preserve_conflict_and_continue_with_limits"
+  },
+  "reproduction": {
+    "comparisonProfile": "reported-precision-v1",
+    "scientificChangesCountAsExact": false
+  },
+  "sensitivity": {
+    "maximumCandidates": 5,
+    "resultsBlindReview": true,
+    "reviewerCount": 2
+  },
+  "evidence": {
+    "maximumQuestions": 3,
+    "maximumDeepSources": 3
+  },
+  "verification": {
+    "independentRerun": true,
+    "maximumCorrectionRounds": 2
+  }
+}

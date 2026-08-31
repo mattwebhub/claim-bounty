@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.0.0",
+  "orderId": "11111111-1111-4111-8111-111111111111",
+  "exportId": "22222222-2222-4222-8222-222222222222",
+  "publicReference": "CB-01J7Y8K2Q9ZX",
+  "createdAt": "2026-08-30T12:00:00Z",
+  "manifestPath": "case-bundle/CASE-MANIFEST.json",
+  "manifestSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "routineContract": {
+    "routineId": "claim-bounty-operations/run-claimbounty-scientific-audit",
+    "revision": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "validation": {
+      "status": "validated",
+      "validatedAt": "2026-08-30T11:50:00Z",
+      "evidenceSha256": "9999999999999999999999999999999999999999999999999999999999999999"
+    }
+  },
+  "policyVersions": {
+    "auditRequest": "1.0.0",
+    "scientificPolicy": "1.0.0",
+    "executionPolicy": "1.0.0"
+  },
+  "authority": {
+    "uploadsAuthorized": true,
+    "analysisUseAuthorized": true,
+    "externalRedistributionAuthorized": false,
+    "authorizationPolicyVersion": "admin-policy-v1",
+    "adminAllowlistVersion": "admin-allowlist-v1"
+  },
+  "dispatch": {
+    "auditRequest": {
+      "path": "dispatch/audit-request.json",
+      "schemaVersion": "1.0.0",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "scientificPolicy": {
+      "path": "dispatch/scientific-policy.json",
+      "schemaVersion": "1.0.0",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    "executionPolicy": {
+      "path": "dispatch/execution-policy.json",
+      "schemaVersion": "1.0.0",
+      "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+    }
+  },
+  "files": [
+    {
+      "fileId": "33333333-3333-4333-8333-333333333333",
+      "role": "primary_paper",
+      "path": "paper/study.pdf",
+      "originalDisplayName": "study.pdf",
+      "sizeBytes": 1048576,
+      "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "objectVersion": "version-00000001",
+      "storageImmutability": "write_once",
+      "detectedMediaType": "application/pdf",
+      "scanResult": "clean",
+      "scannedAt": "2026-08-30T11:45:00Z"
+    }
+  ]
+}

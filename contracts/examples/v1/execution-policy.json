@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "policyVersion": "local-operator-v1",
+  "runClass": "manual_local_operator",
+  "releaseScope": "internal",
+  "resources": {
+    "maximumCpuCores": 4,
+    "maximumMemoryMiB": 8192,
+    "maximumWorkingStorageMiB": 5120
+  },
+  "sandbox": {
+    "isolationRequired": true,
+    "networkDuringAnalysis": "disabled",
+    "dependencyAcquisition": "operator_approved",
+    "expandArchivesAutomatically": false
+  },
+  "sourceAccess": {
+    "externalSearch": true,
+    "openAccessOnly": true,
+    "paywallBypass": false
+  },
+  "privacy": {
+    "publishParticipantRows": false,
+    "publishDirectIdentifiers": false,
+    "reportsMayIncludeAggregateResults": true
+  },
+  "replay": {
+    "requireCleanEnvironment": true,
+    "requireInputAndOutputHashes": true,
+    "requireDependencyVersions": true
+  }
+}

@@ -44,8 +44,8 @@ rules:
     exceptions: ADR with an explicit synchronization protocol and expiry
   - id: CONTRACT-001
     severity: error
-    scope: contracts/openapi.yaml and generated consumers
-    summary: The root OpenAPI file is the only editable API contract and generated output must not drift.
+    scope: contracts/openapi.yaml, contracts/schemas, examples, and generated consumers
+    summary: HTTP and portable export contracts are canonical, versioned, validated, and free of generated drift.
     enforcement: make contract-check
     documentation: docs/rules/CONTRACT-001.md
     exceptions: none

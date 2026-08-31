@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "caseId": "11111111-1111-4111-8111-111111111111",
+  "purpose": "Audit the frozen quantitative claim supplied with this order.",
+  "targetClaim": {
+    "claimId": "primary-result",
+    "text": "The reported intervention increases the primary outcome.",
+    "source": {
+      "artifact": "paper/study.pdf",
+      "location": "Abstract and Table 2"
+    },
+    "status": "frozen"
+  },
+  "permissions": {
+    "readUploadedFiles": true,
+    "executeSuppliedCode": true,
+    "createDerivedFiles": true,
+    "externalSearch": true,
+    "openAccessSourcesOnly": true,
+    "externalRedistributionAuthorized": false
+  },
+  "privacy": {
+    "classification": "restricted_research",
+    "containsParticipantLevelData": true,
+    "containsDirectIdentifiers": false,
+    "redactRowLevelDataFromReports": true
+  },
+  "retention": {
+    "policyVersion": "intake-30d-v1",
+    "sourceDeleteAfter": "2026-09-13T11:30:00Z",
+    "piiDeleteAfter": "2026-09-29T11:30:00Z",
+    "piiDisposition": "hard_delete",
+    "preserveRunOutputs": false
+  },
+  "authority": {
+    "uploadsAuthorized": true,
+    "analysisUseAuthorized": true,
+    "externalRedistributionAuthorized": false,
+    "termsVersion": "terms-v1",
+    "customerConfirmedAt": "2026-08-30T11:30:00Z",
+    "frozenBy": "44444444-4444-4444-8444-444444444444",
+    "frozenAt": "2026-08-30T11:55:00Z",
+    "authorizationPolicyVersion": "authorization-v1",
+    "adminAllowlistVersion": "admin-allowlist-v1"
+  },
+  "releaseScope": "internal"
+}
