@@ -49,10 +49,10 @@ For a deeper visual overview, open the [product guide](submission/reviewer/revie
 
 ClaimBounty has three deliberate boundaries:
 
-| Surface | Responsibility |
-| --- | --- |
-| Researcher intake | Creates a case and uploads the authorized academic bundle. |
-| Administration | Reviews cases, validates policy and permissions, and prepares digest-bound exports. |
+| Surface                   | Responsibility                                                                                              |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Researcher intake         | Creates a case and uploads the authorized academic bundle.                                                  |
+| Administration            | Reviews cases, validates policy and permissions, and prepares digest-bound exports.                         |
 | Local scientific workflow | Runs research code and coordinated agents inside the user's Toone project, then produces the audit package. |
 
 The Go API owns identity, case metadata, policy validation, storage coordination, and export handoffs. The React application provides the public intake and administration interfaces. PostgreSQL, object storage, malware scanning, and background workers support the hosted boundary. Scientific execution remains local so private research material and arbitrary research code do not need to run inside the hosted service.
@@ -112,18 +112,18 @@ The [Improvement Changelog](IMPROVEMENT_CHANGELOG.md) records the major product 
 
 ## Repository map
 
-| Path | Purpose |
-| --- | --- |
-| `apps/web` | Researcher intake and administration interface |
-| `apps/api` | Go API and background worker processes |
-| `contracts` | HTTP and data contracts |
-| `infra` | Compose, Kubernetes, and object-storage configuration |
-| `examples/moura-2023-heliconius-exp1` | Licensed example paper, R code, and data |
-| `workflow/claimbounty-scientific-audit` | Installable ClaimBounty workflow package |
-| `submission/recordings` | Product walkthrough and screened source footage |
-| `submission/reviewer` | Product guide and generated integrity manifest |
-| `submission/evidence` | Public engineering and evaluation evidence |
-| `docs` | Setup, architecture, reproduction, and product documentation |
+| Path                                    | Purpose                                                      |
+| --------------------------------------- | ------------------------------------------------------------ |
+| `apps/web`                              | Researcher intake and administration interface               |
+| `apps/api`                              | Go API and background worker processes                       |
+| `contracts`                             | HTTP and data contracts                                      |
+| `infra`                                 | Compose, Kubernetes, and object-storage configuration        |
+| `examples/moura-2023-heliconius-exp1`   | Licensed example paper, R code, and data                     |
+| `workflow/claimbounty-scientific-audit` | Installable ClaimBounty workflow package                     |
+| `submission/recordings`                 | Product walkthrough and screened source footage              |
+| `submission/reviewer`                   | Product guide and generated integrity manifest               |
+| `submission/evidence`                   | Public engineering and evaluation evidence                   |
+| `docs`                                  | Setup, architecture, reproduction, and product documentation |
 
 ## Data handling
 

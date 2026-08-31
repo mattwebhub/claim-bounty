@@ -20,8 +20,8 @@
     },
     {
       "path": "guide/index.html",
-      "bytes": 45692,
-      "sha256": "6b96ea352430f65f7d0810ef9da0c19fa03c1b7b67a1ef20f4d6506c13913573"
+      "bytes": 45708,
+      "sha256": "4d8c61b58a022bb4e652425e32833fb3aa2b4e34858cd6c5f590d872868fd4ac"
     },
     {
       "path": "guide/render.mjs",
