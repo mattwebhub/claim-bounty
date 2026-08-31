@@ -94,7 +94,7 @@ export function AdminOrdersList({
       ) : (
         <div className="orders-table-wrap">
           <table className="orders-table">
-            <caption className="sr-only">ClaimBounty orders</caption>
+            <caption className="sr-only">Peer2Paper orders</caption>
             <thead>
               <tr>
                 <th scope="col">Reference</th>

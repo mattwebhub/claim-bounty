@@ -20,8 +20,8 @@
     },
     {
       "path": "guide/index.html",
-      "bytes": 45708,
-      "sha256": "4d8c61b58a022bb4e652425e32833fb3aa2b4e34858cd6c5f590d872868fd4ac"
+      "bytes": 45756,
+      "sha256": "9bf49dd631a7336710e37785e8a12b2df78d28303e3a5a2aa220d6a6e2402bf5"
     },
     {
       "path": "guide/render.mjs",
@@ -30,8 +30,8 @@
     },
     {
       "path": "reviewer-guide.pdf",
-      "bytes": 725707,
-      "sha256": "392d8fa26f67a70f15cf1a53ce2563c3f6ae2eefd544f1abcbb93bff27bbeb54"
+      "bytes": 724562,
+      "sha256": "10021582cc8eb0014bda0204ec4fdcf98ef46f34761a6d8fc4ca85052a154091"
     }
   ]
 }

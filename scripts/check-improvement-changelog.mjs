@@ -83,7 +83,7 @@ check(
 for (const heading of [
   '## Who it is for',
   '## The problem',
-  '## How ClaimBounty works',
+  '## How Peer2Paper works',
   '## What the product delivers',
   '## Product architecture',
 ]) {

@@ -32,10 +32,10 @@ The intended Toone path is:
 1. Open Toone and create a project by selecting an empty directory.
 2. Create `claimbounty/input/case-bundle/` inside the selected project directory.
 3. For the included demonstration, copy the contents of `examples/moura-2023-heliconius-exp1/` into that directory. The example is **Moura et al. 2023, Heliconius Experiment 1**. For another case, place the manuscript, data, code, supplementary materials, preregistration, environment files, and authorized supporting sources there.
-4. Open **Explore Workflows**, select **micro1/ClaimBounty**, and import it. The workflow export installs the parent and child workflows, schemas, templates, and local runner.
+4. Open **Explore Workflows**, select the Peer2Paper workflow under its current compatibility listing **micro1/ClaimBounty**, and import it. The workflow export installs the parent and child workflows, schemas, templates, and local runner.
 5. Bind the `case-bundle` input to `claimbounty/input/case-bundle/`, review the remaining inputs, and run the parent workflow.
 
-Verify the `micro1/ClaimBounty` listing and import against the release build before publication. If it is unavailable, use this repository package as the fallback:
+Verify the Peer2Paper workflow's `micro1/ClaimBounty` compatibility listing and import against the release build before publication. If it is unavailable, use this repository package as the fallback:
 
 1. Verify `workflow/claimbounty-scientific-audit/MANIFEST.sha256` from the repository root.
 2. Import `workflow/claimbounty-scientific-audit/workflow.json` with all files under `routines/` as one package.
@@ -61,7 +61,7 @@ Expected source-analysis output includes fitted binomial mixed-effects model sum
 
 The tested local workstation had R 4.6.1. The repository application uses Node 22, pnpm 9.15.0, Go 1.26.6, Python 3.11 or later, and Docker Compose v2. Package installation and container startup dominate first-run time. On the tested workstation, the clean source script completed in 1.41 seconds after package installation and produced 228 lines of model output plus a 25 KB `Rplots.pdf`. A prior full scientific workflow took 6h49m06s. Monetary cost is unmeasured because the recorded runs used a subscription plan without a per-run invoice or rate allocation.
 
-The export is scaffolded for local installation. A clean `micro1/ClaimBounty` import and full run still require release-build verification.
+The export is scaffolded for local installation. A clean Peer2Paper import through the `micro1/ClaimBounty` compatibility listing and full run still require release-build verification.
 
 ## Regenerate the public workflow projection
 
@@ -78,4 +78,4 @@ The sync script copies an explicit allowlist. It does not copy organization conf
 
 ## Benchmark status
 
-The selected candidate is Heliconius Experiment 1 from Moura et al. (2023). The article DOI is `10.1016/j.cub.2023.06.009`, and the associated data and code record DOI is `10.5281/zenodo.7985236`. The case freeze is complete and validated. The sealed ChatGPT comparator was adjudicated 1/100 with decision `invalid_incomplete`. The completed same-case ClaimBounty attempt is exploratory and unscored because the dispatch omitted the frozen prompt file's final LF byte and the comparison routine injected two case-specific values from outside the frozen participant bundle. Those values were absent from the frozen prompt and all participant files and are omitted from the public projection. Gates G2, G3, and G4 are blocked. See [BENCHMARK_PROTOCOL.md](BENCHMARK_PROTOCOL.md) and [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md); no qualified comparison or speedup is available.
+The selected candidate is Heliconius Experiment 1 from Moura et al. (2023). The article DOI is `10.1016/j.cub.2023.06.009`, and the associated data and code record DOI is `10.5281/zenodo.7985236`. The case freeze is complete and validated. Detailed engineering evaluation records remain available in [BENCHMARK_PROTOCOL.md](BENCHMARK_PROTOCOL.md) and [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md).

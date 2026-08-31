@@ -510,7 +510,7 @@ export function ClaimIntake({
                 <img
                   className="dropzone-action-logo"
                   src="/claimbounty-fox-loupe-icon.png"
-                  alt="ClaimBounty"
+                  alt="Peer2Paper"
                 />
                 <span>Audit my paper</span>
               </span>
@@ -657,7 +657,7 @@ export function ClaimIntake({
                   setTermsAccepted(event.target.checked);
                 }}
               />
-              I accept the ClaimBounty intake terms for this order.
+              I accept the Peer2Paper intake terms for this order.
             </label>
             <label className="check-row">
               <input
@@ -667,7 +667,7 @@ export function ClaimIntake({
                   setUploadsAuthorized(event.target.checked);
                 }}
               />
-              I authorize ClaimBounty to retain and privately inspect these uploaded files for this
+              I authorize Peer2Paper to retain and privately inspect these uploaded files for this
               order.
             </label>
             <label className="check-row">

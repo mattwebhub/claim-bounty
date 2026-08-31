@@ -137,7 +137,7 @@ function LandingDropzone({ files, onFilesChange }: LandingDropzoneProps) {
             <img
               className="dropzone-action-logo"
               src="/claimbounty-fox-loupe-icon.png"
-              alt="ClaimBounty"
+              alt="Peer2Paper"
             />
             <span>Audit my paper</span>
           </span>
@@ -214,7 +214,7 @@ export function Component() {
         <div className="claim-hero-inner">
           <h1 id="hero-title">Find the weakness in your paper before reviewers do</h1>
           <p className="hero-description">
-            Upload your manuscript and research materials. ClaimBounty independently tests whether
+            Upload your manuscript and research materials. Peer2Paper independently tests whether
             your central claim can be reproduced, how robust it is, and what should be fixed before
             submission.
           </p>
@@ -254,7 +254,7 @@ export function Component() {
             <p>
               From materials to verdict
               <br />
-              ClaimBounty audit sequence
+              Peer2Paper audit sequence
             </p>
           </header>
 
@@ -275,7 +275,7 @@ export function Component() {
                 <div className="process-step-copy">
                   <p>{step.description}</p>
                   {'outputs' in step ? (
-                    <ul className="output-list" aria-label="ClaimBounty audit outputs">
+                    <ul className="output-list" aria-label="Peer2Paper audit outputs">
                       {step.outputs.map((output) => (
                         <li key={output}>{output}</li>
                       ))}

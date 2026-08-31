@@ -5,8 +5,8 @@
   "entries": [
     {
       "path": "README.md",
-      "bytes": 2756,
-      "sha256": "7b4017751040ed0f8792a0a292a7da90a57b95a01e7bbec4a5ee366e5254324d"
+      "bytes": 2855,
+      "sha256": "5773521b43a1ae9d70bc4aca73b9f72e0dd1ba9980b5cef1a5eca6aea56a233a"
     },
     {
       "path": "project-template/claimbounty/config/audit-schema.json",

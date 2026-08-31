@@ -1,4 +1,4 @@
-# ClaimBounty Scientific Audit Workflow
+# Peer2Paper Scientific Audit Workflow
 
 > **Status**: In-Development | **Updated**: 2026-08-31 | **Scope**: Installable public local-workflow projection
 
@@ -26,11 +26,11 @@ On macOS, use `shasum -a 256 -c MANIFEST.sha256` for the second command.
 
 ## Install
 
-Use the latest [Toone release](https://trytoone.com). Create a project by selecting an empty directory, create `claimbounty/input/case-bundle/` inside it, and place the manuscript, data, code, supplementary materials, preregistration, environment files, and authorized supporting sources there. Open **Explore Workflows**, select **micro1/ClaimBounty**, and import it. Bind `case-bundle` to `claimbounty/input/case-bundle/`, review the remaining inputs, and run the parent workflow.
+Use the latest [Toone release](https://trytoone.com). Create a project by selecting an empty directory, create `claimbounty/input/case-bundle/` inside it, and place the manuscript, data, code, supplementary materials, preregistration, environment files, and authorized supporting sources there. Open **Explore Workflows**, select the Peer2Paper workflow under its current compatibility listing **micro1/ClaimBounty**, and import it. Bind `case-bundle` to `claimbounty/input/case-bundle/`, review the remaining inputs, and run the parent workflow.
 
 For repository fallback import, import `workflow.json` and every workflow definition as one package, then copy `project-template/claimbounty` to the local project root so `project://claimbounty/...` paths resolve. The fallback still requires the same `case-bundle` directory and dispatch documents.
 
-The public package has not yet passed a clean import and end-to-end execution check. The `micro1/ClaimBounty` listing and import must be verified against the release build before publication.
+The public package has not yet passed a clean import and end-to-end execution check. The Peer2Paper workflow's `micro1/ClaimBounty` compatibility listing and import must be verified against the release build before publication.
 
 ## Regeneration boundary
 

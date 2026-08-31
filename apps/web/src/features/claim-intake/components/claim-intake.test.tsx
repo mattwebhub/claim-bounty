@@ -10,7 +10,7 @@ describe('ClaimIntake', () => {
     renderApplication(<ClaimIntake csrfToken={'c'.repeat(32)} />);
 
     const dropSurface = screen.getByRole('button', { name: /choose or drop more evidence here/i });
-    const logo = screen.getByRole('img', { name: 'ClaimBounty' });
+    const logo = screen.getByRole('img', { name: 'Peer2Paper' });
 
     expect(logo).toHaveAttribute('src', '/claimbounty-fox-loupe-icon.png');
     expect(dropSurface).toHaveAttribute('data-drag-active', 'false');

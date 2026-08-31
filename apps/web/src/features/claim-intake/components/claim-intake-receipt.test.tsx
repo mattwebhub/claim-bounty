@@ -83,7 +83,7 @@ describe('ClaimIntake receipt', () => {
     await user.type(screen.getByLabelText('Claim location'), 'Page 4');
     await user.click(screen.getByRole('button', { name: 'Create intake and upload' }));
 
-    const terms = await screen.findByRole('checkbox', { name: /I accept the ClaimBounty/ });
+    const terms = await screen.findByRole('checkbox', { name: /I accept the Peer2Paper/ });
     await waitFor(() => {
       expect(screen.getByRole('listitem')).toHaveTextContent('complete');
     });

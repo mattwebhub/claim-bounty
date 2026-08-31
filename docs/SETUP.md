@@ -1,4 +1,4 @@
-# ClaimBounty Setup
+# Peer2Paper Setup
 
 > **Status**: In-Development | **Updated**: 2026-08-31 | **Scope**: Public web preview, hosted application, and local scientific workflow
 
@@ -25,7 +25,7 @@ This path is useful for interface review. Actions that require the API will not 
 
 1. Copy `.env.example` to a local `.env` file.
 2. Replace every demonstration credential before exposing the stack beyond the local machine. Never commit `.env`.
-3. Start the ClaimBounty profile:
+3. Start the Peer2Paper services using the existing `claimbounty` compatibility profile:
 
    ```sh
    docker compose --project-name claimbounty-public --file infra/compose.yaml \
@@ -56,9 +56,9 @@ The intended Toone path is:
 1. Open Toone and create a project by selecting an empty directory.
 2. In that directory, create `claimbounty/input/case-bundle/`.
 3. Place the manuscript, data, code, supplementary materials, preregistration, environment files, and authorized supporting sources in that directory.
-4. Open **Explore Workflows** and select **micro1/ClaimBounty**.
-5. Import the workflow. The export installs the workflows, schemas, templates, and runner needed by ClaimBounty.
+4. Open **Explore Workflows** and select Peer2Paper under its current compatibility listing, **micro1/ClaimBounty**.
+5. Import the workflow. The export installs the workflows, schemas, templates, and runner needed by Peer2Paper.
 6. Bind the `case-bundle` input to `claimbounty/input/case-bundle/`.
 7. Review the inputs and run the parent workflow.
 
-The `micro1/ClaimBounty` listing and import must be verified against the release build before publication. If the listing is unavailable, import the repository package under `workflow/claimbounty-scientific-audit/` by following [REPRODUCE.md](REPRODUCE.md). Study-specific Python, R, system-library, and data requirements are separate from the hosted application prerequisites above.
+The Peer2Paper workflow is currently distributed under the compatibility listing `micro1/ClaimBounty`. Its listing and import must be verified against the release build before publication. If the listing is unavailable, import the repository package under `workflow/claimbounty-scientific-audit/` by following [REPRODUCE.md](REPRODUCE.md). Study-specific Python, R, system-library, and data requirements are separate from the hosted application prerequisites above.

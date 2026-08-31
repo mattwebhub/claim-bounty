@@ -1,16 +1,16 @@
-# ClaimBounty
+# Peer2Paper
 
-> **Status**: In Development | **Updated**: 2026-08-31 | **Scope**: ClaimBounty product and scientific-audit workflow
+> **Status**: In Development | **Updated**: 2026-08-31 | **Scope**: Peer2Paper product and scientific-audit workflow
 
-![ClaimBounty fox and loupe](apps/web/public/claimbounty-fox-loupe-icon.png)
+![Peer2Paper fox and loupe](apps/web/public/claimbounty-fox-loupe-icon.png)
 
-ClaimBounty turns a quantitative claim and its supporting research bundle into an independent, evidence-backed scientific audit. It brings the paper, data, code, environment, and supporting sources into one traceable workflow, then produces a decision package a researcher can inspect, share, and act on.
+[Peer2Paper](https://peer2paper.com) turns a quantitative claim and its supporting research bundle into an independent, evidence-backed scientific audit. It brings the paper, data, code, environment, and supporting sources into one traceable workflow, then produces a decision package a researcher can inspect, share, and act on.
 
 The product combines a secure web application for case intake and administration with a local [Toone](https://trytoone.com) workflow for scientific execution. Research code runs locally; the hosted service handles authorized intake, validation, and handoff.
 
 ## Who it is for
 
-ClaimBounty is built for empirical researchers, authors, research teams, journals, and organizations that need to challenge an important quantitative claim before publication or a consequential decision.
+Peer2Paper is built for empirical researchers, authors, research teams, journals, and organizations that need to challenge an important quantitative claim before publication or a consequential decision.
 
 ## The problem
 
@@ -18,12 +18,12 @@ A serious scientific review rarely stops at rerunning one script. A reviewer mus
 
 Today that work is fragmented across files, tools, people, and long-running agent sessions. Context is lost between stages, failures are difficult to resume, and the final report often obscures how each conclusion was reached.
 
-## How ClaimBounty works
+## How Peer2Paper works
 
-1. **Create a case.** Upload the manuscript, data, code, supplements, environment files, and authorized supporting sources through the ClaimBounty intake application.
+1. **Create a case.** Upload the manuscript, data, code, supplements, environment files, and authorized supporting sources through the Peer2Paper intake application.
 2. **Define the audit.** Identify the exact target claim and provide the permissions, privacy rules, scientific policy, and execution policy that govern the work.
 3. **Freeze the handoff.** An administrator validates the request and prepares an immutable, digest-bound export for local execution.
-4. **Run the scientific audit.** Import `micro1/ClaimBounty` from **Explore Workflows** in Toone and run the parent workflow. Seven coordinated routines, 19 agents, and 47 ordered steps handle case construction, reproduction, sensitivity analysis, evidence research, independent verification, adjudication, and delivery.
+4. **Run the scientific audit.** Import Peer2Paper from **Explore Workflows** using its current compatibility listing, `micro1/ClaimBounty`, and run the parent workflow. Seven coordinated routines, 19 agents, and 47 ordered steps handle case construction, reproduction, sensitivity analysis, evidence research, independent verification, adjudication, and delivery.
 5. **Review the decision package.** Inspect the verdict, supporting evidence, robustness results, consistency findings, prioritized corrections, reproduction record, and provenance.
 
 ## What the product delivers
@@ -41,13 +41,13 @@ The goal is not to replace scientific judgment. It is to make the evidence behin
 
 ## Product walkthrough
 
-Watch the [ClaimBounty product walkthrough](submission/recordings/claimbounty-submission-video.mp4) for a complete tour of the intake experience, workflow installation, execution model, and resulting audit package.
+Watch the [Peer2Paper product walkthrough](submission/recordings/claimbounty-submission-video.mp4) for a complete tour of the intake experience, workflow installation, execution model, and resulting audit package.
 
 For a deeper visual overview, open the [product guide](submission/reviewer/reviewer-guide.pdf).
 
 ## Product architecture
 
-ClaimBounty has three deliberate boundaries:
+Peer2Paper has three deliberate boundaries:
 
 | Surface                   | Responsibility                                                                                              |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------- |
@@ -83,9 +83,9 @@ To try the included example:
 
 1. Create an empty project in Toone.
 2. Copy the included **Moura et al. 2023, Heliconius Experiment 1** bundle from `examples/moura-2023-heliconius-exp1/` into the project.
-3. Open **Explore Workflows**, select **micro1/ClaimBounty**, and add it to the workspace.
+3. Open **Explore Workflows**, select Peer2Paper under its current compatibility listing, **micro1/ClaimBounty**, and add it to the workspace.
 4. Bind `case-bundle` to the example directory and provide the required audit, scientific, and execution policies.
-5. Review the bindings and run the parent ClaimBounty workflow.
+5. Review the bindings and run the parent Peer2Paper workflow.
 
 The export installs the complete workflow graph, schemas, templates, and local runner. Follow the [reproduction guide](docs/REPRODUCE.md) for exact commands and the repository-package fallback.
 
@@ -119,7 +119,7 @@ The [Improvement Changelog](IMPROVEMENT_CHANGELOG.md) records the major product 
 | `contracts`                             | HTTP and data contracts                                      |
 | `infra`                                 | Compose, Kubernetes, and object-storage configuration        |
 | `examples/moura-2023-heliconius-exp1`   | Licensed example paper, R code, and data                     |
-| `workflow/claimbounty-scientific-audit` | Installable ClaimBounty workflow package                     |
+| `workflow/claimbounty-scientific-audit` | Installable Peer2Paper workflow package                      |
 | `submission/recordings`                 | Product walkthrough and screened source footage              |
 | `submission/reviewer`                   | Product guide and generated integrity manifest               |
 | `submission/evidence`                   | Public engineering and evaluation evidence                   |

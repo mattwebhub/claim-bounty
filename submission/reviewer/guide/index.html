@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Reviewer guide for installing and evaluating the ClaimBounty scientific-audit workflow in Toone."
+      content="Product guide for installing and evaluating the Peer2Paper scientific-audit workflow in Toone."
     />
-    <title>ClaimBounty Reviewer Guide</title>
+    <title>Peer2Paper Product Guide</title>
     <link rel="stylesheet" href="guide.css" />
   </head>
   <body>
     <main>
       <section class="sheet cover" aria-labelledby="cover-title">
         <header class="sheet-header">
-          <span>ClaimBounty</span>
+          <span>Peer2Paper</span>
           <span>Reviewer guide</span>
         </header>
 
@@ -26,14 +26,14 @@
               An academic paper can look convincing while hiding problems across its manuscript,
               data, code, supplementary materials, or preregistration. Finding those problems after
               submission can mean major revisions, rejection, or months of avoidable work.
-              ClaimBounty gives you an independent scientific audit before the paper reaches
+              Peer2Paper gives you an independent scientific audit before the paper reaches
               reviewers.
             </p>
           </div>
           <img
             class="cover-mark"
             src="../../../apps/web/public/claimbounty-fox-loupe-icon.png"
-            alt="ClaimBounty fox looking through a magnifying glass"
+            alt="Peer2Paper fox looking through a magnifying glass"
           />
         </div>
 
@@ -65,7 +65,7 @@
         <p class="eyebrow">Five-minute reviewer path</p>
         <h2 id="review-path-title">Install the workflow, run the example, inspect the evidence.</h2>
         <p class="lede">
-          ClaimBounty’s scientific audit runs locally in <a href="https://trytoone.com">Toone</a>.
+          Peer2Paper’s scientific audit runs locally in <a href="https://trytoone.com">Toone</a>.
           This guide takes a reviewer from a clean installation through workflow import, one
           included scientific case, the agent trajectory, and the final decision package.
         </p>
@@ -81,10 +81,11 @@
           </div>
           <div class="minute">01:00</div>
           <div class="minute-copy">
-            <h3>Import ClaimBounty</h3>
+            <h3>Import Peer2Paper</h3>
             <p>
-              Create an empty Toone project, open <em>Explore Workflows</em>, select
-              <span class="path">micro1/ClaimBounty</span>, and import the complete workflow.
+              Create an empty Toone project, open <em>Explore Workflows</em>, select Peer2Paper
+              under its current compatibility listing <span class="path">micro1/ClaimBounty</span>,
+              and import the complete workflow.
             </p>
           </div>
           <div class="minute">02:00</div>
@@ -114,7 +115,7 @@
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide</span>
+          <span>Peer2Paper product guide</span>
           <span>02 / 13</span>
         </footer>
       </section>
@@ -128,7 +129,7 @@
         <p class="eyebrow">Choose the right path</p>
         <h2 id="review-modes-title">Four modes, four different claims.</h2>
 
-        <table aria-label="ClaimBounty review and execution modes">
+        <table aria-label="Peer2Paper review and execution modes">
           <thead>
             <tr>
               <th scope="col">Mode</th>
@@ -224,7 +225,7 @@ docker compose --project-name claimbounty-public \
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide</span>
+          <span>Peer2Paper product guide</span>
           <span>03 / 13</span>
         </footer>
       </section>
@@ -310,7 +311,7 @@ docker compose --project-name claimbounty-public \
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide</span>
+          <span>Peer2Paper product guide</span>
           <span>04 / 13</span>
         </footer>
       </section>
@@ -388,7 +389,7 @@ docker compose --project-name claimbounty-public \
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide</span>
+          <span>Peer2Paper product guide</span>
           <span>05 / 13</span>
         </footer>
       </section>
@@ -436,9 +437,9 @@ docker compose --project-name claimbounty-public \
             script, data, attribution, and CC BY 4.0 license.
           </li>
           <li>
-            <strong>Import ClaimBounty.</strong> Open <em>Explore Workflows</em>, select
-            <span class="path">micro1/ClaimBounty</span>, and import it. The release export should
-            install every packaged workflow and resource.
+            <strong>Import Peer2Paper.</strong> Open <em>Explore Workflows</em>, select its current
+            compatibility listing <span class="path">micro1/ClaimBounty</span>, and import it. The
+            release export should install every packaged workflow and resource.
           </li>
           <li>
             <strong>Bind the case.</strong> Select
@@ -447,10 +448,9 @@ docker compose --project-name claimbounty-public \
             and confirm every study-specific runtime.
           </li>
           <li>
-            <strong>Run the parent workflow.</strong> Review the bound inputs, start ClaimBounty,
-            and treat all supplied research code as untrusted. If the release listing is
-            unavailable, follow the repository fallback in
-            <span class="path">docs/REPRODUCE.md</span>.
+            <strong>Run the parent workflow.</strong> Review the bound inputs, start Peer2Paper, and
+            treat all supplied research code as untrusted. If the release listing is unavailable,
+            follow the repository fallback in <span class="path">docs/REPRODUCE.md</span>.
           </li>
         </ol>
 
@@ -480,7 +480,7 @@ node scripts/generate-public-manifests.mjs --check
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide</span>
+          <span>Peer2Paper product guide</span>
           <span>06 / 13</span>
         </footer>
       </section>
@@ -581,7 +581,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide</span>
+          <span>Peer2Paper product guide</span>
           <span>07 / 13</span>
         </footer>
       </section>
@@ -595,7 +595,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
         <p class="eyebrow">Repository root</p>
         <h2 id="commands-title">Run only the gate that answers the review question.</h2>
 
-        <table aria-label="ClaimBounty commands and expected outputs">
+        <table aria-label="Peer2Paper commands and expected outputs">
           <thead>
             <tr>
               <th scope="col">Goal</th>
@@ -689,7 +689,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide</span>
+          <span>Peer2Paper product guide</span>
           <span>08 / 13</span>
         </footer>
       </section>
@@ -770,7 +770,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide</span>
+          <span>Peer2Paper product guide</span>
           <span>09 / 13</span>
         </footer>
       </section>
@@ -842,7 +842,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide</span>
+          <span>Peer2Paper product guide</span>
           <span>10 / 13</span>
         </footer>
       </section>
@@ -861,7 +861,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
           the next stage through a reviewable checkpoint.
         </p>
 
-        <table aria-label="ClaimBounty workflow stages">
+        <table aria-label="Peer2Paper workflow stages">
           <thead>
             <tr>
               <th scope="col">Routine</th>
@@ -922,7 +922,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide</span>
+          <span>Peer2Paper product guide</span>
           <span>11 / 13</span>
         </footer>
       </section>
@@ -940,7 +940,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
         <p class="lede">
           Open the researcher-facing HTML or PDF beside the canonical audit JSON. Numbers, statuses,
           conclusions, and evidence references should agree exactly while the report keeps the
-          ClaimBounty black, cream, Georgia, and Inter design language.
+          Peer2Paper black, cream, Georgia, and Inter design language.
         </p>
 
         <table aria-label="Final artifact inspection matrix">
@@ -1014,7 +1014,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide</span>
+          <span>Peer2Paper product guide</span>
           <span>12 / 13</span>
         </footer>
       </section>
@@ -1116,7 +1116,7 @@ curl -fsSL <a href="https://chatgpt.com/codex/install.sh">https://chatgpt.com/co
         </div>
 
         <footer class="sheet-footer">
-          <span>ClaimBounty reviewer guide</span>
+          <span>Peer2Paper product guide</span>
           <span>13 / 13</span>
         </footer>
       </section>

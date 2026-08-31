@@ -5,7 +5,7 @@ import { AppShell } from '@/shared/ui';
 export function ApplicationLayout() {
   return (
     <AppShell
-      brand={<span className="brand-mark">ClaimBounty</span>}
+      brand={<span className="brand-mark">Peer2Paper</span>}
       brandIcon={
         <img
           className="brand-icon-image"
