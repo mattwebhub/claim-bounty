@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "id": "research-methods-and-evidence/www.bmj.com",
+  "routine_id": "research-methods-and-evidence",
+  "site": "www.bmj.com",
+  "status": "draft",
+  "last_updated": "2026-08-29T16:25:11.657Z",
+  "created_by": "research-and-insights/source-extractor",
+  "run_count": 0,
+  "params": {
+    "article_path": {
+      "type": "string",
+      "required": true,
+      "description": "BMJ article path after the domain, such as content/389/bmj-2024-081123"
+    }
+  },
+  "funnels": [
+    {
+      "id": "open_and_extract_article",
+      "name": "Open and extract BMJ article",
+      "description": "Open an authorized BMJ full-text article and extract its visible text and structure.",
+      "repeatable": true,
+      "steps": [
+        {
+          "id": "open_article",
+          "action": "navigate",
+          "url": "https://www.bmj.com/{{article_path}}"
+        },
+        {
+          "id": "extract_article",
+          "action": "extract",
+          "selector": "body",
+          "extractType": "text",
+          "output": "article_full_text"
+        }
+      ]
+    }
+  ]
+}

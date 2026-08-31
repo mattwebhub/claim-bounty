@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "domain": "www.cambridge.org",
+  "display_name": "Cambridge Core",
+  "logo_url": "https://www.cambridge.org/favicon.ico",
+  "last_updated": "2026-08-29T16:01:14.002Z",
+  "rate_limits": {
+    "min_delay_ms": 1500,
+    "max_delay_ms": 4000,
+    "max_requests_per_minute": 20,
+    "cooldown_after_error_ms": 10000
+  },
+  "pages": {
+    "journal_article_full_text": {
+      "selectors": {
+        "article_content": "body"
+      },
+      "description": "Journal article HTML text including headings, figures, tables, appendices, references, and access metadata"
+    }
+  },
+  "selector_history": []
+}

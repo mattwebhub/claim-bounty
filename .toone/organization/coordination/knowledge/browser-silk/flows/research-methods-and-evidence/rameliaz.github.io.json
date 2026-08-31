@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "id": "research-methods-and-evidence/rameliaz.github.io",
+  "routine_id": "research-methods-and-evidence",
+  "site": "rameliaz.github.io",
+  "status": "draft",
+  "last_updated": "2026-08-29T16:03:01.682Z",
+  "created_by": "research-and-insights/source-extractor",
+  "run_count": 0,
+  "params": {
+    "document_path": {
+      "type": "string",
+      "required": true,
+      "description": "Path to authorized PDF on the archive"
+    }
+  },
+  "funnels": [
+    {
+      "id": "open_pdf",
+      "name": "Open author-copy PDF",
+      "description": "Open an authorized author-copy PDF in the persistent browser for access verification and extraction.",
+      "repeatable": true,
+      "steps": [
+        {
+          "id": "open_document",
+          "action": "navigate",
+          "url": "https://rameliaz.github.io/{{document_path}}"
+        },
+        {
+          "id": "read_pdf_container",
+          "action": "extract",
+          "selector": "body",
+          "extractType": "text",
+          "output": "pdf_viewer_text"
+        }
+      ]
+    }
+  ]
+}

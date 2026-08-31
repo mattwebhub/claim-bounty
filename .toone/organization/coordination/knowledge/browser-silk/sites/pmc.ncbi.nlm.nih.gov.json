@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "domain": "pmc.ncbi.nlm.nih.gov",
+  "display_name": "PubMed Central",
+  "logo_url": "https://pmc.ncbi.nlm.nih.gov/favicon.ico",
+  "last_updated": "2026-08-29T15:56:11.461Z",
+  "rate_limits": {
+    "min_delay_ms": 1500,
+    "max_delay_ms": 4000,
+    "max_requests_per_minute": 20,
+    "cooldown_after_error_ms": 10000
+  },
+  "pages": {
+    "article_full_text": {
+      "selectors": {
+        "article_content": "body"
+      },
+      "description": "Stable visible full article content, including headings, tables, figures, supplements, and references"
+    }
+  },
+  "selector_history": []
+}

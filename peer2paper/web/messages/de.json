@@ -1,0 +1,479 @@
+{
+  "meta": {
+    "title": "Peer2Paper — Unabhängige Prüfungen wissenschaftlicher Aussagen",
+    "description": "Unabhängige Reproduktion, Robustheitstests und evidenzbasierte Urteile."
+  },
+  "nav": {
+    "primaryLabel": "Hauptnavigation",
+    "mobileLabel": "Mobile Navigation",
+    "menu": "Menü öffnen",
+    "how": "So funktioniert es",
+    "results": "Beispielergebnis",
+    "methodology": "Methodik",
+    "docs": "Dokumentation",
+    "signin": "Anmelden",
+    "start": "Audit anfragen"
+  },
+  "footer": {
+    "tagline": "Unabhängige, reproduzierbare Prüfungen wichtiger Forschungsaussagen.",
+    "product": "Produkt",
+    "how": "So funktioniert es",
+    "sample": "Beispielergebnis",
+    "methodology": "Methodik",
+    "request": "Audit anfragen",
+    "resources": "Ressourcen",
+    "docs": "Dokumentation",
+    "outputs": "Erwartete Ergebnisse",
+    "security": "Sicherheit",
+    "contact": "Kontakt",
+    "company": "Unternehmen",
+    "about": "Über uns",
+    "privacy": "Datenschutz",
+    "terms": "Bedingungen",
+    "signin": "Anmelden",
+    "rights": "Alle Rechte vorbehalten.",
+    "independence": "Evidenz vor Gewissheit."
+  },
+  "landing": {
+    "eyebrow": "Unabhängige wissenschaftliche Audits",
+    "titleStart": "Wissen, ob eine Aussage",
+    "titleEmphasis": "standhält",
+    "titleEnd": "bevor Sie darauf bauen.",
+    "lede": "Peer2Paper reproduziert publizierte Ergebnisse, prüft analytische Entscheidungen und liefert ein evidenzverknüpftes Urteil, das Ihr Team prüfen und wiederholen kann.",
+    "upload": {
+      "inputLabel": "Manuskript und Forschungsdateien",
+      "idle": "Manuskript hier ablegen",
+      "more": "Weitere Materialien hinzufügen",
+      "hover": "Mein Paper prüfen",
+      "accepted": "Akzeptiert: PDF, Word, Text, CSV, Excel, Statistikdaten, Code, Notebooks und ZIP. Bis zu 20 Dateien mit je 250 MB.",
+      "sizeError": "Jede Datei muss größer als 0 Byte und höchstens 250 MB sein.",
+      "totalError": "Der gesamte Upload darf höchstens 1 GB umfassen.",
+      "selectedFiles": "Ausgewählte Dateien",
+      "file": "Datei",
+      "remove": "{name} entfernen",
+      "localNotice": "Ihre Dateien bleiben bis zur sicheren Aufnahme in diesem Browser.",
+      "continue": "Sicher fortfahren"
+    },
+    "materials": {
+      "label": "Sie liefern",
+      "title": "Paper, Daten, Code und Zusatzmaterial",
+      "body": "Beginnen Sie mit dem vollständigen Datensatz, damit jede Aussage zur Quelle zurückverfolgt werden kann."
+    },
+    "primaryCta": "Audit anfragen",
+    "secondaryCta": "Beispiel ansehen",
+    "assurance1": "Unabhängige Prüfung",
+    "assurance2": "Wiederholbare Evidenz",
+    "assurance3": "Klare Grenzen",
+    "signalLabel": "Leistungsmerkmale",
+    "signal1Value": "Durchgängig",
+    "signal1Label": "Von Quelldateien zur Entscheidungsvorlage",
+    "signal2Value": "Evidenzverknüpft",
+    "signal2Label": "Jeder Befund verweist auf ein Artefakt",
+    "signal3Value": "Reproduzierbar",
+    "signal3Label": "Umgebung und Wiederholungsanleitung",
+    "signal4Value": "Menschlich geprüft",
+    "signal4Label": "Vor Auslieferung beurteilt",
+    "howKicker": "Ein rigoroser Weg",
+    "howTitle": "Von der strittigen Aussage zur prüfbaren Antwort.",
+    "howBody": "Wir fixieren zuerst die Frage, rekonstruieren die Analyse und trennen Reproduziertes von verbleibender Unsicherheit.",
+    "steps": [
+      {
+        "title": "Abgrenzen und fixieren",
+        "body": "Wir definieren Aussage, Zielwerte, Quellen, Rechte und Erfolgskriterien vor der Analyse."
+      },
+      {
+        "title": "Reproduzieren und testen",
+        "body": "Wir führen die Originalanalyse kontrolliert aus und prüfen begründbare Alternativen."
+      },
+      {
+        "title": "Verifizieren und beurteilen",
+        "body": "Unabhängige Kontrollen klären Befunde, bewahren Dissens und kalibrieren das Urteil."
+      },
+      {
+        "title": "Urteil erhalten",
+        "body": "Ein privates Entscheidungspaket vor der Einreichung."
+      }
+    ],
+    "resultKicker": "Ein nutzbares Ergebnis",
+    "resultTitle": "Das Urteil ist erst der Anfang.",
+    "resultBody": "Entscheider erhalten Klartext; technische Teams Zahlen, Evidenzgraph und Wiederholungspaket.",
+    "resultPoint1": "Berichtete und reproduzierte Werte nebeneinander",
+    "resultPoint2": "Materielle Sensitivität und Quellenkonflikte sichtbar",
+    "resultPoint3": "Alle Grenzen im finalen Paket erhalten",
+    "resultCta": "Beispielaudit erkunden",
+    "outputsKicker": "Ein Audit, mehrere Ansichten",
+    "outputsTitle": "Für jede Prüftiefe nützlich.",
+    "outputsBody": "Das Paket ist für Menschen lesbar und für Maschinen strukturiert.",
+    "outputs": [
+      {
+        "title": "Entscheidungsvorlage",
+        "body": "Klares Urteil, Vertrauen, Hauptbefunde und nächste Schritte."
+      },
+      {
+        "title": "Technischer Audit",
+        "body": "Methoden, Vergleiche, Sensitivität, Quellenprüfung und Grenzen."
+      },
+      {
+        "title": "Evidenzpaket",
+        "body": "Versioniertes JSON, Manifeste, Prüfsummen und Wiederholungsanleitung."
+      },
+      {
+        "title": "Konsistenzbefunde",
+        "body": "Konflikte zwischen Paper, Daten, Code und Ergebnis."
+      },
+      {
+        "title": "Priorisierte Korrekturen",
+        "body": "Die wichtigsten Korrekturen vor der Einreichung."
+      }
+    ],
+    "trustKicker": "Vertrauen durch Design",
+    "trustTitle": "Keine Blackbox-Gewissheit.",
+    "trustBody": "Peer2Paper baut auf Herkunft, begrenzten Aussagen und sichtbarer Unsicherheit auf.",
+    "trustCta": "Methodik lesen",
+    "principles": [
+      {
+        "title": "Herkunft zuerst",
+        "body": "Befunde verweisen auf fixierte Eingaben, Läufe und Prüfentscheidungen."
+      },
+      {
+        "title": "Wissenschaftliche Änderungen explizit",
+        "body": "Technische Reparaturen ändern nie stillschweigend die Forschungsfrage."
+      },
+      {
+        "title": "Grenzen bleiben sichtbar",
+        "body": "Fehlende Eingaben, Konflikte und unvollständige Vergleiche bleiben erhalten."
+      }
+    ],
+    "ctaKicker": "Mit der exakten Aussage beginnen",
+    "ctaTitle": "Geben Sie Ihrer nächsten Forschungsentscheidung ein stärkeres Fundament.",
+    "ctaBody": "Reichen Sie Paper, Materialien und die anstehende Entscheidung ein.",
+    "ctaButton": "Anfrage erstellen"
+  },
+  "result": {
+    "completed": "Audit abgeschlossen",
+    "verdict": "Urteil",
+    "verdictValue": "Quelle verifiziert; wesentliche Sensitivität",
+    "confidence": "Vertrauen",
+    "high": "Hoch",
+    "claim": "Bei ungeimpften republikanischen oder republikanisch orientierten Teilnehmenden erhöht eine Empfehlung republikanischer Eliten die Impfabsicht gegenüber einer Empfehlung demokratischer Eliten.",
+    "comparisonLabel": "Berichtetes Ergebnis und verifizierter Auditpfad",
+    "metric": "Metrik",
+    "estimate": "Schätzwert",
+    "interval": "Intervall",
+    "reported": "Berichtet",
+    "audited": "Auditpfad",
+    "brief": "Entscheidungsvorlage",
+    "replay": "Wiederholungspaket",
+    "explore": "Vollständiges Ergebnis"
+  },
+  "resultsPage": {
+    "eyebrow": "Öffentliche Fallstudie",
+    "title": "So sieht ein Peer2Paper-Ergebnis aus.",
+    "intro": "Diese bereinigte öffentliche Fallstudie veröffentlicht die aggregierten Befunde und Einschränkungen von Peer2Paper. Die zugrunde liegenden Forschungsmaterialien und internen Auditunterlagen werden nicht weitergegeben.",
+    "findingsKicker": "Wichtigste Befunde",
+    "findingsTitle": "Was die Evidenz stützt",
+    "findings": [
+      "Der Bericht der Primärquelle wurde hinsichtlich Koeffizient, Intervall, Teststatistik und p-Wert mit ausdrücklich genannten Einschränkungen verifiziert; dies ist keine unabhängige statistische Replikation.",
+      "Die statistische Unterstützung ändert sich zwischen verifizierten adjustierten und unadjustierten Analysepfaden, obwohl beide Schätzwerte positiv bleiben.",
+      "Das Hauptpaper und die ergänzende Dokumentation widersprechen sich hinsichtlich der in die Analyse einbezogenen Population."
+    ],
+    "packageKicker": "Lieferpaket",
+    "packageTitle": "Erwartete Audit-Artefakte",
+    "brief": "Entscheidungs- und technische Berichte",
+    "machine": "Maschinenlesbares Ergebnis",
+    "replay": "Evidenz- und Wiederholungspaket",
+    "demoNotice": "Das öffentliche Repository enthält den aggregierten JSON-Datensatz; eingeschränkte Quellen- und Wiederholungspakete bleiben ausgeschlossen.",
+    "disclosureTitle": "Warum diese Formulierung wichtig ist",
+    "disclosure": "Das kanonische Audit stufte die numerische Reproduktion als nicht beurteilbar ein. Das öffentliche Urteil unterscheidet daher zwischen verifizierter Quellenangabe, begrenzter Robustheitssensitivität und ungelösten Quellenkonflikten.",
+    "paperSource": "Primärpaper",
+    "materialsSource": "Von den Autoren hinterlegte Materialien"
+  },
+  "docsPage": {
+    "contents": "Auf dieser Seite",
+    "start": "Erste Schritte",
+    "workflow": "Ablauf",
+    "outputs": "Erwartete Ergebnisse",
+    "statuses": "Statusbegriffe",
+    "privacy": "Daten und Datenschutz",
+    "eyebrow": "Dokumentation",
+    "title": "Von der Anfrage zum Auditpaket.",
+    "intro": "Was Sie bereitstellen, was während der Prüfung geschieht und was Peer2Paper genau liefert.",
+    "beforeTitle": "Vor dem Einreichen",
+    "beforeBody": "Eine vollständige Anfrage verringert Unklarheiten und ermöglicht einen Auditbeginn mit festgelegtem Umfang.",
+    "inputs": [
+      "Das Paper, Preprint oder Dokument mit der Aussage",
+      "Analysecode, Daten und ergänzende Materialien, sofern verfügbar",
+      "Die genaue Aussage oder das Ergebnis, von dem Ihre Entscheidung abhängt",
+      "Anforderungen an Zugang, Lizenz, Vertraulichkeit und Aufbewahrung"
+    ],
+    "workflowTitle": "Der Auditablauf",
+    "stages": [
+      {
+        "title": "Aufnahme und Vorprüfung",
+        "body": "Wir bestätigen Umfang, Berechtigungen, Dateiintegrität und ob die bereitgestellten Materialien das angeforderte Audit ermöglichen."
+      },
+      {
+        "title": "Fixierung der Fallstudie",
+        "body": "Aussagen, Zielgrößen, Datensätze, Codepfade und Erfolgstoleranzen werden zu einem versionierten Bewertungsfall."
+      },
+      {
+        "title": "Ausführung und Robustheit",
+        "body": "Der ursprüngliche Arbeitsablauf wird reproduziert, technische Korrekturen werden protokolliert und genehmigte Sensitivitätspfade ausgewertet."
+      },
+      {
+        "title": "Verifizierung und Auslieferung",
+        "body": "Befunde werden unabhängig geprüft, Evidenzverknüpfungen kontrolliert und die Ergebnisse für Stakeholder und technische Teams zusammengestellt."
+      }
+    ],
+    "outputsTitle": "Erwartete Ergebnisse",
+    "outputsBody": "Jedes abgeschlossene Audit ist darauf ausgelegt, vorbehaltlich von Zugangs- und Lizenzbeschränkungen die folgenden Ansichten bereitzustellen.",
+    "briefTitle": "Ergebnisübersicht",
+    "briefBody": "Urteil, Konfidenz, zentrale Vergleiche, Einschränkungen und Maßnahmen in lesbarem HTML/PDF.",
+    "jsonTitle": "Strukturiertes Ergebnis",
+    "jsonBody": "Versionierte Felder für den Status der Aussage, reproduzierte Größen, Sensitivitätsbefunde und Provenienz.",
+    "evidenceTitle": "Evidenzmanifest",
+    "evidenceBody": "Ein gehashtes Verzeichnis, das Aussagen und Befunde mit Eingaben, Ausführungen und Prüfobjekten verknüpft.",
+    "replayTitle": "Wiederholungsanleitung",
+    "replayBody": "Umgebungsdetails, Ausführungsanweisungen und Prüfungen zur Verifizierung geeigneter Ergebnisse.",
+    "statusesTitle": "So sind Statusbegriffe zu verstehen",
+    "statusesBody": "Der Status beschreibt die gewonnene Evidenz, nicht das Ansehen eines Papers oder den Charakter seiner Autoren.",
+    "statusReproduced": "Reproduziert",
+    "statusReproducedBody": "Alle erforderlichen Zielgrößen entsprachen bei einer zulässigen Ausführung der festgelegten Toleranz.",
+    "statusPartial": "Teilweise reproduziert",
+    "statusPartialBody": "Einige erforderliche Größen stimmten überein, während andere nicht vergleichbar waren, fehlten oder außerhalb der Toleranz lagen.",
+    "statusNot": "Nicht beurteilbar",
+    "statusNotBody": "Die verfügbaren Dateien, Berechtigungen oder Ausführungsbedingungen ermöglichten keinen gültigen Vergleich.",
+    "privacyTitle": "Daten, Datenschutz und eingeschränkte Materialien",
+    "privacyBody": "Anfragen sollten nur Daten enthalten, zu deren Weitergabe Sie berechtigt sind. Eingeschränkte Inhalte bleiben von öffentlichen Demonstrationen getrennt, und Ergebnisse richten sich nach den Freigabebeschränkungen der jeweiligen Anfrage.",
+    "privacyCta": "Sicherheitsübersicht lesen",
+    "readyTitle": "Bereit, den Fall zu definieren?",
+    "readyBody": "Erstellen Sie ein Konto und reichen Sie die genaue Aussage ein, von der Ihre Entscheidung abhängt.",
+    "readyCta": "Audit anfragen"
+  },
+  "methodologyPage": {
+    "eyebrow": "Methodik",
+    "title": "Eine Evidenzkette, nicht nur eine einzelne Wiederholung.",
+    "intro": "Unser Ablauf trennt Quellenverständnis, numerische Reproduktion, Robustheitsanalyse und wissenschaftliche Beurteilung, damit jede Schlussfolgerung eine sichtbare Grundlage hat.",
+    "phases": [
+      {
+        "title": "Recherche und Quellenverifizierung",
+        "body": "Die primäre Aussage bestimmen, maßgebliche Quellen auffinden, Versionen abgleichen und dokumentieren, was vorhanden ist, fehlt oder sich widerspricht.",
+        "evidence": "Ergebnisse: Quellenregister, Aussageprotokolle, Paper- und Codezuordnungen"
+      },
+      {
+        "title": "Fixierte Fallstudie",
+        "body": "Die Frage in einen versionierten Fall mit Zielwerten, Toleranzen, Datensatzrollen, zulässigen Transformationen und Zugangsbeschränkungen überführen.",
+        "evidence": "Ergebnisse: fixierter Fall, Artefaktregister, Evidenzgraph"
+      },
+      {
+        "title": "Kontrollierte Reproduktion",
+        "body": "Die Originalanalyse mit erfassten Umgebungsdetails ausführen. Technische Korrekturen von wissenschaftlichen Änderungen trennen und jeden Versuch bewahren.",
+        "evidence": "Ergebnisse: Ausführungsprofil, Prüfpunkte, Vergleichsprotokolle"
+      },
+      {
+        "title": "Gesteuerte Robustheit",
+        "body": "Ein begrenztes Register vertretbarer Entscheidungen auswerten, statt im Verborgenen nach einem bevorzugten Ergebnis zu suchen.",
+        "evidence": "Ergebnisse: Variantenregister, Robustheitskarte, Fragilitätsbefunde"
+      },
+      {
+        "title": "Unabhängige Verifizierung",
+        "body": "Numerische und methodische Befunde unabhängig prüfen, Konflikte klären und ungelöste Einwände bewahren.",
+        "evidence": "Ergebnisse: Prüfbeobachtungen, Verifizierungsbeleg, Beurteilungspaket"
+      },
+      {
+        "title": "Zielgruppengerechte Auslieferung",
+        "body": "Aus demselben fixierten Ergebnis eine Entscheidungsvorlage und ein technisches Evidenzpaket erstellen, wobei Einschränkungen in jeder Ansicht erhalten bleiben.",
+        "evidence": "Ergebnisse: Bericht, JSON, Manifeste, Wiederholungspaket"
+      }
+    ],
+    "limitsTitle": "Methodische Zurückhaltung",
+    "limitsBody": "Peer2Paper berichtet, was die bereitgestellte und verifizierte Evidenz stützen kann. Eine teilweise Wiederholung wird weder zur allgemeingültigen Aussage erhoben noch wird statistische Signifikanz als einziges Kriterium behandelt; ungelöste Zugangs- und Dokumentationsgrenzen bleiben sichtbar."
+  },
+  "info": {
+    "about": {
+      "eyebrow": "Über uns",
+      "title": "Bessere Evidenz für folgenreiche Entscheidungen.",
+      "intro": "Peer2Paper soll die Verlässlichkeit wissenschaftlicher Aussagen prüfbarer machen, bevor Organisationen danach handeln.",
+      "sections": [
+        {
+          "title": "Was wir tun",
+          "body": "Wir verbinden Reproduzierbarkeitsengineering, statistische Prüfung und Quellenverifizierung in einem nachvollziehbaren Auditablauf."
+        },
+        {
+          "title": "Für wen es gedacht ist",
+          "body": "Forschungsteams, Förderorganisationen, politische Institutionen, Journalisten und Unternehmen nutzen Peer2Paper, wenn ein veröffentlichtes Ergebnis eine Entscheidung wesentlich beeinflusst."
+        },
+        {
+          "title": "Unser Maßstab",
+          "body": "Wir bevorzugen transparente Unsicherheit gegenüber selbstsicherer Vereinfachung. Befunde bleiben mit Evidenz, Prüfung und ausdrücklichen Einschränkungen verknüpft."
+        }
+      ]
+    },
+    "security": {
+      "eyebrow": "Sicherheit",
+      "title": "Forschungsmaterialien verdienen einen sorgfältigen Umgang.",
+      "intro": "Die Webanwendung nutzt serververwaltete Sitzungen, Autorisierung auf Zeilenebene und anfragespezifische Freigabebeschränkungen.",
+      "sections": [
+        {
+          "title": "Authentifizierung",
+          "body": "Die Anmeldung per E-Mail und Google wird von Supabase Auth verarbeitet. Sitzungen werden in sicheren Cookies gespeichert und auf dem Server aktualisiert; OAuth-Geheimnisse werden niemals an den Browser ausgeliefert."
+        },
+        {
+          "title": "Datenisolation",
+          "body": "Row Level Security stellt sicher, dass Nutzer ausschließlich ihre eigenen Auditanfragen lesen und erstellen können. Administrative Dienstzugangsdaten dürfen nur serverseitig vorliegen."
+        },
+        {
+          "title": "Verantwortungsvolle Offenlegung",
+          "body": "Melden Sie eine vermutete Schwachstelle an den konfigurierten Rechts- oder Sicherheitskontakt. Fügen Sie der ersten Nachricht keine sensiblen Forschungsdaten bei."
+        }
+      ]
+    },
+    "privacy": {
+      "eyebrow": "Datenschutz",
+      "title": "Datenschutzhinweis",
+      "intro": "Dieser Hinweis beschreibt die für den Betrieb von Peer2Paper erforderlichen Daten und die für den Produktivbetrieb erwarteten Kontrollen.",
+      "sections": [
+        {
+          "title": "Von uns verarbeitete Daten",
+          "body": "Wir verarbeiten Kontokennungen, Authentifizierungsereignisse, Angaben zu Auditanfragen und die Forschungsmaterialien, die Sie bewusst bereitstellen. Betriebsprotokolle sollten Quelldaten und sensible Inhalte vermeiden."
+        },
+        {
+          "title": "Zweck und Speicherdauer",
+          "body": "Wir verwenden diese Daten, um Nutzer zu authentifizieren, angeforderte Audits bereitzustellen, den Dienst zu sichern und rechtliche Pflichten zu erfüllen. Die Aufbewahrung richtet sich nach der Vereinbarung zur Anfrage und dem konfigurierten Löschplan."
+        },
+        {
+          "title": "Ihre Wahlmöglichkeiten",
+          "body": "Je nach geltendem Recht können Sie Auskunft, Berichtigung, Export oder Löschung verlangen. Wenden Sie sich an die vom Betreiber konfigurierte Adresse."
+        },
+        {
+          "title": "Auftragsverarbeiter und Übermittlungen",
+          "body": "Supabase und der Hostinganbieter verarbeiten Dienstdaten unter ihren vertraglichen Schutzmaßnahmen. Ein Produktivbetreiber muss vor dem Start seine rechtliche Identität, Region und aktuelle Liste der Auftragsverarbeiter veröffentlichen."
+        }
+      ]
+    },
+    "terms": {
+      "eyebrow": "Rechtliches",
+      "title": "Nutzungsbedingungen",
+      "intro": "Diese grundlegenden Bedingungen erläutern die zulässige Nutzung; vor dem Produktivstart ist eine Prüfung durch die Rechtsberatung des Betreibers erforderlich.",
+      "sections": [
+        {
+          "title": "Berechtigte Einreichungen",
+          "body": "Sie müssen berechtigt sein, jedes eingereichte Paper, jeden Datensatz, jede Codebasis und jeden Zugang bereitzustellen, und die geltenden Lizenz-, Vertraulichkeits- und Aufbewahrungsbeschränkungen beschreiben."
+        },
+        {
+          "title": "Wissenschaftlicher Geltungsbereich",
+          "body": "Ein Audit ist eine evidenzbasierte Bewertung einer definierten Aussage und der bereitgestellten Materialien, keine rechtliche, medizinische, finanzielle oder regulatorische Beratung."
+        },
+        {
+          "title": "Zulässige Nutzung",
+          "body": "Reichen Sie keine rechtswidrigen Inhalte, Schadcode, unnötigen personenbezogenen Daten oder Inhalte ein, die der Identifizierung geschützter Forschungsteilnehmender dienen."
+        },
+        {
+          "title": "Ergebnisse und Einschränkungen",
+          "body": "Freigabe- und Wiederverwendungsrechte richten sich nach den zugrunde liegenden Materialien und der Vereinbarung zur Anfrage. Ergebnisse behalten wesentliche Unsicherheiten und dürfen nicht über ihren dokumentierten Geltungsbereich hinaus dargestellt werden."
+        }
+      ]
+    }
+  },
+  "auth": {
+    "asideEyebrow": "Evidenz-Arbeitsraum",
+    "signinTitle": "Willkommen zurück bei Ihren Audits.",
+    "signupTitle": "Beginnen Sie mit einer prüfenswerten Aussage.",
+    "signinIntro": "Öffnen Sie Ihren Arbeitsraum, verfolgen Sie Prüfungen und laden Sie fertige Pakete.",
+    "signupIntro": "Erstellen Sie einen sicheren Raum für Anfragen und deren Audit-Trail.",
+    "quote": "Die nützliche Antwort lautet nicht nur, ob sich eine Zahl erneut berechnen lässt, sondern was genau der Prüfung standgehalten hat.",
+    "quoteBy": "Prüfgrundsatz von Peer2Paper",
+    "welcome": "Anmelden",
+    "create": "Konto erstellen",
+    "noAccount": "Neu bei Peer2Paper?",
+    "hasAccount": "Bereits registriert?",
+    "signupLink": "Konto erstellen",
+    "signinLink": "Anmelden",
+    "google": "Mit Google fortfahren",
+    "or": "oder mit E-Mail fortfahren",
+    "name": "Name",
+    "namePlaceholder": "Ihr Name",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "passwordPlaceholder": "Mindestens 8 Zeichen",
+    "forgot": "Passwort vergessen?",
+    "signinButton": "Anmelden",
+    "signupButton": "Konto erstellen",
+    "working": "Bitte warten…",
+    "legalStart": "Mit dem Fortfahren stimmen Sie den",
+    "terms": "Bedingungen",
+    "and": "und dem",
+    "privacy": "Datenschutzhinweis zu",
+    "checkEmail": "Prüfen Sie Ihre E-Mail.",
+    "recovery": "Kontowiederherstellung",
+    "forgotTitle": "Passwort zurücksetzen",
+    "forgotIntro": "Geben Sie Ihre E-Mail ein; falls ein Konto besteht, senden wir einen sicheren Link.",
+    "resetButton": "Link senden",
+    "backSignin": "Zur Anmeldung",
+    "updateTitle": "Neues Passwort wählen",
+    "updateIntro": "Nutzen Sie mindestens acht Zeichen und kein wiederverwendetes Passwort.",
+    "newPassword": "Neues Passwort",
+    "updateButton": "Passwort ändern",
+    "errors": {
+      "not_configured": "Die Authentifizierung ist für diese Bereitstellung noch nicht konfiguriert.",
+      "missing_fields": "Geben Sie Ihre E-Mail-Adresse und Ihr Passwort ein.",
+      "invalid_credentials": "Die E-Mail-Adresse oder das Passwort ist falsch.",
+      "invalid_signup": "Verwenden Sie eine gültige E-Mail-Adresse und ein Passwort mit mindestens acht Zeichen.",
+      "already_exists": "Für diese E-Mail-Adresse besteht bereits ein Konto.",
+      "signup_failed": "Das Konto konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
+      "oauth_failed": "Die Google-Anmeldung konnte nicht gestartet werden. Bitte versuchen Sie es erneut.",
+      "callback_failed": "Der Anmeldelink ist ungültig oder abgelaufen.",
+      "generic": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    }
+  },
+  "dashboard": {
+    "setupTitle": "Supabase verbinden, um den Arbeitsraum zu aktivieren",
+    "setupBody": "Kopieren Sie die Umgebungsvorlage, ergänzen Sie öffentliche Werte und führen Sie die Migration aus.",
+    "audits": "Audits",
+    "newRequest": "Neue Anfrage",
+    "signout": "Abmelden",
+    "workspace": "Ihr Arbeitsraum",
+    "title": "Audit-Anfragen",
+    "emptyTitle": "Noch keine Anfragen",
+    "emptyBody": "Definieren Sie die Aussage und verlinken Sie Paper und Materialien.",
+    "emptyCta": "Erste Anfrage erstellen",
+    "notices": {
+      "requestCreated": "Anfrage gespeichert.",
+      "passwordUpdated": "Passwort aktualisiert."
+    },
+    "statuses": {
+      "submitted": "Eingereicht",
+      "in_review": "In Prüfung",
+      "running": "Läuft",
+      "completed": "Abgeschlossen",
+      "needs_input": "Eingabe nötig"
+    }
+  },
+  "submit": {
+    "eyebrow": "Neue Audit-Anfrage",
+    "title": "Definieren Sie die Aussage vor Beginn.",
+    "intro": "Eine präzise Anfrage beschleunigt die Vorprüfung und schafft eine belastbare Grenze.",
+    "requirements": [
+      "Eine entscheidungsrelevante Aussage nennen",
+      "Paper und vorhandene Materialien verlinken",
+      "Zugangs- und Lizenzgrenzen beschreiben",
+      "Keine Zugangsdaten oder unnötigen Personendaten senden"
+    ],
+    "privacy": "Die Anfrage ist dank Row Level Security nur für Ihr Konto sichtbar.",
+    "formTitle": "Anfragedetails",
+    "formIntro": "Der Umfang kann nach Aufnahme präzisiert werden.",
+    "error": "Anfrage konnte nicht gespeichert werden.",
+    "projectTitle": "Projekttitel",
+    "projectPlaceholder": "z. B. Prüfung einer Impfaussage",
+    "claim": "Exakte Aussage",
+    "claimPlaceholder": "Population, Intervention oder Exposition, Vergleich und Ergebnis…",
+    "claimHelp": "Nutzen Sie den Wortlaut, von dem Ihre Entscheidung abhängt.",
+    "paperUrl": "Paper-URL",
+    "materialsUrl": "Code-/Daten-URL",
+    "notes": "Kontext und Grenzen",
+    "notesPlaceholder": "Frist, Zugang, bekannte Probleme…",
+    "submitButton": "Anfrage senden",
+    "submitting": "Wird gespeichert…",
+    "agreement": "Die Einreichung erstellt einen Aufnahmedatensatz. Umfang, Preis, Transfer und Aufbewahrung werden vor Ausführung bestätigt."
+  }
+}

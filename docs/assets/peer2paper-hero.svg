@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title description">
+  <title id="title">Peer2Paper</title>
+  <desc id="description">A warm editorial Peer2Paper banner inviting researchers to find weaknesses in a paper before peer review.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f5f2eb"/>
+      <stop offset="1" stop-color="#ebe7de"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#173e31" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#173e31" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#071d16" flood-opacity=".14"/>
+    </filter>
+    <filter id="invert-mark">
+      <feColorMatrix values="-1 0 0 0 1  0 -1 0 0 1  0 0 -1 0 1  0 0 0 1 0"/>
+    </filter>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#173e31" stroke-opacity=".035"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="560" rx="28" fill="url(#background)"/>
+  <rect width="1200" height="560" rx="28" fill="url(#grid)"/>
+  <circle cx="950" cy="315" r="360" fill="url(#glow)"/>
+  <path d="M846 107c-92 14-156 88-161 177-5 89 48 171 132 202 77 28 170 4 217-62 41-58 47-142 13-204-36-66-116-125-201-113Z" fill="none" stroke="#173e31" stroke-width="2" stroke-opacity=".055"/>
+  <path d="M846 147c-64 10-113 61-119 126-7 70 31 136 95 164 61 27 135 10 177-40 38-45 49-113 25-168-26-59-101-94-178-82Z" fill="none" stroke="#173e31" stroke-width="2" stroke-opacity=".045"/>
+
+  <g transform="translate(70 68)">
+    <circle cx="27" cy="27" r="27" fill="#090909"/>
+    <image width="54" height="54" href="data:image/png;base64,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"/>
+    <text x="68" y="39" fill="#090909" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" letter-spacing="-1.2">Peer2Paper</text>
+  </g>
+
+  <g transform="translate(70 176)">
+    <text fill="#173e31" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="2.3">PRE-SUBMISSION SCIENTIFIC AUDITS</text>
+    <text y="68" fill="#10251d" font-family="Georgia,serif" font-size="59" font-weight="400" letter-spacing="-2.5">Find the weakness</text>
+    <text y="126" fill="#10251d" font-family="Georgia,serif" font-size="59" font-weight="400" letter-spacing="-2.5">in your paper before</text>
+    <text y="184" fill="#10251d" font-family="Georgia,serif" font-size="59" font-weight="400" letter-spacing="-2.5">reviewers do.</text>
+    <text y="229" fill="#515953" font-family="Inter,Arial,sans-serif" font-size="16">Reproduce the central claim. Test its robustness. Fix what matters.</text>
+    <g transform="translate(0 264)">
+      <rect width="176" height="46" rx="6" fill="#173e31"/>
+      <text x="88" y="29" text-anchor="middle" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700">peer2paper.com</text>
+    </g>
+  </g>
+
+  <g transform="translate(728 166)" filter="url(#shadow)">
+    <rect width="400" height="286" rx="10" fill="#f0ede6" stroke="#090909" stroke-width="2"/>
+    <g transform="translate(176 62)">
+      <path d="M0 24v-9C0 7 7 0 15 0h50c8 0 15 7 15 15v9" fill="none" stroke="#173e31" stroke-width="5" stroke-linecap="round"/>
+      <path d="M13 23h54v42H13z" fill="none" stroke="#173e31" stroke-width="5"/>
+      <path d="M27 36h26M27 48h26" stroke="#173e31" stroke-width="4" stroke-linecap="round" opacity=".55"/>
+      <path d="M40 65v20m-14 0h28" stroke="#173e31" stroke-width="5" stroke-linecap="round"/>
+    </g>
+    <text x="200" y="178" text-anchor="middle" fill="#090909" font-family="Inter,Arial,sans-serif" font-size="20" font-weight="700">Drop your manuscript here</text>
+    <text x="200" y="215" text-anchor="middle" fill="#5c625e" font-family="Inter,Arial,sans-serif" font-size="12">Paper · data · code · supplementary files</text>
+    <text x="200" y="242" text-anchor="middle" fill="#173e31" font-family="Inter,Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.1">PRIVATE UNTIL YOU CONTINUE</text>
+  </g>
+</svg>

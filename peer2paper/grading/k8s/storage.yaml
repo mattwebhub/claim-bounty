@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grader-keys
+  namespace: peer2paper
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 256Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grader-receipts
+  namespace: peer2paper
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://peer2paper.com/schemas/validation-question-contract.schema.json",
+  "title": "Peer2Paper visible validation question contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "case_id", "targets"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "case_id": { "$ref": "#/$defs/identifier" },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 512,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "question",
+          "answer_type",
+          "producer_stage",
+          "evidence_requirement"
+        ],
+        "properties": {
+          "id": { "$ref": "#/$defs/identifier" },
+          "question": { "type": "string", "minLength": 1 },
+          "answer_type": {
+            "enum": ["integer", "number", "string", "boolean"]
+          },
+          "producer_stage": {
+            "enum": [
+              "study_case",
+              "reproduction",
+              "robustness",
+              "research",
+              "verification",
+              "delivery"
+            ]
+          },
+          "evidence_requirement": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    }
+  }
+}

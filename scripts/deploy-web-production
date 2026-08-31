@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repository_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+web_root="${repository_root}/peer2paper/web"
+project_link="${repository_root}/.vercel/project.json"
+
+if [[ ! -f "${web_root}/package.json" ]]; then
+  echo "error: expected the public web app at ${web_root}" >&2
+  exit 1
+fi
+
+if [[ ! -f "${project_link}" ]]; then
+  echo "error: ${project_link} is missing; run 'vercel link' once from the repository root" >&2
+  exit 1
+fi
+
+if ! command -v vercel >/dev/null 2>&1; then
+  echo "error: the Vercel CLI is not installed" >&2
+  exit 1
+fi
+
+echo "Running the public-site release gate..."
+npm --prefix "${web_root}" run ci
+
+deployment_root="$(mktemp -d "${TMPDIR:-/tmp}/peer2paper-vercel.XXXXXX")"
+cleanup() {
+  if [[ -n "${deployment_root:-}" && -d "${deployment_root}" && "${deployment_root}" == *peer2paper-vercel.* ]]; then
+    rm -rf -- "${deployment_root}"
+  fi
+}
+trap cleanup EXIT
+
+mkdir -p "${deployment_root}/peer2paper/web" "${deployment_root}/.vercel"
+rsync -a \
+  --exclude='.DS_Store' \
+  --exclude='.git' \
+  --exclude='.next' \
+  --exclude='.vercel' \
+  --exclude='node_modules' \
+  --include='.env.example' \
+  --exclude='.env*' \
+  "${web_root}/" "${deployment_root}/peer2paper/web/"
+cp "${project_link}" "${deployment_root}/.vercel/project.json"
+
+echo "Deploying the isolated public web bundle to production..."
+(
+  cd "${deployment_root}"
+  vercel deploy --prod --yes
+)
+

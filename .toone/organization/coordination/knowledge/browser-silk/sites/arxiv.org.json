@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "domain": "arxiv.org",
+  "display_name": "arXiv",
+  "logo_url": "https://arxiv.org/favicon.ico",
+  "last_updated": "2026-08-29T16:00:32.236Z",
+  "rate_limits": {
+    "min_delay_ms": 1500,
+    "max_delay_ms": 4000,
+    "max_requests_per_minute": 20,
+    "cooldown_after_error_ms": 10000
+  },
+  "pages": {
+    "abstract_record": {
+      "selectors": {
+        "record_content": "body"
+      },
+      "description": "Stable article metadata, abstract, version history, and links"
+    },
+    "article_full_text": {
+      "selectors": {
+        "article_content": "body"
+      },
+      "description": "Full HTML article text with section headings, equations, tables, figures, appendices, and references"
+    }
+  },
+  "selector_history": []
+}

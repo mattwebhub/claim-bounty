@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="610" viewBox="0 0 1200 610" role="img" aria-labelledby="title description">
+  <title id="title">Peer2Paper pre-submission audit workflow</title>
+  <desc id="description">Researchers provide a paper and its materials, then Peer2Paper frames the claim, reproduces and stress-tests it, independently verifies the findings, and delivers a private verdict.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#090909"/>
+      <stop offset="1" stop-color="#10251d"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000" flood-opacity=".24"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="610" rx="24" fill="url(#background)"/>
+  <text x="64" y="67" fill="#f0ede6" font-family="Georgia,serif" font-size="42" letter-spacing="-1.5">See the full audit before reviewers see the paper.</text>
+  <text x="64" y="101" fill="#f0ede6" fill-opacity=".54" font-family="Inter,Arial,sans-serif" font-size="13">From research materials to a private, evidence-backed claim verdict.</text>
+
+  <g transform="translate(64 144)" font-family="Inter,Arial,sans-serif">
+    <g>
+      <text y="25" fill="#f0ede6" fill-opacity=".46" font-size="11" font-family="ui-monospace,monospace" letter-spacing="1.3">YOU PROVIDE</text>
+      <text x="148" y="27" fill="#f0ede6" font-family="Georgia,serif" font-size="24">Paper, data, code, and supplementary information</text>
+      <text x="685" y="25" fill="#f0ede6" fill-opacity=".58" font-size="13">The complete record behind the result.</text>
+      <path d="M0 55H1072" stroke="#f0ede6" stroke-opacity=".18"/>
+    </g>
+
+    <g transform="translate(0 76)">
+      <text y="25" fill="#f0ede6" fill-opacity=".46" font-size="11" font-family="ui-monospace,monospace" letter-spacing="1.3">01</text>
+      <text x="148" y="27" fill="#f0ede6" font-family="Georgia,serif" font-size="24">Frame and freeze</text>
+      <text x="685" y="17" fill="#f0ede6" fill-opacity=".58" font-size="13">Define the exact claim, source set, permissions,</text>
+      <text x="685" y="38" fill="#f0ede6" fill-opacity=".58" font-size="13">expected quantities, and success criteria.</text>
+      <path d="M0 68H1072" stroke="#f0ede6" stroke-opacity=".18"/>
+    </g>
+
+    <g transform="translate(0 165)">
+      <text y="25" fill="#f0ede6" fill-opacity=".46" font-size="11" font-family="ui-monospace,monospace" letter-spacing="1.3">02</text>
+      <text x="148" y="27" fill="#f0ede6" font-family="Georgia,serif" font-size="24">Reproduce and stress-test</text>
+      <text x="685" y="17" fill="#f0ede6" fill-opacity=".58" font-size="13">Run the original analysis in a controlled boundary,</text>
+      <text x="685" y="38" fill="#f0ede6" fill-opacity=".58" font-size="13">then probe a governed set of defensible alternatives.</text>
+      <path d="M0 68H1072" stroke="#f0ede6" stroke-opacity=".18"/>
+    </g>
+
+    <g transform="translate(0 254)">
+      <text y="25" fill="#f0ede6" fill-opacity=".46" font-size="11" font-family="ui-monospace,monospace" letter-spacing="1.3">03</text>
+      <text x="148" y="27" fill="#f0ede6" font-family="Georgia,serif" font-size="24">Verify and adjudicate</text>
+      <text x="685" y="17" fill="#f0ede6" fill-opacity=".58" font-size="13">Independently check findings, preserve disagreements,</text>
+      <text x="685" y="38" fill="#f0ede6" fill-opacity=".58" font-size="13">and calibrate the verdict to the evidence.</text>
+      <path d="M0 68H1072" stroke="#f0ede6" stroke-opacity=".18"/>
+    </g>
+
+    <g transform="translate(0 343)">
+      <text y="25" fill="#f0ede6" fill-opacity=".46" font-size="11" font-family="ui-monospace,monospace" letter-spacing="1.3">04</text>
+      <text x="148" y="27" fill="#f0ede6" font-family="Georgia,serif" font-size="24">Receive the claim verdict</text>
+      <text x="685" y="17" fill="#f0ede6" fill-opacity=".58" font-size="13">A private decision package you can act on</text>
+      <text x="685" y="38" fill="#f0ede6" fill-opacity=".58" font-size="13">before submission.</text>
+    </g>
+  </g>
+
+  <g transform="translate(64 545)" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing=".8">
+    <rect width="142" height="31" rx="4" fill="#f0ede6" fill-opacity=".1" stroke="#f0ede6" stroke-opacity=".24"/>
+    <text x="71" y="20" text-anchor="middle" fill="#f0ede6">DECISION BRIEF</text>
+    <g transform="translate(154)">
+      <rect width="142" height="31" rx="4" fill="#f0ede6" fill-opacity=".1" stroke="#f0ede6" stroke-opacity=".24"/>
+      <text x="71" y="20" text-anchor="middle" fill="#f0ede6">TECHNICAL AUDIT</text>
+    </g>
+    <g transform="translate(308)">
+      <rect width="150" height="31" rx="4" fill="#f0ede6" fill-opacity=".1" stroke="#f0ede6" stroke-opacity=".24"/>
+      <text x="75" y="20" text-anchor="middle" fill="#f0ede6">EVIDENCE PACKAGE</text>
+    </g>
+    <g transform="translate(470)">
+      <rect width="174" height="31" rx="4" fill="#f0ede6" fill-opacity=".1" stroke="#f0ede6" stroke-opacity=".24"/>
+      <text x="87" y="20" text-anchor="middle" fill="#f0ede6">CONSISTENCY FINDINGS</text>
+    </g>
+    <g transform="translate(656)">
+      <rect width="174" height="31" rx="4" fill="#f0ede6" fill-opacity=".1" stroke="#f0ede6" stroke-opacity=".24"/>
+      <text x="87" y="20" text-anchor="middle" fill="#f0ede6">PRIORITIZED CORRECTIONS</text>
+    </g>
+  </g>
+</svg>

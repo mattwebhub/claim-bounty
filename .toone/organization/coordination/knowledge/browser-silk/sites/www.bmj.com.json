@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "domain": "www.bmj.com",
+  "display_name": "The BMJ",
+  "logo_url": "https://www.bmj.com/favicon.ico",
+  "last_updated": "2026-08-29T16:25:06.398Z",
+  "rate_limits": {
+    "min_delay_ms": 1500,
+    "max_delay_ms": 4000,
+    "max_requests_per_minute": 20,
+    "cooldown_after_error_ms": 10000
+  },
+  "pages": {
+    "journal_article_full_text": {
+      "selectors": {
+        "article_content": "body"
+      },
+      "description": "Full CONSORT statement article text with headings, references, and reporting checklist content"
+    }
+  },
+  "selector_history": []
+}

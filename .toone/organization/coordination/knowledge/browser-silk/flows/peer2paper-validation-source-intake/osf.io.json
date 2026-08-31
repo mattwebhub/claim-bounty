@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "id": "peer2paper-validation-source-intake/osf.io",
+  "routine_id": "peer2paper-validation-source-intake",
+  "site": "osf.io",
+  "status": "draft",
+  "last_updated": "2026-08-29T12:50:52.832Z",
+  "created_by": "peer2paper-operations/peer2paper-orchestrator",
+  "run_count": 0,
+  "params": {
+    "project_id": {
+      "type": "string",
+      "required": true,
+      "description": "Public OSF project identifier"
+    }
+  },
+  "funnels": [
+    {
+      "id": "inspect_and_list_public_project",
+      "name": "Inspect and list public OSF project",
+      "description": "Open a public OSF project, navigate to its files, and extract the visible file inventory before downloading through the official API.",
+      "repeatable": true,
+      "steps": [
+        {
+          "id": "open_project",
+          "action": "navigate",
+          "url": "https://osf.io/{{project_id}}/"
+        },
+        {
+          "id": "read_overview",
+          "action": "extract",
+          "selector": "main",
+          "extractType": "text",
+          "output": "project_overview"
+        },
+        {
+          "id": "open_files",
+          "action": "click",
+          "selector": "a[href$=\"/files\"]"
+        },
+        {
+          "id": "read_files",
+          "action": "extract",
+          "selector": "main",
+          "extractType": "text",
+          "output": "file_inventory"
+        }
+      ]
+    }
+  ]
+}

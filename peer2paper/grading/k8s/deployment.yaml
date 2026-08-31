@@ -1,0 +1,120 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grader
+  namespace: peer2paper
+  labels:
+    app.kubernetes.io/name: grader
+    app.kubernetes.io/part-of: peer2paper
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: grader
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: grader
+        app.kubernetes.io/part-of: peer2paper
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        - name: prepare-private-storage
+          image: busybox:1.37.0
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              cp -f /token-source/service.token /private/token/service.token
+              chown 10001:10001 /private/token/service.token
+              chmod 0600 /private/token/service.token
+              chown 10001:10001 /private/keys /private/receipts /private/token
+              chmod 0700 /private/keys /private/receipts /private/token
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+              add: ["CHOWN", "FOWNER", "DAC_OVERRIDE"]
+            runAsNonRoot: false
+            runAsUser: 0
+          volumeMounts:
+            - name: keys
+              mountPath: /private/keys
+            - name: receipts
+              mountPath: /private/receipts
+            - name: token
+              mountPath: /private/token
+            - name: token-source
+              mountPath: /token-source
+              readOnly: true
+      containers:
+        - name: grader
+          image: peer2paper-grader:local
+          imagePullPolicy: Never
+          ports:
+            - name: loopback-http
+              containerPort: 8765
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          readinessProbe:
+            exec:
+              command:
+                - python3
+                - -c
+                - import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/health', timeout=2).read()
+            initialDelaySeconds: 2
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            exec:
+              command:
+                - python3
+                - -c
+                - import urllib.request; urllib.request.urlopen('http://127.0.0.1:8765/health', timeout=2).read()
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 3
+            failureThreshold: 3
+          volumeMounts:
+            - name: keys
+              mountPath: /private/keys
+              readOnly: true
+            - name: receipts
+              mountPath: /private/receipts
+            - name: token
+              mountPath: /private/token
+              readOnly: true
+      volumes:
+        - name: keys
+          persistentVolumeClaim:
+            claimName: grader-keys
+        - name: receipts
+          persistentVolumeClaim:
+            claimName: grader-receipts
+        - name: token
+          emptyDir:
+            medium: Memory
+        - name: token-source
+          secret:
+            secretName: grader-token
+            defaultMode: 0400

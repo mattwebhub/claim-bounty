@@ -1,0 +1,42 @@
+{
+  "name": "peer2paper-web",
+  "version": "0.1.0",
+  "description": "Peer2Paper public site and authenticated scientific-audit intake workspace.",
+  "homepage": "https://peer2paper.com",
+  "private": true,
+  "engines": {
+    "node": "22.x"
+  },
+  "packageManager": "npm@10.8.2",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "npm run typecheck && npm run lint && npm run test:unit && npm run test:i18n",
+    "test:unit": "vitest run",
+    "test:i18n": "node scripts/check-i18n.mjs",
+    "test:smoke": "node scripts/smoke.mjs",
+    "release:check": "node scripts/check-public-release.mjs",
+    "ci": "npm test && npm run build && npm run test:smoke && npm run release:check"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.5",
+    "@supabase/supabase-js": "^2.112.4",
+    "lucide-react": "^1.38.0",
+    "next": "^16.3.3",
+    "next-intl": "^4.14.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.3",
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.11"
+  }
+}

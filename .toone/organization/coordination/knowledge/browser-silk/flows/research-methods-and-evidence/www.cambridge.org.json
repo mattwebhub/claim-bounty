@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "id": "research-methods-and-evidence/www.cambridge.org",
+  "routine_id": "research-methods-and-evidence",
+  "site": "www.cambridge.org",
+  "status": "draft",
+  "last_updated": "2026-08-29T16:01:14.006Z",
+  "created_by": "research-and-insights/source-extractor",
+  "run_count": 0,
+  "params": {
+    "article_slug": {
+      "type": "string",
+      "required": true,
+      "description": "Cambridge Core journal article path after /core/"
+    }
+  },
+  "funnels": [
+    {
+      "id": "open_and_extract_article",
+      "name": "Open and extract Cambridge article",
+      "description": "Open an authorized Cambridge Core HTML article and extract its visible full text and structure.",
+      "repeatable": true,
+      "steps": [
+        {
+          "id": "open_article",
+          "action": "navigate",
+          "url": "https://www.cambridge.org/core/{{article_slug}}"
+        },
+        {
+          "id": "extract_article",
+          "action": "extract",
+          "selector": "body",
+          "extractType": "text",
+          "output": "article_full_text"
+        }
+      ]
+    }
+  ]
+}

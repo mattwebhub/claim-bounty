@@ -1,0 +1,114 @@
+{
+  "accentColor" : "#2563EB",
+  "author" : "Peer2Paper",
+  "departments" : [
+    {
+      "agentCount" : 1,
+      "id" : "peer2paper-operations",
+      "knownSubfolders" : [
+        "active",
+        "inbox",
+        "outbox",
+        "knowledge",
+        "logs",
+        "review"
+      ],
+      "name" : "Peer2Paper Operations"
+    },
+    {
+      "agentCount" : 3,
+      "id" : "research-and-insights",
+      "knownSubfolders" : [
+        "active",
+        "inbox",
+        "outbox",
+        "knowledge",
+        "logs",
+        "review"
+      ],
+      "name" : "Research and Insights"
+    },
+    {
+      "agentCount" : 3,
+      "id" : "peer2paper-intake",
+      "knownSubfolders" : [
+        "active",
+        "inbox",
+        "outbox",
+        "knowledge",
+        "logs",
+        "review"
+      ],
+      "name" : "Peer2Paper Intake And Provenance"
+    },
+    {
+      "agentCount" : 1,
+      "id" : "peer2paper-reproduction",
+      "knownSubfolders" : [
+        "active",
+        "inbox",
+        "outbox",
+        "knowledge",
+        "logs",
+        "review"
+      ],
+      "name" : "Peer2Paper Reproduction Engineering"
+    },
+    {
+      "agentCount" : 5,
+      "id" : "peer2paper-robustness",
+      "knownSubfolders" : [
+        "active",
+        "inbox",
+        "outbox",
+        "knowledge",
+        "logs",
+        "review"
+      ],
+      "name" : "Peer2Paper Statistical Robustness"
+    },
+    {
+      "agentCount" : 6,
+      "id" : "peer2paper-verification",
+      "knownSubfolders" : [
+        "active",
+        "inbox",
+        "outbox",
+        "knowledge",
+        "logs",
+        "review"
+      ],
+      "name" : "Peer2Paper Verification And Adjudication"
+    },
+    {
+      "agentCount" : 2,
+      "id" : "peer2paper-delivery",
+      "knownSubfolders" : [
+        "active",
+        "inbox",
+        "outbox",
+        "knowledge",
+        "logs",
+        "review"
+      ],
+      "name" : "Peer2Paper Audit Delivery"
+    }
+  ],
+  "description" : "A reproducible scientific-audit organization with separated intake, execution, robustness, verification, and delivery responsibilities.",
+  "icon" : "checkmark.seal",
+  "id" : "peer2paper",
+  "name" : "Peer2Paper",
+  "runtimeKnownSubfolders" : [
+    "data"
+  ],
+  "stats" : {
+    "agentCount" : 21,
+    "departmentCount" : 7,
+    "routineCount" : 8
+  },
+  "tags" : [
+    "scientific-audit",
+    "reproducibility"
+  ],
+  "version" : "2.0.0"
+}

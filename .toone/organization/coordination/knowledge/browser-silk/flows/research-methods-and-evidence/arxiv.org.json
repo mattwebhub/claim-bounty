@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "id": "research-methods-and-evidence/arxiv.org",
+  "routine_id": "research-methods-and-evidence",
+  "site": "arxiv.org",
+  "status": "draft",
+  "last_updated": "2026-08-29T16:00:32.239Z",
+  "created_by": "research-and-insights/source-extractor",
+  "run_count": 0,
+  "params": {
+    "arxiv_id": {
+      "type": "string",
+      "required": true,
+      "description": "arXiv identifier with available HTML rendering"
+    }
+  },
+  "funnels": [
+    {
+      "id": "open_and_extract_full_text",
+      "name": "Open and extract arXiv full text",
+      "description": "Open the authorized arXiv HTML rendering and extract full article text and structure.",
+      "repeatable": true,
+      "steps": [
+        {
+          "id": "open_full_text",
+          "action": "navigate",
+          "url": "https://arxiv.org/html/{{arxiv_id}}"
+        },
+        {
+          "id": "extract_full_text",
+          "action": "extract",
+          "selector": "body",
+          "extractType": "text",
+          "output": "article_full_text"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "id": "research-methods-and-evidence/pmc.ncbi.nlm.nih.gov",
+  "routine_id": "research-methods-and-evidence",
+  "site": "pmc.ncbi.nlm.nih.gov",
+  "status": "draft",
+  "last_updated": "2026-08-29T15:56:20.935Z",
+  "created_by": "research-and-insights/source-extractor",
+  "run_count": 0,
+  "params": {
+    "pmcid": {
+      "type": "string",
+      "required": true,
+      "description": "PubMed Central article identifier such as PMC8670490"
+    }
+  },
+  "funnels": [
+    {
+      "id": "open_and_extract_article",
+      "name": "Open and extract PMC article",
+      "description": "Open an authorized PubMed Central full-text article and extract its visible text with headings, tables, figures, supplements, and references.",
+      "repeatable": true,
+      "steps": [
+        {
+          "id": "open_article",
+          "action": "navigate",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/{{pmcid}}/"
+        },
+        {
+          "id": "extract_article",
+          "action": "extract",
+          "selector": "body",
+          "extractType": "text",
+          "output": "article_full_text"
+        }
+      ]
+    }
+  ]
+}

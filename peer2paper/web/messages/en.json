@@ -1,0 +1,479 @@
+{
+  "meta": {
+    "title": "Peer2Paper — Independent scientific claim audits",
+    "description": "Independent reproduction, robustness testing and evidence-backed verdicts for consequential research claims."
+  },
+  "nav": {
+    "primaryLabel": "Primary navigation",
+    "mobileLabel": "Mobile navigation",
+    "menu": "Open menu",
+    "how": "How it works",
+    "results": "Sample result",
+    "methodology": "Methodology",
+    "docs": "Documentation",
+    "signin": "Sign in",
+    "start": "Request an audit"
+  },
+  "footer": {
+    "tagline": "Independent, reproducible audits for research claims that matter.",
+    "product": "Product",
+    "how": "How it works",
+    "sample": "Sample result",
+    "methodology": "Methodology",
+    "request": "Request an audit",
+    "resources": "Resources",
+    "docs": "Documentation",
+    "outputs": "Expected outputs",
+    "security": "Security",
+    "contact": "Contact",
+    "company": "Company",
+    "about": "About",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "signin": "Sign in",
+    "rights": "All rights reserved.",
+    "independence": "Evidence before certainty."
+  },
+  "landing": {
+    "eyebrow": "Independent scientific audits",
+    "titleStart": "Find the weakness",
+    "titleEmphasis": "in your paper",
+    "titleEnd": "before reviewers do.",
+    "lede": "Upload your manuscript and research materials. Peer2Paper independently tests whether your central claim can be reproduced, how robust it is, and what should be fixed before submission.",
+    "upload": {
+      "inputLabel": "Manuscript and research files",
+      "idle": "Drop your manuscript here",
+      "more": "Add more research materials",
+      "hover": "Audit my paper",
+      "accepted": "Accepted: PDF manuscripts, Word and text documents, CSV, Excel, statistical data, code, notebooks, and ZIP archives. Up to 20 files, 250 MB each.",
+      "sizeError": "Each file must be larger than 0 bytes and no more than 250 MB.",
+      "totalError": "The complete upload must be no more than 1 GB.",
+      "selectedFiles": "Selected manuscript and research files",
+      "file": "File",
+      "remove": "Remove {name}",
+      "localNotice": "Your files stay in this browser until you continue to the secure intake.",
+      "continue": "Continue securely"
+    },
+    "materials": {
+      "label": "You provide",
+      "title": "Paper, data, code, and supplementary information",
+      "body": "Start with the complete record behind the result so every claim can be traced to its source."
+    },
+    "primaryCta": "Request an audit",
+    "secondaryCta": "See a sample result",
+    "assurance1": "Independent review",
+    "assurance2": "Replayable evidence",
+    "assurance3": "Clear limitations",
+    "signalLabel": "Service characteristics",
+    "signal1Value": "End-to-end",
+    "signal1Label": "From source files to decision brief",
+    "signal2Value": "Evidence-linked",
+    "signal2Label": "Every finding traces to an artifact",
+    "signal3Value": "Reproducible",
+    "signal3Label": "Environment and replay instructions",
+    "signal4Value": "Human-reviewed",
+    "signal4Label": "Adjudicated before delivery",
+    "howKicker": "A rigorous path",
+    "howTitle": "See the full audit before reviewers see the paper.",
+    "howBody": "From materials to verdict — the Peer2Paper audit sequence.",
+    "steps": [
+      {
+        "title": "Frame and freeze",
+        "body": "We define the exact claim, expected quantities, source set, permissions and success criteria before analysis begins."
+      },
+      {
+        "title": "Reproduce and stress-test",
+        "body": "We execute the original analysis in a controlled environment and test a governed set of defensible alternatives."
+      },
+      {
+        "title": "Verify and adjudicate",
+        "body": "Independent checks resolve findings, preserve disagreements and calibrate the final verdict to the evidence."
+      },
+      {
+        "title": "Receive the claim verdict",
+        "body": "A private decision package you can act on before submission."
+      }
+    ],
+    "resultKicker": "A result you can use",
+    "resultTitle": "The verdict is only the beginning.",
+    "resultBody": "Decision-makers get a concise reading. Technical teams get the exact numbers, evidence graph and replay package behind it.",
+    "resultPoint1": "Reported and reproduced values side by side",
+    "resultPoint2": "Material sensitivity and source conflicts surfaced",
+    "resultPoint3": "Every limitation retained in the final package",
+    "resultCta": "Explore the sample audit",
+    "outputsKicker": "One audit, multiple views",
+    "outputsTitle": "Useful at every level of scrutiny.",
+    "outputsBody": "The delivery package is readable by a stakeholder and structured for a machine.",
+    "outputs": [
+      {
+        "title": "Decision brief",
+        "body": "A plain-language verdict, confidence statement, principal findings and recommended next actions."
+      },
+      {
+        "title": "Technical audit",
+        "body": "Methods, comparisons, sensitivity results, source checks and explicit unresolved limitations."
+      },
+      {
+        "title": "Evidence package",
+        "body": "Versioned JSON, manifests, checksums and replay guidance for verification and downstream systems."
+      },
+      {
+        "title": "Consistency findings",
+        "body": "Conflicts between the paper, data, code and reported result."
+      },
+      {
+        "title": "Prioritized corrections",
+        "body": "The most important fixes to address before submission."
+      }
+    ],
+    "trustKicker": "Trust by design",
+    "trustTitle": "No black-box certainty.",
+    "trustBody": "Peer2Paper is built around evidence provenance, bounded claims and visible uncertainty—not a score detached from its method.",
+    "trustCta": "Read our methodology",
+    "principles": [
+      {
+        "title": "Provenance first",
+        "body": "Findings point to frozen inputs, executions and review decisions."
+      },
+      {
+        "title": "Scientific changes stay explicit",
+        "body": "Technical repairs never silently become changes to the research question."
+      },
+      {
+        "title": "Limits survive delivery",
+        "body": "Missing inputs, unresolved conflicts and incomplete comparisons remain visible."
+      }
+    ],
+    "ctaKicker": "Start with the exact claim",
+    "ctaTitle": "Give your next research decision a stronger foundation.",
+    "ctaBody": "Submit a paper, materials and the decision you need to make.",
+    "ctaButton": "Create your request"
+  },
+  "result": {
+    "completed": "Audit completed",
+    "verdict": "Verdict",
+    "verdictValue": "Source verified; material sensitivity",
+    "confidence": "Confidence",
+    "high": "High",
+    "claim": "Among unvaccinated Republican or Republican-leaning participants, a Republican elite endorsement increases vaccination intentions relative to a Democratic elite endorsement.",
+    "comparisonLabel": "Reported result and verified audited path",
+    "metric": "Metric",
+    "estimate": "Estimate",
+    "interval": "Interval",
+    "reported": "Reported",
+    "audited": "Audited path",
+    "brief": "Decision brief",
+    "replay": "Replay pack",
+    "explore": "View the full result"
+  },
+  "resultsPage": {
+    "eyebrow": "Public case study",
+    "title": "See what a Peer2Paper result looks like.",
+    "intro": "This sanitized public case study publishes Peer2Paper's aggregate findings and limitations. Underlying research materials and internal audit records are not redistributed.",
+    "findingsKicker": "Principal findings",
+    "findingsTitle": "What the evidence supports",
+    "findings": [
+      "The primary source report is verified for its coefficient, interval, test statistic and p value, with explicit limits; this is not an independent statistical replication.",
+      "Statistical support changes across verified adjusted and unadjusted analysis paths, although both estimates remain positive.",
+      "The primary paper and supplemental documentation conflict about the population included in the analysis."
+    ],
+    "packageKicker": "Delivery package",
+    "packageTitle": "Expected audit artifacts",
+    "brief": "Decision and technical reports",
+    "machine": "Machine-readable result",
+    "replay": "Evidence and replay package",
+    "demoNotice": "The public repository contains the aggregate JSON record; restricted source and replay bundles remain excluded.",
+    "disclosureTitle": "Why this wording matters",
+    "disclosure": "The canonical audit classified numerical reproduction as not assessable. The public verdict therefore distinguishes verified source reporting, bounded robustness sensitivity and unresolved source conflicts.",
+    "paperSource": "Primary paper",
+    "materialsSource": "Author-deposited materials"
+  },
+  "docsPage": {
+    "contents": "On this page",
+    "start": "Getting started",
+    "workflow": "Workflow",
+    "outputs": "Expected outputs",
+    "statuses": "Status language",
+    "privacy": "Data and privacy",
+    "eyebrow": "Documentation",
+    "title": "From request to audit package.",
+    "intro": "What to provide, what happens during review and exactly what Peer2Paper delivers.",
+    "beforeTitle": "Before you submit",
+    "beforeBody": "A complete request reduces ambiguity and lets the audit begin with a frozen scope.",
+    "inputs": [
+      "The paper, preprint or claim document",
+      "Analysis code, data and supplementary materials when available",
+      "The exact claim or result that affects your decision",
+      "Access, licence, confidentiality and retention requirements"
+    ],
+    "workflowTitle": "The audit workflow",
+    "stages": [
+      {
+        "title": "Intake and preflight",
+        "body": "We confirm scope, permissions, file integrity and whether the supplied materials can support the requested audit."
+      },
+      {
+        "title": "Study-case freeze",
+        "body": "Claims, quantities, datasets, code paths and success tolerances become a versioned assessment case."
+      },
+      {
+        "title": "Execution and robustness",
+        "body": "The original workflow is reproduced, technical repairs are logged and approved sensitivity paths are evaluated."
+      },
+      {
+        "title": "Verification and delivery",
+        "body": "Findings receive independent review, evidence links are checked and the stakeholder and technical outputs are assembled."
+      }
+    ],
+    "outputsTitle": "Expected outputs",
+    "outputsBody": "Every completed audit is designed to produce the following views, subject to access and licence constraints.",
+    "briefTitle": "Results brief",
+    "briefBody": "Verdict, confidence, key comparisons, limitations and actions in readable HTML/PDF.",
+    "jsonTitle": "Structured result",
+    "jsonBody": "Versioned fields for claim status, reproduced quantities, sensitivity findings and provenance.",
+    "evidenceTitle": "Evidence manifest",
+    "evidenceBody": "A hashed inventory connecting claims and findings to inputs, executions and review objects.",
+    "replayTitle": "Replay guidance",
+    "replayBody": "Environment details, execution instructions and checks needed to verify eligible outputs.",
+    "statusesTitle": "How to read status language",
+    "statusesBody": "Status describes the evidence obtained, not the prestige of a paper or the character of its authors.",
+    "statusReproduced": "Reproduced",
+    "statusReproducedBody": "All required target quantities matched the declared tolerance under an eligible execution.",
+    "statusPartial": "Partially reproduced",
+    "statusPartialBody": "Some required quantities matched while others were not comparable, missing or outside tolerance.",
+    "statusNot": "Not assessable",
+    "statusNotBody": "The available files, permissions or execution conditions could not support a valid comparison.",
+    "privacyTitle": "Data, privacy and restricted material",
+    "privacyBody": "Requests should contain only data you are authorized to share. Restricted inputs remain separated from public demonstrations and outputs follow request-level release constraints.",
+    "privacyCta": "Read the security overview",
+    "readyTitle": "Ready to define the case?",
+    "readyBody": "Create an account and submit the exact claim your decision depends on.",
+    "readyCta": "Request an audit"
+  },
+  "methodologyPage": {
+    "eyebrow": "Methodology",
+    "title": "A chain of evidence, not a single rerun.",
+    "intro": "Our workflow separates source understanding, numerical reproduction, robustness analysis and scientific adjudication so each conclusion has a visible basis.",
+    "phases": [
+      {
+        "title": "Research and source verification",
+        "body": "Identify the primary claim, locate authoritative source material, reconcile versions and record what is present, missing or contradictory.",
+        "evidence": "Outputs: source registry, claim records, paper and code maps"
+      },
+      {
+        "title": "Frozen study case",
+        "body": "Turn the question into a versioned case with targets, tolerances, dataset roles, permitted transformations and access constraints.",
+        "evidence": "Outputs: frozen case, artifact registry, evidence graph"
+      },
+      {
+        "title": "Controlled reproduction",
+        "body": "Run the original analysis with captured environment details. Separate technical repairs from scientific changes and preserve every attempt.",
+        "evidence": "Outputs: execution profile, checkpoints, comparison records"
+      },
+      {
+        "title": "Governed robustness",
+        "body": "Evaluate a bounded registry of defensible choices rather than searching silently for a preferred result.",
+        "evidence": "Outputs: candidate registry, robustness map, fragility findings"
+      },
+      {
+        "title": "Independent verification",
+        "body": "Review numerical and methodological findings independently, resolve conflicts and preserve unresolved objections.",
+        "evidence": "Outputs: review observations, verification receipt, adjudication package"
+      },
+      {
+        "title": "Audience-aware delivery",
+        "body": "Produce a decision brief and technical evidence package from the same frozen result, with limitations carried into every view.",
+        "evidence": "Outputs: report, JSON, manifests, replay package"
+      }
+    ],
+    "limitsTitle": "Methodological restraint",
+    "limitsBody": "Peer2Paper reports what the supplied and verified evidence can support. It does not turn a partial rerun into a global truth claim, treat statistical significance as the only criterion, or hide unresolved access and documentation limits."
+  },
+  "info": {
+    "about": {
+      "eyebrow": "About",
+      "title": "Better evidence for consequential decisions.",
+      "intro": "Peer2Paper exists to make the reliability of scientific claims easier to inspect before organizations act on them.",
+      "sections": [
+        {
+          "title": "What we do",
+          "body": "We combine reproducibility engineering, statistical review and source verification in one traceable audit workflow."
+        },
+        {
+          "title": "Who it is for",
+          "body": "Research teams, funders, policy groups, journalists and businesses use Peer2Paper when a published result materially affects a decision."
+        },
+        {
+          "title": "Our standard",
+          "body": "We value transparent uncertainty over confident simplification. Findings remain connected to evidence, review and explicit limitations."
+        }
+      ]
+    },
+    "security": {
+      "eyebrow": "Security",
+      "title": "Research material deserves careful handling.",
+      "intro": "The web application uses server-managed sessions, row-level authorization and request-scoped release constraints.",
+      "sections": [
+        {
+          "title": "Authentication",
+          "body": "Email and Google sign-in are handled by Supabase Auth. Sessions are stored in secure cookies and refreshed on the server; OAuth secrets are never shipped to the browser."
+        },
+        {
+          "title": "Data isolation",
+          "body": "Row Level Security ensures users can read and create only their own audit requests. Administrative service credentials must remain server-only."
+        },
+        {
+          "title": "Responsible disclosure",
+          "body": "Report a suspected vulnerability to the configured legal or security contact. Do not include sensitive research data in the initial message."
+        }
+      ]
+    },
+    "privacy": {
+      "eyebrow": "Privacy",
+      "title": "Privacy notice",
+      "intro": "This notice describes the data required to operate Peer2Paper and the controls expected in production.",
+      "sections": [
+        {
+          "title": "Data we process",
+          "body": "We process account identifiers, authentication events, audit request details and the research materials you intentionally provide. Operational logs should avoid source data and sensitive content."
+        },
+        {
+          "title": "Why and how long",
+          "body": "We use this data to authenticate users, deliver requested audits, secure the service and meet legal obligations. Retention follows the request agreement and configured deletion schedule."
+        },
+        {
+          "title": "Your choices",
+          "body": "Depending on applicable law, you may request access, correction, export or deletion. Contact the address configured by the service operator."
+        },
+        {
+          "title": "Processors and transfers",
+          "body": "Supabase and the hosting provider process service data under their contractual safeguards. A production operator must publish its legal identity, region and current processor list before launch."
+        }
+      ]
+    },
+    "terms": {
+      "eyebrow": "Legal",
+      "title": "Terms of service",
+      "intro": "These baseline terms explain permitted use; production launch requires review by the service operator's counsel.",
+      "sections": [
+        {
+          "title": "Authorized submissions",
+          "body": "You must have the right to provide every submitted paper, dataset, codebase and credential, and must describe applicable licence, confidentiality and retention restrictions."
+        },
+        {
+          "title": "Scientific scope",
+          "body": "An audit is an evidence-based assessment of a defined claim and supplied materials, not legal, medical, investment or regulatory advice."
+        },
+        {
+          "title": "Acceptable use",
+          "body": "Do not submit unlawful material, malicious code, unnecessary personal data or content intended to identify protected research participants."
+        },
+        {
+          "title": "Outputs and limitations",
+          "body": "Release and reuse rights follow the underlying materials and request agreement. Results retain material uncertainties and should not be presented beyond their recorded scope."
+        }
+      ]
+    }
+  },
+  "auth": {
+    "asideEyebrow": "Evidence workspace",
+    "signinTitle": "Welcome back to your audits.",
+    "signupTitle": "Start with a claim worth checking.",
+    "signinIntro": "Open your workspace, follow active reviews and retrieve completed evidence packages.",
+    "signupIntro": "Create a secure workspace for your research requests and their audit trail.",
+    "quote": "The useful answer is not just whether a number reruns, but exactly what survived inspection.",
+    "quoteBy": "Peer2Paper review principle",
+    "welcome": "Sign in",
+    "create": "Create your account",
+    "noAccount": "New to Peer2Paper?",
+    "hasAccount": "Already have an account?",
+    "signupLink": "Create an account",
+    "signinLink": "Sign in",
+    "google": "Continue with Google",
+    "or": "or continue with email",
+    "name": "Name",
+    "namePlaceholder": "Your name",
+    "email": "Email",
+    "password": "Password",
+    "passwordPlaceholder": "At least 8 characters",
+    "forgot": "Forgot password?",
+    "signinButton": "Sign in",
+    "signupButton": "Create account",
+    "working": "Please wait…",
+    "legalStart": "By continuing, you agree to the",
+    "terms": "terms",
+    "and": "and",
+    "privacy": "privacy notice",
+    "checkEmail": "Check your email to continue.",
+    "recovery": "Account recovery",
+    "forgotTitle": "Reset your password",
+    "forgotIntro": "Enter your email and we will send a secure recovery link if an account exists.",
+    "resetButton": "Send recovery link",
+    "backSignin": "Back to sign in",
+    "updateTitle": "Choose a new password",
+    "updateIntro": "Use at least eight characters and a password you do not reuse elsewhere.",
+    "newPassword": "New password",
+    "updateButton": "Update password",
+    "errors": {
+      "not_configured": "Authentication has not been configured for this deployment.",
+      "missing_fields": "Enter your email and password.",
+      "invalid_credentials": "The email or password is incorrect.",
+      "invalid_signup": "Use a valid email and a password of at least eight characters.",
+      "already_exists": "An account with this email already exists.",
+      "signup_failed": "We could not create the account. Please try again.",
+      "oauth_failed": "Google sign-in could not start. Please try again.",
+      "callback_failed": "The sign-in link is invalid or expired.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "dashboard": {
+    "setupTitle": "Connect Supabase to enable the workspace",
+    "setupBody": "Copy the environment template, add your public project values and apply the included database migration.",
+    "audits": "Audits",
+    "newRequest": "New request",
+    "signout": "Sign out",
+    "workspace": "Your workspace",
+    "title": "Audit requests",
+    "emptyTitle": "No audit requests yet",
+    "emptyBody": "Define the exact research claim you need assessed and attach links to the available paper and materials.",
+    "emptyCta": "Create your first request",
+    "notices": {
+      "requestCreated": "Your audit request was saved.",
+      "passwordUpdated": "Your password was updated."
+    },
+    "statuses": {
+      "submitted": "Submitted",
+      "in_review": "In review",
+      "running": "Running",
+      "completed": "Completed",
+      "needs_input": "Needs input"
+    }
+  },
+  "submit": {
+    "eyebrow": "New audit request",
+    "title": "Define the claim before the work begins.",
+    "intro": "A precise request produces a faster preflight and a more defensible audit boundary.",
+    "requirements": [
+      "State one decision-relevant claim",
+      "Link the paper and available materials",
+      "Describe known access or licence constraints",
+      "Do not include credentials or unnecessary personal data"
+    ],
+    "privacy": "Your request is visible only to your account under Row Level Security. File-handling and retention terms must be agreed before restricted materials are transferred.",
+    "formTitle": "Request details",
+    "formIntro": "You can refine scope with the review team after intake.",
+    "error": "We could not save the request. Check the required fields and try again.",
+    "projectTitle": "Project title",
+    "projectPlaceholder": "e.g. Vaccination intention claim review",
+    "claim": "Exact claim to assess",
+    "claimPlaceholder": "State the population, intervention or exposure, comparison and reported outcome…",
+    "claimHelp": "Use the wording your decision actually depends on.",
+    "paperUrl": "Paper or preprint URL",
+    "materialsUrl": "Code/data repository URL",
+    "notes": "Context and constraints",
+    "notesPlaceholder": "Decision deadline, access constraints, known issues…",
+    "submitButton": "Submit audit request",
+    "submitting": "Saving request…",
+    "agreement": "Submitting creates an intake record. Scope, price, transfer method and retention are confirmed separately before audit execution."
+  }
+}

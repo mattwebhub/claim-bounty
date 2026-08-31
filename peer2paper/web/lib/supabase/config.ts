@@ -1,0 +1,10 @@
+export const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+export const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+export function isSupabaseConfigured() {
+  return Boolean(
+    supabaseUrl?.startsWith("https://") &&
+      supabaseAnonKey &&
+      supabaseAnonKey !== "your-anon-key"
+  );
+}

@@ -1,0 +1,479 @@
+{
+  "meta": {
+    "title": "Peer2Paper — Auditorias independentes de alegações científicas",
+    "description": "Reprodução independente, testes de robustez e veredictos baseados em evidências para alegações de investigação importantes."
+  },
+  "nav": {
+    "primaryLabel": "Navegação principal",
+    "mobileLabel": "Navegação móvel",
+    "menu": "Abrir menu",
+    "how": "Como funciona",
+    "results": "Resultado de exemplo",
+    "methodology": "Metodologia",
+    "docs": "Documentação",
+    "signin": "Entrar",
+    "start": "Pedir uma auditoria"
+  },
+  "footer": {
+    "tagline": "Auditorias independentes e reproduzíveis para alegações científicas importantes.",
+    "product": "Produto",
+    "how": "Como funciona",
+    "sample": "Resultado de exemplo",
+    "methodology": "Metodologia",
+    "request": "Pedir auditoria",
+    "resources": "Recursos",
+    "docs": "Documentação",
+    "outputs": "Resultados esperados",
+    "security": "Segurança",
+    "contact": "Contacto",
+    "company": "Empresa",
+    "about": "Sobre",
+    "privacy": "Privacidade",
+    "terms": "Termos",
+    "signin": "Entrar",
+    "rights": "Todos os direitos reservados.",
+    "independence": "Evidência antes da certeza."
+  },
+  "landing": {
+    "eyebrow": "Auditorias científicas independentes",
+    "titleStart": "Saiba se uma alegação",
+    "titleEmphasis": "resiste",
+    "titleEnd": "antes de confiar nela.",
+    "lede": "A Peer2Paper reproduz resultados publicados, testa escolhas analíticas e entrega um veredicto ligado às evidências que a sua equipa pode inspecionar e repetir.",
+    "upload": {
+      "inputLabel": "Manuscrito e ficheiros de investigação",
+      "idle": "Largue o seu manuscrito aqui",
+      "more": "Adicionar mais materiais",
+      "hover": "Auditar o meu artigo",
+      "accepted": "Aceites: PDF, Word, texto, CSV, Excel, dados estatísticos, código, notebooks e ZIP. Até 20 ficheiros, 250 MB cada.",
+      "sizeError": "Cada ficheiro deve ter mais de 0 bytes e no máximo 250 MB.",
+      "totalError": "O envio completo não pode exceder 1 GB.",
+      "selectedFiles": "Ficheiros selecionados",
+      "file": "Ficheiro",
+      "remove": "Remover {name}",
+      "localNotice": "Os ficheiros permanecem neste navegador até avançar para o envio seguro.",
+      "continue": "Continuar em segurança"
+    },
+    "materials": {
+      "label": "Você fornece",
+      "title": "Artigo, dados, código e informação suplementar",
+      "body": "Comece pelo registo completo por trás do resultado para rastrear cada alegação até à fonte."
+    },
+    "primaryCta": "Pedir uma auditoria",
+    "secondaryCta": "Ver resultado de exemplo",
+    "assurance1": "Revisão independente",
+    "assurance2": "Evidência reproduzível",
+    "assurance3": "Limitações claras",
+    "signalLabel": "Características do serviço",
+    "signal1Value": "Ponta a ponta",
+    "signal1Label": "Dos ficheiros ao resumo decisório",
+    "signal2Value": "Ligado à evidência",
+    "signal2Label": "Cada conclusão aponta para um artefacto",
+    "signal3Value": "Reproduzível",
+    "signal3Label": "Ambiente e instruções de repetição",
+    "signal4Value": "Revisto por pessoas",
+    "signal4Label": "Adjudicado antes da entrega",
+    "howKicker": "Um percurso rigoroso",
+    "howTitle": "De alegação contestada a resposta inspecionável.",
+    "howBody": "Primeiro congelamos a pergunta, reconstruímos a análise e depois separamos o que foi reproduzido do que permanece incerto.",
+    "steps": [
+      {
+        "title": "Definir e congelar",
+        "body": "Definimos a alegação exata, quantidades esperadas, fontes, permissões e critérios de sucesso antes da análise."
+      },
+      {
+        "title": "Reproduzir e testar",
+        "body": "Executamos a análise original num ambiente controlado e testamos alternativas defensáveis e governadas."
+      },
+      {
+        "title": "Verificar e adjudicar",
+        "body": "Verificações independentes resolvem conclusões, preservam divergências e calibram o veredicto final."
+      },
+      {
+        "title": "Receber o veredicto da alegação",
+        "body": "Um pacote decisório privado para usar antes da submissão."
+      }
+    ],
+    "resultKicker": "Um resultado utilizável",
+    "resultTitle": "O veredicto é apenas o início.",
+    "resultBody": "Decisores recebem uma leitura concisa. Equipas técnicas recebem números, grafo de evidência e pacote de repetição.",
+    "resultPoint1": "Valores publicados e reproduzidos lado a lado",
+    "resultPoint2": "Sensibilidades materiais e conflitos de fontes visíveis",
+    "resultPoint3": "Todas as limitações mantidas no pacote final",
+    "resultCta": "Explorar a auditoria de exemplo",
+    "outputsKicker": "Uma auditoria, várias perspetivas",
+    "outputsTitle": "Útil em todos os níveis de escrutínio.",
+    "outputsBody": "O pacote é legível por pessoas e estruturado para máquinas.",
+    "outputs": [
+      {
+        "title": "Resumo decisório",
+        "body": "Veredicto em linguagem clara, confiança, principais conclusões e próximos passos."
+      },
+      {
+        "title": "Auditoria técnica",
+        "body": "Métodos, comparações, sensibilidades, verificação de fontes e limitações explícitas."
+      },
+      {
+        "title": "Pacote de evidência",
+        "body": "JSON versionado, manifestos, checksums e orientação para verificação."
+      },
+      {
+        "title": "Conclusões de consistência",
+        "body": "Conflitos entre artigo, dados, código e resultado."
+      },
+      {
+        "title": "Correções prioritárias",
+        "body": "As correções mais importantes antes da submissão."
+      }
+    ],
+    "trustKicker": "Confiança desde a conceção",
+    "trustTitle": "Sem certezas de caixa-preta.",
+    "trustBody": "A Peer2Paper assenta em proveniência, alegações delimitadas e incerteza visível — não numa pontuação isolada do método.",
+    "trustCta": "Ler a metodologia",
+    "principles": [
+      {
+        "title": "Proveniência primeiro",
+        "body": "As conclusões apontam para entradas, execuções e decisões de revisão congeladas."
+      },
+      {
+        "title": "Alterações científicas explícitas",
+        "body": "Reparações técnicas nunca se tornam silenciosamente mudanças à pergunta científica."
+      },
+      {
+        "title": "Limitações até à entrega",
+        "body": "Entradas em falta, conflitos e comparações incompletas continuam visíveis."
+      }
+    ],
+    "ctaKicker": "Comece pela alegação exata",
+    "ctaTitle": "Dê uma base mais forte à sua próxima decisão de investigação.",
+    "ctaBody": "Envie o artigo, materiais e a decisão que precisa de tomar.",
+    "ctaButton": "Criar pedido"
+  },
+  "result": {
+    "completed": "Auditoria concluída",
+    "verdict": "Veredicto",
+    "verdictValue": "Fonte verificada; sensibilidade material",
+    "confidence": "Confiança",
+    "high": "Alta",
+    "claim": "Entre participantes republicanos ou inclinados ao Partido Republicano não vacinados, o apoio de elites republicanas aumenta a intenção de vacinação face ao apoio de elites democratas.",
+    "comparisonLabel": "Resultado reportado e percurso auditado verificado",
+    "metric": "Métrica",
+    "estimate": "Estimativa",
+    "interval": "Intervalo",
+    "reported": "Reportado",
+    "audited": "Percurso auditado",
+    "brief": "Resumo decisório",
+    "replay": "Pacote de repetição",
+    "explore": "Ver resultado completo"
+  },
+  "resultsPage": {
+    "eyebrow": "Estudo de caso público",
+    "title": "Veja como é um resultado Peer2Paper.",
+    "intro": "Este estudo de caso público e sanitizado publica conclusões agregadas e limitações da Peer2Paper. Os materiais de investigação e registos internos não são redistribuídos.",
+    "findingsKicker": "Principais conclusões",
+    "findingsTitle": "O que a evidência suporta",
+    "findings": [
+      "O relato da fonte primária foi verificado quanto ao coeficiente, intervalo, estatística de teste e valor p, com limites explícitos; não se trata de uma replicação estatística independente.",
+      "O suporte estatístico muda entre análises ajustadas e não ajustadas verificadas, embora ambas as estimativas sejam positivas.",
+      "O artigo e o suplemento entram em conflito sobre a população analisada."
+    ],
+    "packageKicker": "Pacote de entrega",
+    "packageTitle": "Artefactos esperados da auditoria",
+    "brief": "Relatórios decisório e técnico",
+    "machine": "Resultado legível por máquina",
+    "replay": "Evidência e repetição",
+    "demoNotice": "O repositório público contém o registo JSON agregado; fontes restritas e pacotes de repetição permanecem excluídos.",
+    "disclosureTitle": "Porque importa esta formulação",
+    "disclosure": "A auditoria canónica classificou a reprodução numérica como não avaliável. O veredicto público distingue a verificação da fonte, a sensibilidade de robustez limitada e os conflitos por resolver.",
+    "paperSource": "Artigo principal",
+    "materialsSource": "Materiais depositados pelos autores"
+  },
+  "docsPage": {
+    "contents": "Nesta página",
+    "start": "Começar",
+    "workflow": "Fluxo de trabalho",
+    "outputs": "Resultados esperados",
+    "statuses": "Linguagem de estado",
+    "privacy": "Dados e privacidade",
+    "eyebrow": "Documentação",
+    "title": "Do pedido ao pacote de auditoria.",
+    "intro": "O que fornecer, o que acontece na revisão e o que a Peer2Paper entrega.",
+    "beforeTitle": "Antes de enviar",
+    "beforeBody": "Um pedido completo reduz ambiguidades e permite começar com âmbito congelado.",
+    "inputs": [
+      "Artigo, preprint ou documento da alegação",
+      "Código, dados e suplementos quando disponíveis",
+      "A alegação exata que afeta a sua decisão",
+      "Requisitos de acesso, licença, confidencialidade e retenção"
+    ],
+    "workflowTitle": "Fluxo de auditoria",
+    "stages": [
+      {
+        "title": "Entrada e pré-verificação",
+        "body": "Confirmamos âmbito, permissões, integridade e viabilidade."
+      },
+      {
+        "title": "Congelar o caso",
+        "body": "Alegações, quantidades, dados, código e tolerâncias tornam-se um caso versionado."
+      },
+      {
+        "title": "Execução e robustez",
+        "body": "Reproduzimos o fluxo original, registamos reparações e avaliamos sensibilidades aprovadas."
+      },
+      {
+        "title": "Verificação e entrega",
+        "body": "As conclusões são revistas e os pacotes técnico e decisório são montados."
+      }
+    ],
+    "outputsTitle": "Resultados esperados",
+    "outputsBody": "Cada auditoria concluída procura produzir estas perspetivas, sujeitas a restrições de acesso e licença.",
+    "briefTitle": "Resumo de resultados",
+    "briefBody": "Veredicto, confiança, comparações, limitações e ações em HTML/PDF.",
+    "jsonTitle": "Resultado estruturado",
+    "jsonBody": "Campos versionados para estado, valores reproduzidos, sensibilidade e proveniência.",
+    "evidenceTitle": "Manifesto de evidência",
+    "evidenceBody": "Inventário com hashes que liga conclusões a entradas, execuções e revisão.",
+    "replayTitle": "Orientação de repetição",
+    "replayBody": "Ambiente, instruções e verificações para validar resultados elegíveis.",
+    "statusesTitle": "Como ler os estados",
+    "statusesBody": "O estado descreve a evidência, não o prestígio do artigo ou os seus autores.",
+    "statusReproduced": "Reproduzido",
+    "statusReproducedBody": "Todas as quantidades exigidas corresponderam à tolerância declarada.",
+    "statusPartial": "Parcialmente reproduzido",
+    "statusPartialBody": "Algumas quantidades corresponderam; outras não foram comparáveis, estavam ausentes ou fora da tolerância.",
+    "statusNot": "Não avaliável",
+    "statusNotBody": "Ficheiros, permissões ou execução não permitiram uma comparação válida.",
+    "privacyTitle": "Dados e materiais restritos",
+    "privacyBody": "Envie apenas dados que pode partilhar. Entradas restritas permanecem separadas de demonstrações públicas.",
+    "privacyCta": "Ler sobre segurança",
+    "readyTitle": "Pronto para definir o caso?",
+    "readyBody": "Crie uma conta e envie a alegação exata.",
+    "readyCta": "Pedir auditoria"
+  },
+  "methodologyPage": {
+    "eyebrow": "Metodologia",
+    "title": "Uma cadeia de evidência, não apenas uma nova execução.",
+    "intro": "O nosso fluxo de trabalho separa a compreensão das fontes, a reprodução numérica, a análise de robustez e a adjudicação científica, para que cada conclusão tenha uma base visível.",
+    "phases": [
+      {
+        "title": "Investigação e verificação de fontes",
+        "body": "Identificamos a alegação principal, localizamos fontes fidedignas, reconciliamos versões e registamos o que está presente, em falta ou em contradição.",
+        "evidence": "Resultados: registo de fontes, registos de alegações e mapas do artigo e do código"
+      },
+      {
+        "title": "Caso de estudo congelado",
+        "body": "Transformamos a pergunta num caso versionado com alvos, tolerâncias, funções dos conjuntos de dados, transformações permitidas e restrições de acesso.",
+        "evidence": "Resultados: caso congelado, registo de artefactos e grafo de evidência"
+      },
+      {
+        "title": "Reprodução controlada",
+        "body": "Executamos a análise original e registamos os detalhes do ambiente. Separamos as reparações técnicas das alterações científicas e preservamos todas as tentativas.",
+        "evidence": "Resultados: perfil de execução, pontos de controlo e registos de comparação"
+      },
+      {
+        "title": "Robustez governada",
+        "body": "Avaliamos um conjunto delimitado de escolhas defensáveis, em vez de procurar silenciosamente um resultado preferido.",
+        "evidence": "Resultados: registo de candidatos, mapa de robustez e conclusões sobre fragilidade"
+      },
+      {
+        "title": "Verificação independente",
+        "body": "Revemos de forma independente as conclusões numéricas e metodológicas, resolvemos conflitos e preservamos as objeções por resolver.",
+        "evidence": "Resultados: observações da revisão, comprovativo de verificação e pacote de adjudicação"
+      },
+      {
+        "title": "Entrega adaptada ao público",
+        "body": "Produzimos um resumo decisório e um pacote técnico de evidência a partir do mesmo resultado congelado, mantendo as limitações em todas as perspetivas.",
+        "evidence": "Resultados: relatório, JSON, manifestos e pacote de repetição"
+      }
+    ],
+    "limitsTitle": "Contenção metodológica",
+    "limitsBody": "A Peer2Paper comunica o que as evidências fornecidas e verificadas permitem sustentar. Não transforma uma reprodução parcial numa verdade geral, não trata a significância estatística como o único critério e não oculta limitações de acesso ou documentação por resolver."
+  },
+  "info": {
+    "about": {
+      "eyebrow": "Sobre",
+      "title": "Evidência mais sólida para decisões importantes.",
+      "intro": "A Peer2Paper existe para tornar a fiabilidade das alegações científicas mais fácil de avaliar antes de as organizações agirem com base nelas.",
+      "sections": [
+        {
+          "title": "O que fazemos",
+          "body": "Reunimos engenharia de reprodutibilidade, revisão estatística e verificação de fontes num único fluxo de auditoria rastreável."
+        },
+        {
+          "title": "A quem se destina",
+          "body": "Equipas de investigação, financiadores, grupos de políticas públicas, jornalistas e empresas recorrem à Peer2Paper quando um resultado publicado influencia materialmente uma decisão."
+        },
+        {
+          "title": "O nosso padrão",
+          "body": "Valorizamos a incerteza transparente acima da simplificação confiante. As conclusões permanecem ligadas às evidências, à revisão e a limitações explícitas."
+        }
+      ]
+    },
+    "security": {
+      "eyebrow": "Segurança",
+      "title": "Os materiais de investigação merecem um tratamento cuidadoso.",
+      "intro": "A aplicação Web utiliza sessões geridas pelo servidor, autorização ao nível da linha e restrições de divulgação específicas de cada pedido.",
+      "sections": [
+        {
+          "title": "Autenticação",
+          "body": "O início de sessão por email e Google é gerido pelo Supabase Auth. As sessões são guardadas em cookies seguros e atualizadas no servidor; os segredos OAuth nunca são enviados para o navegador."
+        },
+        {
+          "title": "Isolamento de dados",
+          "body": "A Segurança ao Nível da Linha garante que cada utilizador só pode ler e criar os seus próprios pedidos de auditoria. As credenciais administrativas do serviço devem permanecer apenas no servidor."
+        },
+        {
+          "title": "Divulgação responsável",
+          "body": "Comunique uma possível vulnerabilidade ao contacto jurídico ou de segurança configurado. Não inclua dados de investigação sensíveis na mensagem inicial."
+        }
+      ]
+    },
+    "privacy": {
+      "eyebrow": "Privacidade",
+      "title": "Aviso de privacidade",
+      "intro": "Este aviso descreve os dados necessários para operar a Peer2Paper e os controlos esperados em produção.",
+      "sections": [
+        {
+          "title": "Dados que tratamos",
+          "body": "Tratamos identificadores de conta, eventos de autenticação, detalhes dos pedidos de auditoria e os materiais de investigação que fornece intencionalmente. Os registos operacionais devem evitar dados de origem e conteúdo sensível."
+        },
+        {
+          "title": "Finalidades e conservação",
+          "body": "Utilizamos estes dados para autenticar utilizadores, prestar as auditorias pedidas, proteger o serviço e cumprir obrigações legais. A conservação segue o acordo do pedido e o calendário de eliminação configurado."
+        },
+        {
+          "title": "Os seus direitos",
+          "body": "Consoante a legislação aplicável, pode pedir acesso, correção, exportação ou eliminação. Contacte o endereço configurado pelo operador do serviço."
+        },
+        {
+          "title": "Subcontratantes e transferências",
+          "body": "O Supabase e o fornecedor de alojamento tratam dados do serviço ao abrigo das respetivas garantias contratuais. Antes do lançamento, o operador de produção deve publicar a sua identidade jurídica, região e lista atual de subcontratantes."
+        }
+      ]
+    },
+    "terms": {
+      "eyebrow": "Legal",
+      "title": "Termos de serviço",
+      "intro": "Estes termos de base explicam a utilização permitida; o lançamento em produção exige revisão pelos consultores jurídicos do operador do serviço.",
+      "sections": [
+        {
+          "title": "Submissões autorizadas",
+          "body": "Deve ter o direito de fornecer todos os artigos, conjuntos de dados, bases de código e credenciais submetidos, e deve descrever as restrições aplicáveis de licença, confidencialidade e conservação."
+        },
+        {
+          "title": "Âmbito científico",
+          "body": "Uma auditoria é uma avaliação baseada em evidências de uma alegação definida e dos materiais fornecidos; não constitui aconselhamento jurídico, médico, financeiro ou regulamentar."
+        },
+        {
+          "title": "Utilização aceitável",
+          "body": "Não envie materiais ilícitos, código malicioso, dados pessoais desnecessários nem conteúdo destinado a identificar participantes de investigação protegidos."
+        },
+        {
+          "title": "Resultados e limitações",
+          "body": "Os direitos de divulgação e reutilização seguem os materiais subjacentes e o acordo do pedido. Os resultados mantêm as incertezas materiais e não devem ser apresentados para além do âmbito registado."
+        }
+      ]
+    }
+  },
+  "auth": {
+    "asideEyebrow": "Espaço de evidência",
+    "signinTitle": "Bem-vindo de volta às suas auditorias.",
+    "signupTitle": "Comece com uma alegação que merece verificação.",
+    "signinIntro": "Abra o espaço, acompanhe revisões e obtenha pacotes concluídos.",
+    "signupIntro": "Crie um espaço seguro para pedidos e respetivo histórico.",
+    "quote": "A resposta útil não é apenas se o número corre, mas o que sobreviveu à inspeção.",
+    "quoteBy": "Princípio de revisão Peer2Paper",
+    "welcome": "Entrar",
+    "create": "Criar conta",
+    "noAccount": "Novo na Peer2Paper?",
+    "hasAccount": "Já tem conta?",
+    "signupLink": "Criar conta",
+    "signinLink": "Entrar",
+    "google": "Continuar com Google",
+    "or": "ou continuar com email",
+    "name": "Nome",
+    "namePlaceholder": "O seu nome",
+    "email": "Email",
+    "password": "Palavra-passe",
+    "passwordPlaceholder": "Pelo menos 8 caracteres",
+    "forgot": "Esqueceu a palavra-passe?",
+    "signinButton": "Entrar",
+    "signupButton": "Criar conta",
+    "working": "Aguarde…",
+    "legalStart": "Ao continuar, aceita os",
+    "terms": "termos",
+    "and": "e o",
+    "privacy": "aviso de privacidade",
+    "checkEmail": "Consulte o email para continuar.",
+    "recovery": "Recuperação de conta",
+    "forgotTitle": "Repor palavra-passe",
+    "forgotIntro": "Introduza o email e enviaremos uma ligação segura se a conta existir.",
+    "resetButton": "Enviar ligação",
+    "backSignin": "Voltar ao início de sessão",
+    "updateTitle": "Escolha uma nova palavra-passe",
+    "updateIntro": "Use pelo menos oito caracteres e não a reutilize.",
+    "newPassword": "Nova palavra-passe",
+    "updateButton": "Atualizar palavra-passe",
+    "errors": {
+      "not_configured": "A autenticação não está configurada para esta instalação.",
+      "missing_fields": "Introduza o email e a palavra-passe.",
+      "invalid_credentials": "O email ou a palavra-passe estão incorretos.",
+      "invalid_signup": "Utilize um email válido e uma palavra-passe com pelo menos oito caracteres.",
+      "already_exists": "Já existe uma conta com este email.",
+      "signup_failed": "Não foi possível criar a conta. Tente novamente.",
+      "oauth_failed": "Não foi possível iniciar sessão com o Google. Tente novamente.",
+      "callback_failed": "A ligação de início de sessão é inválida ou expirou.",
+      "generic": "Ocorreu um erro. Tente novamente."
+    }
+  },
+  "dashboard": {
+    "setupTitle": "Ligue o Supabase para ativar o espaço",
+    "setupBody": "Copie o modelo de ambiente, adicione os valores públicos e aplique a migração.",
+    "audits": "Auditorias",
+    "newRequest": "Novo pedido",
+    "signout": "Sair",
+    "workspace": "O seu espaço",
+    "title": "Pedidos de auditoria",
+    "emptyTitle": "Ainda não há pedidos",
+    "emptyBody": "Defina a alegação e ligue o artigo e materiais disponíveis.",
+    "emptyCta": "Criar primeiro pedido",
+    "notices": {
+      "requestCreated": "O pedido foi guardado.",
+      "passwordUpdated": "A palavra-passe foi atualizada."
+    },
+    "statuses": {
+      "submitted": "Enviado",
+      "in_review": "Em revisão",
+      "running": "Em execução",
+      "completed": "Concluído",
+      "needs_input": "Requer informação"
+    }
+  },
+  "submit": {
+    "eyebrow": "Novo pedido de auditoria",
+    "title": "Defina a alegação antes de começar.",
+    "intro": "Um pedido preciso acelera a pré-verificação e cria um limite defensável.",
+    "requirements": [
+      "Indique uma alegação relevante para a decisão",
+      "Ligue o artigo e os materiais disponíveis",
+      "Descreva restrições de acesso ou licença",
+      "Não inclua credenciais nem dados pessoais desnecessários"
+    ],
+    "privacy": "O pedido é visível apenas para a sua conta através de segurança ao nível da linha.",
+    "formTitle": "Detalhes do pedido",
+    "formIntro": "Pode afinar o âmbito com a equipa após a entrada.",
+    "error": "Não foi possível guardar. Verifique os campos e tente novamente.",
+    "projectTitle": "Título do projeto",
+    "projectPlaceholder": "ex.: Revisão de uma alegação de vacinação",
+    "claim": "Alegação exata",
+    "claimPlaceholder": "Indique população, intervenção ou exposição, comparação e resultado…",
+    "claimHelp": "Use a formulação de que a decisão depende.",
+    "paperUrl": "URL do artigo",
+    "materialsUrl": "URL do repositório de código/dados",
+    "notes": "Contexto e restrições",
+    "notesPlaceholder": "Prazo, restrições de acesso, problemas conhecidos…",
+    "submitButton": "Enviar pedido",
+    "submitting": "A guardar…",
+    "agreement": "O envio cria um registo de entrada. Âmbito, preço, transferência e retenção são confirmados antes da execução."
+  }
+}
