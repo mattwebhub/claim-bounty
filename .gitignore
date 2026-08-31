@@ -20,3 +20,10 @@ apps/api/coverage.html
 *.tsbuildinfo
 .eslintcache
 *.log
+__pycache__/
+*.py[cod]
+/exports/
+/verified-exports/
+/apps/web/public/claimbounty-anatomical-brain.png
+/apps/web/public/claimbounty-proof-loupe-icon.png
+/apps/web/.local-assets/

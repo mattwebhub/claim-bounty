@@ -1,0 +1,55 @@
+#!/bin/sh
+set -eu
+
+repository_root=$(git rev-parse --show-toplevel)
+fixture=$(mktemp -d "${TMPDIR:-/tmp}/micro1-review-hook.XXXXXX")
+trap 'rm -rf "$fixture"' EXIT INT TERM
+
+git -C "$fixture" init --quiet --initial-branch main
+mkdir -p "$fixture/scripts"
+cp "$repository_root/scripts/review" "$fixture/scripts/review"
+
+printf 'check-ci:\n\t@true\n' >"$fixture/Makefile"
+printf '%s\n' \
+  '#!/bin/sh' \
+  'printf "%s\\n" "$*" >>"$(git rev-parse --show-toplevel)/.review-calls"' \
+  'exit 1' >"$fixture/scripts/ai-review"
+chmod +x "$fixture/scripts/review" "$fixture/scripts/ai-review"
+printf 'base\n' >"$fixture/change.txt"
+
+git -C "$fixture" add .
+git -C "$fixture" \
+  -c user.name='Micro1 Test' \
+  -c user.email='test@micro1.invalid' \
+  commit --quiet -m base
+base_sha=$(git -C "$fixture" rev-parse HEAD)
+
+printf 'head\n' >"$fixture/change.txt"
+git -C "$fixture" add change.txt
+git -C "$fixture" \
+  -c user.name='Micro1 Test' \
+  -c user.email='test@micro1.invalid' \
+  commit --quiet -m head
+head_sha=$(git -C "$fixture" rev-parse HEAD)
+
+set +e
+printf 'refs/heads/main %s refs/heads/release %s\n' "$head_sha" "$base_sha" |
+  (cd "$fixture" && ./scripts/review --push) >/dev/null 2>&1
+status=$?
+set -e
+
+if [ "$status" -eq 0 ]; then
+  printf 'review-hook-test: failed review was incorrectly accepted\n' >&2
+  exit 1
+fi
+
+expected="--range $base_sha $head_sha"
+actual=$(sed -n '1p' "$fixture/.review-calls")
+calls=$(wc -l <"$fixture/.review-calls" | tr -d ' ')
+
+if [ "$actual" != "$expected" ] || [ "$calls" -ne 1 ]; then
+  printf 'review-hook-test: expected one exact-range review, got %s call(s): %s\n' "$calls" "$actual" >&2
+  exit 1
+fi
+
+printf 'review-hook-test: exact-range failures block without fallback\n'

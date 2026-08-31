@@ -3,3 +3,13 @@ apps/web/**
 coverage/**
 node_modules/**
 pnpm-lock.yaml
+
+# Byte-preserved public workflow resources synchronized from the canonical source.
+workflow/claimbounty-scientific-audit/project-template/claimbounty/config/audit-schema.json
+workflow/claimbounty-scientific-audit/project-template/claimbounty/config/audit-template.html
+workflow/claimbounty-scientific-audit/project-template/claimbounty/config/canonical-schemas.json
+
+# Generated sanitized trajectory records. The generator and SHA-256 manifest own formatting.
+workflow/claimbounty-scientific-audit/trajectories/agents/*.json
+workflow/claimbounty-scientific-audit/trajectories/routines/*.json
+workflow/claimbounty-scientific-audit/trajectories/index.json

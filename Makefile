@@ -11,12 +11,14 @@ INTEGRATION_POSTGRES_PORT ?= 55431
 TEST_DATABASE_URL ?= postgres://postgres:postgres@127.0.0.1:$(INTEGRATION_POSTGRES_PORT)/app?sslmode=disable
 SYSTEM_COMPOSE_PROJECT_NAME ?= $(COMPOSE_PROJECT_NAME)-system
 SYSTEM_POSTGRES_PORT ?= 55432
-SYSTEM_TEST_DATABASE_URL ?= postgres://postgres:postgres@127.0.0.1:$(SYSTEM_POSTGRES_PORT)/app?sslmode=disable
+SYSTEM_API_PORT ?= 58080
+SYSTEM_WEB_PORT ?= 58081
+SYSTEM_MAILPIT_PORT ?= 58025
 COMPOSE := docker compose --project-name $(COMPOSE_PROJECT_NAME) --file infra/compose.yaml
 
 .PHONY: help install doctor dev db-up db-down contract-generate contract-check \
 	architecture-registry arch arch-explain api-check-fast api-precommit api-check web-check-fast web-check check-fast check \
-	test-integration test-system vulnerability docker-build public-release check-ci hooks clean
+	review-hook-test reviewer-guide-check test-integration test-system vulnerability docker-build verify-export public-release check-ci review review-push ai-review hooks clean
 
 help: ## Show the monorepo command contract.
 	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z0-9_-]+:.*## / {printf "  %-24s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -68,7 +70,13 @@ web-check-fast: ## Run fast frontend formatting, lint, type, boundary, contract,
 web-check: ## Run the complete frontend handoff gate, including browser smoke tests.
 	pnpm --filter $(WEB_FILTER) verify
 
-check-fast: contract-check architecture-registry api-check-fast web-check-fast ## Run the warm-cache monorepo edit-loop gate.
+review-hook-test: ## Verify exact pushed-range failures cannot fall through to another review.
+	./scripts/test-review-hook
+
+reviewer-guide-check: ## Check the 13-page reviewer guide with the Playwright-pinned Chromium browser.
+	node submission/reviewer/guide/check.mjs
+
+check-fast: contract-check architecture-registry api-check-fast web-check-fast review-hook-test ## Run the warm-cache monorepo edit-loop gate.
 
 check: contract-check architecture-registry api-check web-check ## Run all deterministic local release gates.
 	GOCACHE="$${GOCACHE:-$$(go env GOCACHE)}" go run github.com/rhysd/actionlint/cmd/actionlint@$(ACTIONLINT_VERSION)
@@ -81,12 +89,12 @@ test-integration: ## Replay migrations and run PostgreSQL tests in an isolated d
 	  trap 'POSTGRES_PORT="$(INTEGRATION_POSTGRES_PORT)" $$compose down --volumes --remove-orphans' EXIT INT TERM; \
 	  $(MAKE) -C $(API_DIR) TEST_DATABASE_URL='$(TEST_DATABASE_URL)' migration-check test-integration
 
-test-system: ## Exercise the real browser-to-API-to-PostgreSQL slice in an isolated stack.
+test-system: ## Exercise the browser against the complete isolated ClaimBounty profile.
 	@set -eu; \
 	  compose='docker compose --project-name $(SYSTEM_COMPOSE_PROJECT_NAME) --file infra/compose.yaml'; \
-	  POSTGRES_PORT='$(SYSTEM_POSTGRES_PORT)' $$compose up -d --wait postgres; \
-	  trap 'POSTGRES_PORT="$(SYSTEM_POSTGRES_PORT)" $$compose down --volumes --remove-orphans' EXIT INT TERM; \
-	  SYSTEM_TEST_DATABASE_URL='$(SYSTEM_TEST_DATABASE_URL)' pnpm test:system
+	  trap 'POSTGRES_PORT="$(SYSTEM_POSTGRES_PORT)" CLAIMBOUNTY_API_PORT="$(SYSTEM_API_PORT)" CLAIMBOUNTY_WEB_PORT="$(SYSTEM_WEB_PORT)" MAILPIT_UI_PORT="$(SYSTEM_MAILPIT_PORT)" $$compose --profile claimbounty down --volumes --remove-orphans' EXIT INT TERM; \
+	  POSTGRES_PORT='$(SYSTEM_POSTGRES_PORT)' CLAIMBOUNTY_API_PORT='$(SYSTEM_API_PORT)' CLAIMBOUNTY_WEB_PORT='$(SYSTEM_WEB_PORT)' MAILPIT_UI_PORT='$(SYSTEM_MAILPIT_PORT)' $$compose --profile claimbounty up --build -d --wait --wait-timeout 300; \
+	  SYSTEM_TEST_WEB_ORIGIN='http://127.0.0.1:$(SYSTEM_WEB_PORT)' SYSTEM_TEST_MAILPIT_ORIGIN='http://127.0.0.1:$(SYSTEM_MAILPIT_PORT)' SYSTEM_TEST_COMPOSE_PROJECT_NAME='$(SYSTEM_COMPOSE_PROJECT_NAME)' SYSTEM_TEST_VERIFY_EXPORT='1' SYSTEM_TEST_REQUIRE_CLAIMBOUNTY='1' pnpm test:system
 
 vulnerability: ## Scan Go and JavaScript dependency graphs for known vulnerabilities.
 	$(MAKE) -C $(API_DIR) vulnerability
@@ -96,10 +104,27 @@ docker-build: ## Build both production images from the monorepo root context.
 	docker build --file apps/api/Dockerfile --tag micro1-api:local .
 	docker build --file apps/web/Dockerfile --tag micro1-web:local .
 
-public-release: contract-check architecture-registry ## Reject secrets, private references, generated drift, and unsafe files.
+verify-export: ## Verify exports/claimbounty-export.zip in an offline container.
+	@test -f exports/claimbounty-export.zip || (echo "missing exports/claimbounty-export.zip" >&2 && exit 2)
+	@printf '%s' '$(EXPORT_SHA256)' | grep -Eq '^[a-f0-9]{64}$$' || (echo "EXPORT_SHA256 must be the export resource's 64-character lowercase hexadecimal sha256" >&2 && exit 2)
+	@test ! -e verified-exports/claimbounty-export || (echo "verified-exports/claimbounty-export already exists; choose a new destination or move the previous result" >&2 && exit 2)
+	@install -d -m 0700 verified-exports
+	EXPORT_SHA256='$(EXPORT_SHA256)' $(COMPOSE) --profile operator run --rm verify-export
+
+public-release: contract-check architecture-registry reviewer-guide-check ## Reject secrets, private references, generated drift, and unsafe files.
+	pnpm policies:check
 	./scripts/check-public-release
 
 check-ci: check test-integration vulnerability docker-build test-system ## Reproduce the complete infrastructure and security gate.
+
+review: ## Run the complete deterministic and Codex semantic review locally.
+	./scripts/review
+
+review-push: ## Review committed changes about to be pushed.
+	./scripts/review --push
+
+ai-review: ## Run only the Codex semantic review for current uncommitted changes.
+	./scripts/ai-review --uncommitted
 
 hooks: ## Install the single repository-root hook configuration.
 	pnpm hooks:install

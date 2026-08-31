@@ -4,7 +4,7 @@
 
 1. Run `./scripts/agent-context <path>` before editing.
 2. Read the nearest `AGENTS.md` and the relevant architecture rule.
-3. Use `make check-fast` during the edit loop and `make check` before handoff.
+3. Use `make check-fast` during the edit loop and `make review` before handoff.
 4. Change the root OpenAPI contract and generated frontend types together.
 
 `./scripts/agent-context` prints the stable rules and smallest useful gate for the target. Use `make arch-explain RULE=<ID>` for local remediation without searching external documentation.
@@ -36,3 +36,6 @@
 - Root policy or release change: run `make check` and `make public-release`.
 - Persistence, dependency, container, or infrastructure change: run the relevant portion of `make check-ci`.
 - Always report exact commands, failures, and deliberately skipped infrastructure checks.
+- `git push` runs the complete deterministic suite and a read-only Codex review. Fix
+  actionable findings rather than suppressing the hook; use `make ai-review` to rerun
+  only the semantic review while iterating.

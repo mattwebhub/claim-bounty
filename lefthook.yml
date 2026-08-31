@@ -17,5 +17,6 @@ pre-commit:
 
 pre-push:
   commands:
-    repository:
-      run: make check
+    complete-review:
+      run: ./scripts/review --push
+      use_stdin: true

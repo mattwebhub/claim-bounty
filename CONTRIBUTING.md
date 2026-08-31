@@ -12,6 +12,6 @@ Before handoff:
 4. Run `make check` before requesting review.
 5. Run `make test-system` for cross-stack or contract changes.
 
-Use `make check-ci` before a release or after persistence, infrastructure, dependency, or container changes. It adds isolated PostgreSQL integration, vulnerability scans, production image builds, and the real system flow to the deterministic `make check` gate.
+Use `make review` before sharing work. It runs `make check-ci`—including isolated PostgreSQL integration, vulnerability scans, production image builds, and the real system flow—then performs a read-only Codex semantic review. The pre-push hook runs this same flow automatically over Git's exact outgoing refs. Use `make ai-review` while fixing semantic findings without repeating the deterministic suite.
 
 Do not lower thresholds, weaken lint rules, edit generated API types, or create architecture exceptions merely to make a gate pass.

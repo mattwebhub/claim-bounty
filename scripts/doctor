@@ -37,6 +37,7 @@ require_version() {
 }
 
 require git 'install Git'
+require codex 'install the Codex CLI and run `codex login`'
 require go 'install Go with automatic toolchain selection enabled'
 require node 'install Node.js 20.19 or newer'
 require pnpm 'install pnpm 9.15.0'
@@ -57,6 +58,14 @@ if command -v go >/dev/null 2>&1; then
     require_version 'Go toolchain' "$go_version" '1.26.6'
   else
     printf 'FAIL %-16s could not resolve apps/api toolchain\n' 'Go toolchain' >&2
+    failures=$((failures + 1))
+  fi
+fi
+if command -v codex >/dev/null 2>&1; then
+  if codex login status >/dev/null 2>&1; then
+    printf 'ok   %-16s authenticated\n' 'Codex login'
+  else
+    printf 'FAIL %-16s run `codex login`\n' 'Codex login' >&2
     failures=$((failures + 1))
   fi
 fi

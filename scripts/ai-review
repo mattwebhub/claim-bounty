@@ -1,0 +1,112 @@
+#!/bin/sh
+set -eu
+
+root=$(git rev-parse --show-toplevel)
+schema="$root/.codex/review-result.schema.json"
+prompt="$root/.codex/review-prompt.md"
+cache_dir="$root/.cache/codex-review"
+mode=''
+target=''
+
+usage() {
+  printf 'usage: scripts/ai-review --base <revision> | --range <base> <head> | --uncommitted\n' >&2
+  exit 2
+}
+
+case "${1:-}" in
+  --base)
+    [ "$#" -eq 2 ] || usage
+    mode='base'
+    target=$(git rev-parse --verify "$2^{commit}")
+    ;;
+  --range)
+    [ "$#" -eq 3 ] || usage
+    mode='range'
+    target=$(git rev-parse --verify "$2^{commit}")
+    range_head=$(git rev-parse --verify "$3^{commit}")
+    ;;
+  --uncommitted)
+    [ "$#" -eq 1 ] || usage
+    mode='uncommitted'
+    ;;
+  *)
+    usage
+    ;;
+esac
+
+command -v codex >/dev/null 2>&1 || {
+  printf 'ai-review: Codex CLI is required; install it and run `codex login`\n' >&2
+  exit 2
+}
+
+codex login status >/dev/null 2>&1 || {
+  printf 'ai-review: Codex CLI is not authenticated; run `codex login`\n' >&2
+  exit 2
+}
+
+if [ "$mode" = 'base' ] || [ "$mode" = 'range' ]; then
+  if [ "$mode" = 'base' ]; then
+    head=$(git rev-parse HEAD)
+    review_base=$(git merge-base "$target" "$head")
+  else
+    head=$range_head
+    review_base=$target
+  fi
+  if git diff --quiet "$review_base..$head"; then
+    printf 'ai-review: no committed changes to review\n'
+    exit 0
+  fi
+  policy_hash=$(git hash-object "$prompt" "$schema" "$root/AGENTS.md" "$root/ARCHITECTURE.md" "$root/architecture/rules.yaml" | git hash-object --stdin)
+  cache_key=$(printf '%s\n%s\n%s\n' "$review_base" "$head" "$policy_hash" | git hash-object --stdin)
+  mkdir -p "$cache_dir"
+  cached_report="$cache_dir/$cache_key.json"
+  target_description="Review committed changes in git diff $review_base..$head. Use that exact range, not the working tree."
+
+  if [ -f "$cached_report" ] && [ "${MICRO1_AI_REVIEW_REFRESH:-0}" != '1' ]; then
+    printf 'ai-review: using cached result for %s..%s\n' "$review_base" "$head"
+    exec node "$root/scripts/validate-ai-review.mjs" "$cached_report"
+  fi
+else
+  if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+    printf 'ai-review: no uncommitted changes to review\n'
+    exit 0
+  fi
+  target_description='Review all staged, unstaged, and untracked changes. Use git status, git diff, git diff --cached, and direct reads of untracked files.'
+fi
+
+temp_dir=$(mktemp -d "${TMPDIR:-/tmp}/micro1-ai-review.XXXXXX")
+trap 'rm -rf "$temp_dir"' EXIT INT TERM
+report="$temp_dir/report.json"
+trace="$temp_dir/codex.log"
+
+printf 'ai-review: running read-only Codex semantic review\n'
+if ! {
+  {
+    sed -n '1,260p' "$prompt"
+    printf '\n## Review target\n\n%s\n' "$target_description"
+  } | codex exec \
+    --cd "$root" \
+    --sandbox read-only \
+    --ephemeral \
+    --ignore-user-config \
+    --output-schema "$schema" \
+    --output-last-message "$report" \
+    - >/dev/null 2>"$trace"
+}; then
+  printf 'ai-review: Codex execution failed\n' >&2
+  tail -n 40 "$trace" >&2
+  exit 2
+fi
+
+set +e
+node "$root/scripts/validate-ai-review.mjs" "$report"
+status=$?
+set -e
+
+if [ "$mode" = 'base' ] || [ "$mode" = 'range' ]; then
+  if [ "$status" -le 1 ]; then
+    mv "$report" "$cached_report"
+  fi
+fi
+
+exit "$status"
