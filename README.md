@@ -1,95 +1,132 @@
 # ClaimBounty
 
-> **Status**: In-Development | **Updated**: 2026-08-31 | **Scope**: Public hackathon repository projection
+> **Status**: In Development | **Updated**: 2026-08-31 | **Scope**: ClaimBounty product and scientific-audit workflow
 
 ![ClaimBounty fox and loupe](apps/web/public/claimbounty-fox-loupe-icon.png)
 
-ClaimBounty gives researchers an independent scientific audit before a paper reaches reviewers. The hosted application accepts a claim and private source material, an administrator freezes an authorized export, and the scientific audit runs locally with [Toone](https://trytoone.com).
+ClaimBounty turns a quantitative claim and its supporting research bundle into an independent, evidence-backed scientific audit. It brings the paper, data, code, environment, and supporting sources into one traceable workflow, then produces a decision package a researcher can inspect, share, and act on.
 
-This repository is a working submission scaffold. The deadline-constrained evaluation contains one frozen Heliconius case, although the challenge recommends 10 or more cases when feasible. The one-shot ChatGPT comparator is sealed and adjudicated 1/100 with decision `invalid_incomplete`; Alpha scored it 1/100 and Beta 2/100, with no cap applied. The completed same-case ClaimBounty attempt is exploratory and unscored because it failed exact prompt identity and injected two out-of-contract case-specific values from outside the frozen participant bundle. No qualified head-to-head comparison, general performance claim, or speedup is published here.
+The product combines a secure web application for case intake and administration with a local [Toone](https://trytoone.com) workflow for scientific execution. Research code runs locally; the hosted service handles authorized intake, validation, and handoff.
 
-## Intended user
+## Who it is for
 
-ClaimBounty is for empirical researchers, authors, and research teams who want to challenge a focal quantitative claim before submission or a consequential review decision.
+ClaimBounty is built for empirical researchers, authors, research teams, journals, and organizations that need to challenge an important quantitative claim before publication or a consequential decision.
 
-## Current bottleneck
+## The problem
 
-The work spans assembling the paper, data, and code; reproducing the focal result; challenging defensible analytical choices; reconciling documentary and external evidence; and turning discrepancies into traceable corrections. The [experiment ledger](IMPROVEMENT_CHANGELOG.md) records where those handoffs succeeded, failed, or remain pending.
+A serious scientific review rarely stops at rerunning one script. A reviewer must locate the exact claim, reconstruct its analysis contract, reproduce the reported result, test defensible alternatives, reconcile the manuscript with code and data, inspect supporting literature, and turn every discrepancy into an actionable correction.
 
-## Practical value
+Today that work is fragmented across files, tools, people, and long-running agent sessions. Context is lost between stages, failures are difficult to resume, and the final report often obscures how each conclusion was reached.
 
-The intended value is earlier evidence-backed correction through a bounded hosted-to-local handoff. The hosted application freezes an authorized, digest-bound package; the local workflow performs scientific work and produces review artifacts without granting hosted credentials the ability to execute research code. See the [architecture](docs/ARCHITECTURE.md) and [reproduction guide](docs/REPRODUCE.md).
+## How ClaimBounty works
 
-## Main failure mode
+1. **Create a case.** Upload the manuscript, data, code, supplements, environment files, and authorized supporting sources through the ClaimBounty intake application.
+2. **Define the audit.** Identify the exact target claim and provide the permissions, privacy rules, scientific policy, and execution policy that govern the work.
+3. **Freeze the handoff.** An administrator validates the request and prepares an immutable, digest-bound export for local execution.
+4. **Run the scientific audit.** Import `micro1/ClaimBounty` from **Explore Workflows** in Toone and run the parent workflow. Seven coordinated routines, 19 agents, and 47 ordered steps handle case construction, reproduction, sensitivity analysis, evidence research, independent verification, adjudication, and delivery.
+5. **Review the decision package.** Inspect the verdict, supporting evidence, robustness results, consistency findings, prioritized corrections, reproduction record, and provenance.
 
-The main failure mode is an incomplete or malformed evidence handoff, often compounded by environment or package gaps. The [one-shot comparator](submission/evidence/chatgpt-comparator.json) ended without the required report. The [ClaimBounty exploratory attempt](submission/evidence/claimbounty-exploratory-attempt.json) had two independent qualification failures: the dispatch omitted the frozen prompt file's final LF byte, and the comparison routine used case-specific values absent from the frozen prompt and participant files. Gates G2, G3, and G4 remained blocked before any scientific command ran. The public record omits the case-specific values.
+## What the product delivers
 
-## Hot take
+Each completed audit is designed to produce one coherent decision package containing:
 
-Analysis that never becomes a traceable reviewer report is missing work, even when intermediate computation occurred. The baseline's progress summaries did not satisfy the requested deliverable, and a run with contaminated or non-identical inputs cannot qualify as a comparison. The [Improvement Changelog](IMPROVEMENT_CHANGELOG.md) keeps these failures visible without claiming a qualified comparison.
+- **Verdict** — the bounded conclusion for the target claim and the evidence supporting it.
+- **Reproduction evidence** — commands, environments, exit states, logs, numeric comparisons, tolerances, and artifact hashes.
+- **Robustness summary** — how the conclusion changes across defensible data, model, covariate, and inference choices.
+- **Consistency findings** — agreement or conflict across the manuscript, data, code, figures, tables, citations, and reported values.
+- **Prioritized corrections** — actionable changes ordered by consequence, evidence, and effort.
+- **Provenance** — source identifiers, file digests, workflow revisions, model usage, reviewer actions, and adjudication history.
 
-## Five-minute reviewer path
+The goal is not to replace scientific judgment. It is to make the evidence behind that judgment complete, inspectable, and reproducible.
 
-1. Watch the [4:54 solution video](submission/recordings/claimbounty-submission-video.mp4).
-2. Open the [reviewer guide](submission/reviewer/README.md).
-3. Read the [submission status](docs/SUBMISSION.md), [benchmark status](docs/BENCHMARK_RESULTS.md), [human baseline estimate](docs/HUMAN_BASELINE.md), [usage and cost disclosure](docs/USAGE_AND_COST.md), and [limitations](docs/LIMITATIONS.md).
-4. Inspect the [installable workflow package](workflow/claimbounty-scientific-audit/README.md) and its generated integrity manifest.
-5. For a visual-only web preview, run:
+## Product walkthrough
 
-   ```sh
-   pnpm install --frozen-lockfile
-   pnpm --filter @micro1/web build
-   pnpm --filter @micro1/web preview
-   ```
+Watch the [ClaimBounty product walkthrough](submission/recordings/claimbounty-submission-video.mp4) for a complete tour of the intake experience, workflow installation, execution model, and resulting audit package.
 
-The visual preview does not start the API, database, object storage, malware scanner, or worker. Use the hosted setup below to review the end-to-end application boundary. The planned demo sequence is in [docs/VIDEO_SCRIPT.md](docs/VIDEO_SCRIPT.md).
+For a deeper visual overview, open the [product guide](submission/reviewer/reviewer-guide.pdf).
 
-## Hosted web application setup
+## Product architecture
 
-Use Docker and the ClaimBounty Compose profile to run the web application, API, database, object storage, scanner, mail sandbox, and worker. Follow [docs/SETUP.md](docs/SETUP.md) for prerequisites, local environment handling, startup, and shutdown.
+ClaimBounty has three deliberate boundaries:
 
-The hosted application ends at an authorized, digest-bound export. It does not run the scientific audit or publish a finding.
+| Surface | Responsibility |
+| --- | --- |
+| Researcher intake | Creates a case and uploads the authorized academic bundle. |
+| Administration | Reviews cases, validates policy and permissions, and prepares digest-bound exports. |
+| Local scientific workflow | Runs research code and coordinated agents inside the user's Toone project, then produces the audit package. |
 
-## Local Toone scientific-workflow setup
+The Go API owns identity, case metadata, policy validation, storage coordination, and export handoffs. The React application provides the public intake and administration interfaces. PostgreSQL, object storage, malware scanning, and background workers support the hosted boundary. Scientific execution remains local so private research material and arbitrary research code do not need to run inside the hosted service.
 
-This path is separate from the hosted application. The scientific workflow requires macOS, the latest [Toone release](https://trytoone.com), and one supported coding-agent client: Codex or Claude Code. It also requires Python 3.11 or later and the language runtimes required by the study. The included **Moura et al. 2023, Heliconius Experiment 1** demonstration uses R and is stored under `examples/moura-2023-heliconius-exp1/`.
+Read the full [architecture](docs/ARCHITECTURE.md) and [security policy](SECURITY.md).
 
-In Toone, create a project by selecting an empty directory. Inside that project directory, place the manuscript, data, code, supplementary materials, preregistration, environment files, and authorized supporting sources under `claimbounty/input/case-bundle/`. Open **Explore Workflows**, select **micro1/ClaimBounty**, and import it. The workflow export installs the parent workflow, its child workflows, schemas, templates, and local runner. When prompted, bind `case-bundle` to `claimbounty/input/case-bundle/`, review the inputs, and run the parent workflow. Follow [docs/REPRODUCE.md](docs/REPRODUCE.md) for the full path and repository-package fallback.
+## Run the hosted application
 
-For Codex on macOS or Linux, follow the [official Codex CLI guide](https://learn.chatgpt.com/docs/codex/cli): install with `curl -fsSL https://chatgpt.com/codex/install.sh | sh`, run `codex`, and sign in with ChatGPT. For Claude Code, use the [official Anthropic setup page](https://code.claude.com/docs/en/getting-started).
-
-## Contributor gates
-
-Run the smallest gate that matches the change:
+The local product stack uses Docker Compose to start the web application, API, PostgreSQL, object storage, malware scanner, mail sandbox, and worker.
 
 ```sh
+cp .env.example .env
+docker compose --profile claimbounty up --build
+```
+
+Follow [docs/SETUP.md](docs/SETUP.md) for prerequisites, environment configuration, service URLs, and shutdown instructions.
+
+## Run the scientific workflow
+
+The scientific workflow requires:
+
+- macOS and the latest [Toone release](https://trytoone.com)
+- Codex or Claude Code configured as the coding-agent client
+- Python 3.11 or later
+- the language runtimes required by the study, such as R
+
+To try the included example:
+
+1. Create an empty project in Toone.
+2. Copy the included **Moura et al. 2023, Heliconius Experiment 1** bundle from `examples/moura-2023-heliconius-exp1/` into the project.
+3. Open **Explore Workflows**, select **micro1/ClaimBounty**, and add it to the workspace.
+4. Bind `case-bundle` to the example directory and provide the required audit, scientific, and execution policies.
+5. Review the bindings and run the parent ClaimBounty workflow.
+
+The export installs the complete workflow graph, schemas, templates, and local runner. Follow the [reproduction guide](docs/REPRODUCE.md) for exact commands and the repository-package fallback.
+
+## Development
+
+Install the JavaScript workspace and run the fast local gate:
+
+```sh
+pnpm install --frozen-lockfile
 make check-fast
+```
+
+Useful validation targets:
+
+```sh
 make public-release
 make test-system
 make check-ci
 ```
 
-`make check-fast` covers local static and contract checks. `make public-release` checks the public projection and package manifests. `make test-system` requires Docker. `make check-ci` is the full contributor gate and may require more time and disk.
+`make test-system` requires Docker. `make check-ci` runs the complete deterministic contributor gate and may require additional time and disk space.
+
+The [Improvement Changelog](IMPROVEMENT_CHANGELOG.md) records the major product and workflow iterations together with the evidence that motivated each change.
 
 ## Repository map
 
-| Path                                    | Purpose                                                          |
-| --------------------------------------- | ---------------------------------------------------------------- |
-| `apps/web`                              | Claim intake and administration interface                        |
-| `apps/api`                              | Hosted application API and worker processes                      |
-| `contracts`                             | Public HTTP and data contracts                                   |
-| `infra`                                 | Compose, Kubernetes, and object-storage configuration            |
-| `examples/moura-2023-heliconius-exp1`   | Included CC BY 4.0 paper, R code, and data for the demo          |
-| `workflow/claimbounty-scientific-audit` | Installable local scientific-workflow projection                 |
-| `submission/reviewer`                   | Short reviewer path and generated manifest                       |
-| `submission/recordings`                 | Final solution video and screened source footage                 |
-| `submission/evidence`                   | Public benchmark, timing, usage, cost, and evidence status       |
-| `docs`                                  | Setup, architecture, benchmark, disclosure, and submission notes |
+| Path | Purpose |
+| --- | --- |
+| `apps/web` | Researcher intake and administration interface |
+| `apps/api` | Go API and background worker processes |
+| `contracts` | HTTP and data contracts |
+| `infra` | Compose, Kubernetes, and object-storage configuration |
+| `examples/moura-2023-heliconius-exp1` | Licensed example paper, R code, and data |
+| `workflow/claimbounty-scientific-audit` | Installable ClaimBounty workflow package |
+| `submission/recordings` | Product walkthrough and screened source footage |
+| `submission/reviewer` | Product guide and generated integrity manifest |
+| `submission/evidence` | Public engineering and evaluation evidence |
+| `docs` | Setup, architecture, reproduction, and product documentation |
 
-## Evidence boundary
+## Data handling
 
-This public projection excludes the prior 218 MiB assessment bundle, the `dev-01` case, hidden answer keys, internal organization configuration, absolute workstation paths, restricted screenshots, raw browser traces, authentication or session metadata, raw exploratory run identifiers, grader-only material, and customer data. The sealed comparator and exploratory-attempt records contain only cleared facts. See [docs/BENCHMARK_PROTOCOL.md](docs/BENCHMARK_PROTOCOL.md).
-
-## Security and licensing
+The public repository contains no customer research data, credentials, session metadata, internal organization configuration, hidden answer keys, or restricted case material. Uploaded research bundles are governed by explicit permissions, privacy classification, retention rules, source immutability, and release policy.
 
 Read [SECURITY.md](SECURITY.md) before reporting a vulnerability or handling research data. Dependency and asset attribution is recorded in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [docs/ASSET_PROVENANCE.md](docs/ASSET_PROVENANCE.md). Repository licensing is defined by [LICENSE](LICENSE).

@@ -55,7 +55,6 @@ check(
 );
 
 const linkedDocuments = [
-  'README.md',
   'docs/BENCHMARK_RESULTS.md',
   'submission/reviewer/README.md',
   'submission/evidence/README.md',

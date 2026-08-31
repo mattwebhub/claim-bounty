@@ -81,26 +81,22 @@ check(
 );
 
 for (const heading of [
-  '## Intended user',
-  '## Current bottleneck',
-  '## Practical value',
-  '## Main failure mode',
-  '## Hot take',
+  '## Who it is for',
+  '## The problem',
+  '## How ClaimBounty works',
+  '## What the product delivers',
+  '## Product architecture',
 ]) {
   check(readme.includes(heading), `README narrative heading: ${heading}`);
 }
 check(
-  readme.includes('same-case ClaimBounty attempt is exploratory'),
-  'README same-case attempt status',
+  readme.includes('[Improvement Changelog](IMPROVEMENT_CHANGELOG.md)'),
+  'README changelog link',
 );
-check(readme.includes('exploratory and unscored'), 'README unscored ClaimBounty status');
-check(readme.includes('two independent qualification failures'), 'README two-deviation status');
-check(readme.includes('out-of-contract case-specific values'), 'README contamination status');
-check(readme.includes('[experiment ledger](IMPROVEMENT_CHANGELOG.md)'), 'README changelog link');
-check(
-  readme.includes('[one-shot comparator](submission/evidence/chatgpt-comparator.json)'),
-  'README comparator evidence link',
-);
+check(readme.includes('Researcher intake'), 'README product intake boundary');
+check(readme.includes('Local scientific workflow'), 'README local execution boundary');
+check(readme.includes('decision package'), 'README product output');
+check(!/hackathon/i.test(readme), 'README excludes event framing');
 
 const shotPattern = /^\| (\d):(\d{2})–(\d):(\d{2}) \|/gm;
 const shots = [...video.matchAll(shotPattern)].map((match) => ({
